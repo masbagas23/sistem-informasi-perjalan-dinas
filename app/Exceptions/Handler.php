@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -23,39 +22,20 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontFlash = [
+        'current_password',
         'password',
         'password_confirmation',
     ];
 
     /**
-     * Convert an authentication exception into a response.
+     * Register the exception handling callbacks for the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    public function register()
     {
-        return $request->expectsJson()
-                    ? response()->json(['message' => $exception->getMessage()], 401)
-                    : redirect()->guest(url('/login'));
-    }
-
-    /**
-     * Prepare a JSON response for the given exception.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $e
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function prepareJsonResponse($request, Throwable $e)
-    {
-        $response = parent::prepareJsonResponse($request, $e);
-
-        if ($response->getStatusCode() === 500 && config('app.debug')) {
-            return $this->prepareResponse($request, $e);
-        }
-
-        return $response;
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 }

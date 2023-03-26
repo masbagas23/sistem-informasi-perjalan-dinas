@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'api',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
 
@@ -42,7 +42,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'passport',
             'provider' => 'users',
             'hash' => false,
         ],
@@ -113,5 +113,7 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    'must_verify_email' => env('MUST_VERIFY_EMAIL', false),
 
 ];
