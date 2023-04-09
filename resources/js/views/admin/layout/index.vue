@@ -24,7 +24,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2021</span>
+            <span>&copy; {{thisYear}} Bagasraga. Hak cipta dilindungi Undang-undang.</span>
           </div>
         </div>
       </footer>
@@ -40,8 +40,9 @@
 </template>
 
 <script>
-import sbadmin2 from "../../../sb-admin-2.js";
+import sbadmin2 from "@app/utils/sb-admin-2.js";
 import axios from "axios";
+import moment from "moment";
 import { mapGetters } from "vuex";
 import Topbar from "../components/Topbar";
 import Sidebar from "../components/Sidebar";
@@ -51,6 +52,11 @@ export default {
   components: {
     Topbar,
     Sidebar
+  },
+  data(){
+    return{
+      thisYear: moment().format("Y"),
+    }
   },
   mounted() {
     sbadmin2.init();

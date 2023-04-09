@@ -4,16 +4,19 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require("./bootstrap");
+require("@app/utils/bootstrap");
 
 import router from "./router";
-import "./axios";
-import store from "./vuex";
+// import "@app/utils/axios";
+import store from "@app/utils/vuex";
 import Toasted from "vue-toasted";
+import _ from 'lodash';
+import bootstrapVue from "@app/utils/bootstrap-vue"
 import Chart from "chart.js";
+import Vue from "vue";
 
 window.Vue = require("vue").default;
-Vue.use(Toasted);
+Vue.use(Toasted,{iconPack : 'material'});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -36,5 +39,6 @@ Vue.component("app", require("./App.vue").default);
 const app = new Vue({
     router,
     store,
+    bootstrapVue,
     el: "#app"
 });
