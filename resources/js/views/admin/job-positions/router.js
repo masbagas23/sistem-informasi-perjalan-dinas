@@ -7,7 +7,7 @@ export default [
             {
                 path: '',
                 name: 'jobPositions.index',
-                component: () => import(/* webpackChunkName: "projects" */ './index.vue'),
+                component: () => import(/* webpackChunkName: "admin" */ './index.vue'),
                 meta: { title: 'Jabatan', module:'Data Master'}
             },
         ]

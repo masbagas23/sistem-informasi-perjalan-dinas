@@ -9,7 +9,7 @@ export default [
             {
                 path: '',
                 name: 'users.index',
-                component: () => import(/* webpackChunkName: "projects" */ './index.vue'),
+                component: () => import(/* webpackChunkName: "admin" */ './index.vue'),
                 meta: { title: 'User', module:'Manajemen Pengguna'}
             },
         ]

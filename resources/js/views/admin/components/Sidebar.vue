@@ -165,7 +165,13 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">Data Master</div>
-
+        <!-- Nav Item - Tables -->
+        <li class="nav-item">
+          <router-link class="nav-link" to="/admin/customers">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Pelanggan</span></router-link
+          >
+        </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
           <router-link class="nav-link" to="/admin/job-positions">
@@ -175,23 +181,23 @@
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/job-categories">
             <i class="fas fa-fw fa-table"></i>
             <span>Kategori Pekerjaan</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/cost-category">
             <i class="fas fa-fw fa-table"></i>
             <span>Kategori Biaya</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/vehicles">
             <i class="fas fa-fw fa-table"></i>
-            <span>Kendaraan Inventaris</span></router-link
+            <span>Kendaraan</span></router-link
           >
         </li>
       </ul>

@@ -7,7 +7,7 @@ export default [
             {
                 path: '',
                 name: 'roles.index',
-                component: () => import(/* webpackChunkName: "projects" */ './index.vue'),
+                component: () => import(/* webpackChunkName: "admin" */ './index.vue'),
                 meta: { title: 'Hak Akses', module:'Manajemen Pengguna'}
             },
         ]

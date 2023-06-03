@@ -2,6 +2,7 @@ import layout from "@app/views/admin/layout/index.vue"
 import mstUser from "./users/router"
 import mstRole from "./roles/router"
 import mstJobPosition from "./job-positions/router"
+import mstJobCategory from "./job-categories/router"
 
 const dashboard = {
     path: '',
@@ -11,7 +12,7 @@ const dashboard = {
         {
             path: '',
             name: 'dashboard.index',
-            component: () => import(/* webpackChunkName: "admins" */ './dashboard.vue'),
+            component: () => import(/* webpackChunkName: "admin" */ './dashboard.vue'),
             meta: { title: 'Dashborad', disableBreadcrumb:false }
         },
     ]
@@ -24,5 +25,6 @@ export default {
         ...mstUser,
         ...mstRole,
         ...mstJobPosition,
+        ...mstJobCategory,
     ]
 }
