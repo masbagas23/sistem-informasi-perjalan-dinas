@@ -3,6 +3,7 @@ import mstUser from "./users/router"
 import mstRole from "./roles/router"
 import mstJobPosition from "./job-positions/router"
 import mstJobCategory from "./job-categories/router"
+import mstCostCategory from "./cost-categories/router"
 
 const dashboard = {
     path: '',
@@ -26,5 +27,6 @@ export default {
         ...mstRole,
         ...mstJobPosition,
         ...mstJobCategory,
+        ...mstCostCategory,
     ]
 }

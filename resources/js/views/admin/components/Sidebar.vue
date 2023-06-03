@@ -188,7 +188,7 @@
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/cost-category">
+          <router-link class="nav-link" to="/admin/cost-categories">
             <i class="fas fa-fw fa-table"></i>
             <span>Kategori Biaya</span></router-link
           >

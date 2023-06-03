@@ -46,4 +46,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Kategori Pekerjaan
     Route::apiResource('/job-categories', 'JobCategoryController');
     Route::get('/job-category-list', 'JobCategoryController@loadList');
+    // Kategori Biaya
+    Route::apiResource('/cost-categories', 'CostCategoryController');
+    Route::get('/cost-category-list', 'CostCategoryController@loadList');
 });
