@@ -1,6 +1,7 @@
 import layout from "@app/views/admin/layout/index.vue"
 import mstUser from "./users/router"
 import mstRole from "./roles/router"
+import mstJobPosition from "./job-positions/router"
 
 const dashboard = {
     path: '',
@@ -22,5 +23,6 @@ export default {
         dashboard,
         ...mstUser,
         ...mstRole,
+        ...mstJobPosition,
     ]
 }

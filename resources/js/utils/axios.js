@@ -49,12 +49,8 @@ axios.interceptors.response.use(
 );
 
 function handleError(error, res) {
-    Vue.toasted.error(error.message,{
+    Vue.toasted.show(error.message,{
         duration : 3000,
-    }).then(()=>{
-        if(res.status == 401){
-            
-        }
     });
 }
 

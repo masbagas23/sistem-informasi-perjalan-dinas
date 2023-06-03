@@ -38,6 +38,29 @@ class RoleController extends Controller
         }
     }
 
+    public function loadList(Request $request)
+    {
+        try {
+            $data = Model::query();
+            if (request()->keyword != '') {
+                $data = $data->where(function($query){
+                    $query->where('name', 'LIKE', '%' . request()->keyword . '%')
+                    ->orWhere('code', 'LIKE', '%' . request()->keyword . '%');
+                });
+            }
+            $data = $data->get();
+            return response()->json([
+                "status"=>"success",
+                "data"=>$data
+            ], Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -95,7 +118,22 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "code"=>"required|min:3|max:4|unique:roles,code,".$id,
+            "name"=>"required"
+        ]);
+
+        try {
+            Model::find($id)->update($request->all());
+            return response()->json([
+                "status"=>"success"
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

@@ -54,6 +54,10 @@
                     {{ row.index + 1 }}
                 </template>
 
+                <template v-slot:cell(name)="row">
+                    {{ `${row.item.first_name} ${row.item.middle_name ? row.item.middle_name : ''} ${row.item.last_name ? row.item.last_name : ''}` }}
+                </template>
+
                 <template v-slot:cell(action)="row">
                     <b-badge title="Edit" class="btn" @click="view(row.item.id)" pill variant="primary"><b-icon icon="pencil-square"></b-icon></b-badge>
                     <b-badge title="Hapus" class="btn" @click="remove(row.item.id)" pill variant="danger"><b-icon icon="trash"></b-icon></b-badge>
@@ -174,7 +178,11 @@ export default {
             this.reloadTable(this.tableParams, true);
         }
     },
+    mounted(){
+        this.CLEAR_ERRORS()
+    },
     methods: {
+        ...mapMutations(['CLEAR_ERRORS']),
         ...mapActions("mstUser", [
             "load",
             "show",
@@ -223,33 +231,53 @@ export default {
         },
 		submit: _.debounce(function() {
             this.loadingProcess = true;
-            if(!this.modelId){
-                this.store().then((r) => {
-                    this.hideModal(true);
-                    notify.success(this.fileTitle, 'tambah');
-                    this.loadingProcess = false
-                }).catch((e) => {
-					notify.error(this.fileTitle, 'tambah');
-                    this.loadingProcess = false
+            let form = new FormData();
 
-                })
-            }else{
-                this.update(this.modelId).then((r) => {
-                    this.hideModal(true);
-                    notify.success(this.fileTitle, 'simpan');
-                    this.loadingProcess = false
-                }).catch((e) => {
-					notify.error(this.fileTitle, 'simpan');
-                    this.loadingProcess = false
-                })
+            for (const key in this.form) {
+                if ((this.form[key] != undefined || this.form[key] != null)) {
+                    form.append(key, this.form[key]);
+                }
+            }
+            if (!this.modelId) {
+                this.store(form)
+                    .then(r => {
+                        this.hideModal(true);
+                        notify.success(this.fileTitle, "tambah");
+                        this.loadingProcess = false;
+                    })
+                    .catch(e => {
+                        notify.error(this.fileTitle, "tambah");
+                        this.loadingProcess = false;
+                    });
+            } else {
+                this.update({form:form, id:this.modelId})
+                    .then(r => {
+                        this.hideModal(true);
+                        notify.success(this.fileTitle, "simpan");
+                        this.loadingProcess = false;
+                    })
+                    .catch(e => {
+                        notify.error(this.fileTitle, "simpan");
+                        this.loadingProcess = false;
+                    });
             }
         }, 500),
-        remove(id){
-            this.$confirm(this.fileTitle + " akan dihapus?","Peringatan","warning",1).then(() => {
-                this.destroy(id).then(()=>{
-                    this.hideModal(true)
+        remove(id) {
+            this.$confirm(
+                this.fileTitle + " akan dihapus?",
+                "Peringatan",
+                "warning",
+                1
+            )
+                .then(() => {
+                    this.destroy(id).then(() => {
+                        this.hideModal(true);
+                        notify.success(this.fileTitle, "hapus");
+                    });
                 })
-            }).catch(()=>{});
+                .catch(() => {
+                        notify.error(this.fileTitle, "hapus");
+                });
         }
     }
 };

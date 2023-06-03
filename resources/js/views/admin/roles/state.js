@@ -19,6 +19,7 @@ const state = () => ({
     form: defaultForm(),
     isBusy: false,
     isShow: false,
+    isLoading: false,
     tableParams: {
         page: 1, //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
         per_page: 10,
@@ -52,6 +53,9 @@ const mutations = {
     },
     SET_SHOW(state, payload) {
         state.isShow = payload;
+    },
+    SET_LOADING(state, payload) {
+        state.isLoading = payload;
     },
     //MENGUBAH DATA STATE PAGE
     SET_DOWNLOAD(state, payload) {
@@ -102,11 +106,13 @@ const actions = {
     },
     //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA DARI SERVER
     loadList({ commit }, payload) {
+        commit("SET_LOADING", false);
         return new Promise((resolve, reject) => {
             $axios.get(`/role-list`).then(response => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit("ASSIGN_LIST", response.data);
                 resolve(response.data);
+                commit("SET_LOADING", false);
             });
         });
     },

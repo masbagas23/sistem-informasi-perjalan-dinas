@@ -7,6 +7,7 @@ use App\Http\Resources\UserListResource;
 use Illuminate\Http\Request;
 use App\Models\User as Model;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -51,11 +52,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "code"=>"required|min:3|max:4|unique:roles,code",
-            "name"=>"required"
+            "nip"=>"required|min:4|max:10|unique:users,nip",
+            "job_position_id"=>"required",
+            "first_name"=>"required",
+            "email"=>"required",
+            "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
         ]);
 
         try {
+            $ava_url = '/images/ava.webp';
+            // Simpan Foto
+            if($request->hasFile('file')){
+                $ava_url = Model::savePhoto($request->file('file'), 'avatar');
+            }
+            //
+            $request->request->add(['avatar_url' => $ava_url]);
+            $request->request->add(['password' => Hash::make('password')]);
             Model::create($request->all());
             return response()->json([
                 "status"=>"success"
@@ -99,7 +111,31 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "nip"=>"required|min:4|max:10|unique:users,nip,".$id,
+            "job_position_id"=>"required",
+            "first_name"=>"required",
+            "email"=>"required|unique:users,nip,".$id,
+            "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
+        ]);
+
+        try {
+            // Simpan Foto
+            if($request->hasFile('file')){
+                $ava_url = Model::savePhoto($request->file('file'), 'avatar');
+                $request->request->add(['avatar_url' => $ava_url]);
+            }
+            //
+            Model::find($id)->update($request->all());
+            return response()->json([
+                "status"=>"success"
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

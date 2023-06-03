@@ -2,19 +2,20 @@ import $axios from "@app/utils/axios"
 
 function defaultForm() {
     return {
-        name: "",
+        email: "",
+        nip: "",
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        gender: "",
         address: "",
-        pic_name: "",
-        pic_phone_number: "",
-        province_id: "",
-        city_id: "",
-        district_id: "",
-        description: "",
-        value: "",
-        is_active : true,
-        created_at: "",
+        phone_number: "",
+        job_position_id: "",
+        bank_number: "",
+        signature_url: "",
+        avatar_url: "",
         updated_at: "",
-        deleted_at: ""
+        file:[]
     };
 }
 
@@ -25,6 +26,7 @@ const state = () => ({
     //UNTUK MENAMPUNG VALUE DARI FORM INPUTAN NANTINYA
     form: defaultForm(),
     isBusy: false,
+    isShow: false,
     tableParams: {
         page: 1, //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
         per_page: 10,
@@ -56,6 +58,9 @@ const mutations = {
     SET_BUSY(state, payload) {
         state.isBusy = payload;
     },
+    SET_SHOW(state, payload) {
+        state.isShow = payload;
+    },
     //MENGUBAH DATA STATE PAGE
     SET_DOWNLOAD(state, payload) {
         state.isDownload = payload;
@@ -71,16 +76,19 @@ const mutations = {
     //MENGUBAH DATA STATE FORM
     ASSIGN_FORM(state, payload) {
         state.form = {
-            name: payload.name,
+            email: payload.email,
+            nip: payload.nip,
+            first_name: payload.first_name,
+            middle_name: payload.middle_name,
+            last_name: payload.last_name,
+            gender: payload.gender,
             address: payload.address,
-            pic_name: payload.pic_name,
-            pic_phone_number: payload.pic_phone_number,
-            province_id: payload.province_id,
-            city_id: payload.city_id,
-            district_id: payload.district_id,
-            description: payload.description,
-            value: payload.value,
-            is_active : payload.is_active,
+            phone_number: payload.phone_number,
+            job_position_id: payload.job_position_id,
+            bank_number: payload.bank_number,
+            signature_url: payload.signature_url,
+            avatar_url: payload.avatar_url,
+            updated_at: payload.updated_at,
         };
     },
     //ME-RESET STATE FORM MENJADI KOSONG
@@ -118,40 +126,21 @@ const actions = {
             });
         });
     },
-
-    //UNTUK MENGAMBIL SINGLE DATA DARI SERVER BERDASARKAN ID
-    filterTabList({ commit }, payload) {
-        commit('SET_BUSY', true)
-        return new Promise((resolve, reject) => {
-            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN ID DI URL
-            $axios.get(`/mst-user-tab-alert`, { params: payload })
-            .then((response) => {
-                //SIMPAN DATA KE STATE MELALUI MUTATIONS
-                commit('ASSIGN_FILTER_DATA', response.data.data)
-                resolve(response.data)
-                commit('SET_BUSY', false)
-            }).catch(error => {
-                commit('SET_BUSY', false)
-                return []
-            })
-        })
-    },
     //FUNGSI UNTUK MENAMBAHKAN DATA BARU
-    store({ dispatch, commit, state }) {
+    store({ commit }, form) {
         return new Promise((resolve, reject) => {
             //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
             //DARI STATE FORM
             $axios
-                .post(`/mst-users`, state.form)
+                .post(`/mst-users`, form,{
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                })
                 .then(response => {
                     //APABILA BERHASIL KITA MELAKUKAN REQUEST LAGI
                     //UNTUK MENGAMBIL DATA TERBARU
-                    dispatch("load", state.tableParams).then(() => {
-                        resolve(response.data);
-                    });
-                    dispatch("filterTabList", state.tableParams).then(() => {
-                        resolve(response.data);
-                    });
+                    resolve(response.data);
                 })
                 .catch(error => {
                     //APABILA TERJADI ERROR VALIDASI
@@ -168,53 +157,15 @@ const actions = {
     },
     //UNTUK MENGAMBIL SINGLE DATA DARI SERVER BERDASARKAN ID
     show({ commit }, payload) {
-        commit("SET_BUSY", true);
+        commit("SET_SHOW", true);
         return new Promise((resolve, reject) => {
             //MELAKUKAN REQUEST DENGAN MENGIRIMKAN ID DI URL
             $axios.get(`/mst-users/${payload}`).then(response => {
                 //APABIL BERHASIL, DI ASSIGN KE FORM
                 commit("ASSIGN_FORM", response.data.data);
                 resolve(response.data);
-                commit("SET_BUSY", false);
+                commit("SET_SHOW", false);
             });
-        });
-    },
-
-    download({ commit },payload) {
-        let { file } = payload
-        commit("SET_DOWNLOAD", true);
-        return new Promise((resolve, reject) => {
-            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN ID DI URL
-            $axios
-                .get(`/mst-user-export-${file}`, {
-                   responseType: "blob",
-                    params: payload
-                })
-                .then(response => {
-                    var fileType = null
-                    if (file=="salary-slip") {
-                        fileType = "application/pdf"
-                    }else if (file=="permata") {
-                        // fileType = "application/vnd.ms-excel"
-                        fileType = "text/csv"
-                    }else if (file=="talenta") {
-                        fileType = "application/vnd.ms-excel"
-                    }else{
-                        fileType = file == "pdf" ? "application/pdf" : "application/vnd.ms-excel"
-                    }
-
-                    const blob = new Blob([response.data], { type: fileType });
-                    const link = document.createElement("a");
-                    link.href = URL.createObjectURL(blob);
-                    link.download =
-                        "mst-users-" + new Date().toISOString().substring(0, 10);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                    commit("SET_DOWNLOAD", false);
-                })
-                .catch(error => {
-                    commit("SET_DOWNLOAD", false);
-                });
         });
     },
     //UNTUK MENGUPDATE DATA BERDASARKAN ID YANG SEDANG DIEDIT
@@ -224,41 +175,15 @@ const actions = {
             //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
             //MELALUI STATE FORM
             $axios
-                .put(`/mst-users/${payload}`, state.form)
+                .post(`/mst-users/${payload.id}?_method=put`, payload.form,{
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                })
                 .then(response => {
                     //FORM DIBERSIHKAN
                     // commit("CLEAR_FORM");
                     resolve(response.data);
-                    dispatch("filterTabList", state.tableParams).then(() => {
-                        resolve(response.data);
-                    });
-                })
-                .catch(error => {
-                    //APABILA TERJADI ERROR VALIDASI
-                    //DIMANA LARAVEL MENGGUNAKAN CODE 422
-                    if (error.response.status == 422) {
-                        //MAKA LIST ERROR AKAN DIASSIGN KE STATE ERRORS
-                        commit("SET_ERRORS", error.response.data.errors, {
-                            root: true
-                        });
-                    }
-                    reject(error.response);
-                });
-        });
-    },
-    //UNTUK MENGHITUNG PAYROLL PROCESS
-    calculate({ dispatch, commit, state }) {
-        return new Promise((resolve, reject) => {
-            //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
-            //DARI STATE FORM
-            $axios
-                .post(`/payroll-calculation`, state.form)
-                .then(response => {
-                    //APABILA BERHASIL KITA MELAKUKAN REQUEST LAGI
-                    //UNTUK MENGAMBIL DATA TERBARU
-                    dispatch("load", state.tableParams).then(() => {
-                        resolve(response.data);
-                    });
                 })
                 .catch(error => {
                     //APABILA TERJADI ERROR VALIDASI
@@ -274,14 +199,14 @@ const actions = {
         });
     },
     //MENGHAPUS DATA
-    destroy({ dispatch, state }, payload) {
+    destroy({ }, payload) {
         return new Promise((resolve, reject) => {
             //MENGIRIM PERMINTAAN KE SERVER UNTUK MENGHAPUS DATA
             $axios
                 .delete(`/mst-users/${payload}`)
-                .then(response => {
+                .then((response) => {
                     //APABILA BERHASIL, FETCH DATA TERBARU DARI SERVER
-                    dispatch("load", state.tableParams).then(() => resolve());
+                    resolve(response);
                 });
         });
     }

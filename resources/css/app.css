@@ -6,3 +6,11 @@ small{
   content: " \002A";
   color: #ff5050;
 }
+
+.boot-style .vs__selected-options{
+  margin: 2px;
+}
+
+.boot-style .vs__selected{
+  color: #6e707e;
+}

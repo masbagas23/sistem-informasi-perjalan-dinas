@@ -32,7 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'job_position_id',
         'bank_number',
         'signature_url',
-        'ava_url',
+        'avatar_url',
     ];
 
     /**
@@ -67,5 +67,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function jobPosition()
     {
         return $this->belongsTo(JobPosition::class, 'job_position_id', 'id')->withDefault();
+    }
+
+    public static function savePhoto($file, $dir)
+    {
+        // Get filename with the extension
+        $filenameWithExt = $file->getClientOriginalName();
+        //Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just ext
+        $extension = $file->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+        // Upload Image
+        $path = $file->storeAs($dir, $fileNameToStore, 'public');
+        return '/storage/'.$path;
     }
 }

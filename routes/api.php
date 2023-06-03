@@ -25,6 +25,14 @@ Route::get('email/verify/{id}', [Api\VerifyController::class, 'verify'])->name('
 Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\Api'], function () {
     Route::get('user', [Api\AuthController::class, 'user']);
 
+    // User Manajemen
     Route::apiResource('/roles', 'RoleController');
+    Route::get('/role-list', 'RoleController@loadList');
+
     Route::apiResource('/mst-users', 'UserController');
+    Route::get('/mst-user-list', 'UserController@loadList');
+
+    // Data Master
+    Route::apiResource('/job-positions', 'JobPositionController');
+    Route::get('/job-position-list', 'JobPositionController@loadList');
 });

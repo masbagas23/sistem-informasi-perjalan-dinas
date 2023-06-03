@@ -168,9 +168,9 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/projects">
+          <router-link class="nav-link" to="/admin/job-positions">
             <i class="fas fa-fw fa-table"></i>
-            <span>Projek</span></router-link
+            <span>Jabatan</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->

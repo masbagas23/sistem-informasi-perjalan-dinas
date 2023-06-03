@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('nip')->nullable();
-            $table->enum('gender',[1,2])->nullable()->comment('[1=>laki, 2=>perempuan]');
+            $table->unsignedTinyInteger('gender')->nullable()->comment('[1=>laki, 2=>perempuan]');
             $table->string('bank_number')->nullable();
             $table->text('avatar_url')->nullable();
             $table->text('signature_url')->nullable();

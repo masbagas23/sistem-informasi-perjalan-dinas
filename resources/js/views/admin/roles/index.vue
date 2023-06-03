@@ -186,7 +186,11 @@ export default {
             this.reloadTable(this.tableParams, true);
         }
     },
+    mounted(){
+        this.CLEAR_ERRORS()
+    },
     methods: {
+        ...mapMutations(['CLEAR_ERRORS']),
         ...mapActions("mstRole", [
             "load",
             "show",
@@ -269,9 +273,12 @@ export default {
                 .then(() => {
                     this.destroy(id).then(() => {
                         this.hideModal(true);
+                        notify.success(this.fileTitle, "hapus");
                     });
                 })
-                .catch(() => {});
+                .catch(() => {
+                        notify.error(this.fileTitle, "hapus");
+                });
         }
     }
 };
