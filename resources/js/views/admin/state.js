@@ -3,8 +3,7 @@ import mstRole from "./roles/state"
 import mstJobPosition from "./job-positions/state"
 import mstJobCategory from "./job-categories/state"
 import mstCostCategory from "./cost-categories/state"
-
-
+import mstVehicle from "./vehicles/state"
 
 export default {
     modules:{
@@ -13,5 +12,6 @@ export default {
         mstJobPosition,
         mstJobCategory,
         mstCostCategory,
+        mstVehicle,
     }
 };

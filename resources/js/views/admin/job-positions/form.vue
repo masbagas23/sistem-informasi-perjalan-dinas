@@ -17,7 +17,7 @@
                         <div class="form-group">
                             <label class="required">Hak Akses</label>
                             <v-select class="boot-style" v-model="form.role_id" label="name" :reduce="item => item.id" :options="roles.data"></v-select>
-                            <p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+                            <p class="text-danger" v-if="errors.role_id">{{ errors.role_id[0] }}</p>
                         </div>
                     </b-col>
                     <b-col cols="12">

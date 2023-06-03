@@ -49,4 +49,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Kategori Biaya
     Route::apiResource('/cost-categories', 'CostCategoryController');
     Route::get('/cost-category-list', 'CostCategoryController@loadList');
+    // Kendaraan
+    Route::apiResource('/vehicles', 'VehicleController');
+    Route::get('/vehicle-list', 'VehicleController@loadList');
 });
