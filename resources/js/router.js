@@ -3,7 +3,6 @@ import Vue from "vue";
 import Router from "vue-router";
 import store from "@app/utils/vuex";
 import routers from "@app/views/admin/router"
-import AdminLayout from "@app/views/admin/layout/index";
 
 
 Vue.use(Router);
@@ -50,12 +49,10 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (store.getters.user) {
-            next();
-            return;
-        }
-        next("/login");
+    if(to.name === 'login' && store.getters.user)next('/admin');
+    else if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (store.getters.user) next();
+        else next("/login");
     } else {
         next();
     }

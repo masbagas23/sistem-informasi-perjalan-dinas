@@ -26,10 +26,10 @@
                     mb-1
                   "
                 >
-                  Earnings (Monthly)
+                  Sisa Budget (Mei)
                 </div>
                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                  $40,000
+                  RP 1.560.300
                 </div>
               </div>
               <div class="col-auto">
@@ -54,10 +54,10 @@
                     mb-1
                   "
                 >
-                  Earnings (Annual)
+                  Pengeluaran (Bulanan)
                 </div>
                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                  $215,000
+                  Rp 3.453.250
                 </div>
               </div>
               <div class="col-auto">

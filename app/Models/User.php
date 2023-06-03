@@ -19,10 +19,20 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
+        'id',
         'password',
+        'email',
+        'nip',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'gender',
+        'address',
+        'phone_number',
+        'job_position_id',
+        'bank_number',
+        'signature_url',
+        'ava_url',
     ];
 
     /**
@@ -32,7 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'bank_number',
     ];
 
     /**
@@ -52,5 +62,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getMustVerifyEmailAttribute()
     {
         return config('auth.must_verify_email');
+    }
+
+    public function jobPosition()
+    {
+        return $this->belongsTo(JobPosition::class, 'job_position_id', 'id')->withDefault();
     }
 }

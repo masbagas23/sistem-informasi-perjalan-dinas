@@ -1,7 +1,9 @@
-import mstProject from './projects/state'
+import mstUser from './users/state'
+import mstRole from "./roles/state"
 
 export default {
     modules:{
-        mstProject,
+        mstUser,
+        mstRole,
     }
 };

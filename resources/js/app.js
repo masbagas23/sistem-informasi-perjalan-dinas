@@ -7,16 +7,19 @@
 require("@app/utils/bootstrap");
 
 import router from "./router";
-// import "@app/utils/axios";
+import "@app/utils/axios";
 import store from "@app/utils/vuex";
 import Toasted from "vue-toasted";
 import _ from 'lodash';
 import bootstrapVue from "@app/utils/bootstrap-vue"
 import Chart from "chart.js";
 import Vue from "vue";
+import vSelect from "@app/utils/vue-select";
+import VueSimpleAlert from "vue-simple-alert"
 
 window.Vue = require("vue").default;
 Vue.use(Toasted,{iconPack : 'material'});
+Vue.use(VueSimpleAlert)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -40,5 +43,6 @@ const app = new Vue({
     router,
     store,
     bootstrapVue,
+    vSelect,
     el: "#app"
 });

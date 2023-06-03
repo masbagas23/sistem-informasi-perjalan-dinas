@@ -1,4 +1,4 @@
-export function authError(error) {
+function authError(error) {
     let errorMessages = [];
     let detailedMessages = [];
 
@@ -21,4 +21,22 @@ export function authError(error) {
             duration: 5000
         });
     });
+}
+
+function success(module, type){
+    Vue.toasted.success(`${module} Berhasil di${type}`, {
+        position: "top-right",
+        duration: 5000,
+    });
+}
+
+function error(module, type){
+    Vue.toasted.error(`${module} Gagal di${type}`, {
+        position: "top-right",
+        duration: 5000,
+    });
+}
+
+export {
+    authError,success, error
 }

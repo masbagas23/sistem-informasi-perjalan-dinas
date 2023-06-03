@@ -42,12 +42,12 @@
         <!-- Nav Item - Tables -->
         <li class="nav-item">
           <router-link class="nav-link" to="/admin/tables">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Surat Perintah Kerja</span></router-link
+            <i class="fa fa-plane rotate-n-15"></i>
+            <span>Perjalan Dinas</span></router-link
           >
         </li>
         <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a
             class="nav-link collapsed"
             href="#"
@@ -66,7 +66,6 @@
             data-parent="#accordionSidebar"
           >
             <div class="bg-primary bg-gradient py-2 collapse-inner rounded">
-              <!-- <h6 class="collapse-header">Custom Components:</h6> -->
               <router-link
                 class="bg-primary text-light collapse-item"
                 to="/admin/components/buttons"
@@ -84,7 +83,7 @@
               >
             </div>
           </div>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a
             class="nav-link collapsed"
@@ -108,12 +107,12 @@
               <router-link
                 class="bg-primary text-light collapse-item"
                 to="/admin/components/cards"
-                >Penyerahan Biaya</router-link
+                >Uang Muka</router-link
               >
               <router-link
                 class="bg-primary text-light collapse-item"
-                to="/admin/components/buttons"
-                >Reimburse</router-link
+                to="/admin/components/cards"
+                >Pengeluaran</router-link
               >
             </div>
           </div>
@@ -148,14 +147,14 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/users">
             <i class="fa fa-users"></i>
             <span>Pengguna</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/roles">
             <i class="fa fa-info-circle"></i>
             <span>Hak Akses</span></router-link
           >

@@ -1,5 +1,7 @@
-import project from "./projects/router"
 import layout from "@app/views/admin/layout/index.vue"
+import mstUser from "./users/router"
+import mstRole from "./roles/router"
+
 const dashboard = {
     path: '',
     component: { render (c) { return c('router-view') }},
@@ -8,7 +10,7 @@ const dashboard = {
         {
             path: '',
             name: 'dashboard.index',
-            component: () => import(/* webpackChunkName: "projects" */ './dashboard.vue'),
+            component: () => import(/* webpackChunkName: "admins" */ './dashboard.vue'),
             meta: { title: 'Dashborad', disableBreadcrumb:false }
         },
     ]
@@ -18,6 +20,7 @@ export default {
     component: layout,
     children: [
         dashboard,
-        ...project
+        ...mstUser,
+        ...mstRole,
     ]
 }
