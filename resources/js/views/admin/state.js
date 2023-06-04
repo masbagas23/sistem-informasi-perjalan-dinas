@@ -4,6 +4,7 @@ import mstJobPosition from "./job-positions/state"
 import mstJobCategory from "./job-categories/state"
 import mstCostCategory from "./cost-categories/state"
 import mstVehicle from "./vehicles/state"
+import mstCustomer from "./customers/state"
 
 export default {
     modules:{
@@ -13,5 +14,6 @@ export default {
         mstJobCategory,
         mstCostCategory,
         mstVehicle,
+        mstCustomer,
     }
 };

@@ -39,51 +39,20 @@
         <!-- Heading -->
         <div class="sidebar-heading">Transaksi</div>
 
-        <!-- Nav Item - Tables -->
+        <!-- Perjalan Dinas -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/business-trips">
             <i class="fa fa-plane rotate-n-15"></i>
             <span>Perjalan Dinas</span></router-link
           >
         </li>
-        <!-- Nav Item - Pages Collapse Menu -->
-        <!-- <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#transaction"
-            aria-expanded="true"
-            aria-controls="transaction"
+        <!-- Peminjaman Kendaraan -->
+        <li class="nav-item">
+          <router-link class="nav-link" to="/admin/vehicle-submissions">
+            <i class="fa fa-car rotate-n-15"></i>
+            <span>Peminjaman Kendaraan</span></router-link
           >
-            <i class="fa fa-plane rotate-n-15"></i>
-            <span>Perjalan Dinas</span>
-          </a>
-          <div
-            id="transaction"
-            class="collapse"
-            aria-labelledby="headingTwo"
-            data-parent="#accordionSidebar"
-          >
-            <div class="bg-primary bg-gradient py-2 collapse-inner rounded">
-              <router-link
-                class="bg-primary text-light collapse-item"
-                to="/admin/components/buttons"
-                >Perencaan</router-link
-              >
-              <router-link
-                class="bg-primary text-light collapse-item"
-                to="/admin/components/cards"
-                >Realisasi</router-link
-              >
-              <router-link
-                class="bg-primary text-light collapse-item"
-                to="/admin/components/cards"
-                >Evaluasi</router-link
-              >
-            </div>
-          </div>
-        </li> -->
+        </li>
         <li class="nav-item">
           <a
             class="nav-link collapsed"

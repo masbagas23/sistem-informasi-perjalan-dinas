@@ -52,4 +52,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Kendaraan
     Route::apiResource('/vehicles', 'VehicleController');
     Route::get('/vehicle-list', 'VehicleController@loadList');
+    // Customer
+    Route::apiResource('/customers', 'CustomerController');
+    Route::get('/customer-list', 'CustomerController@loadList');
 });
