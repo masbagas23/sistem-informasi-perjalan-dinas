@@ -43,6 +43,42 @@ class UserController extends Controller
         }
     }
 
+    public function loadList(Request $request)
+    {
+        try {
+            $data = Model::with(['jobPosition:id,name']);
+            if (request()->keyword != '') {
+                $data = $data->where(function($query){
+                    $query->where('name', 'LIKE', '%' . request()->keyword . '%');
+                });
+            }
+            if(request()->filter_job_position){
+                switch (request()->filter_job_position) {
+                    case 'participant':
+                        $data = $data->whereHas('jobPosition', function($q){
+                            $q->where('id', '>', 2);
+                        });
+                        break;
+                    default:
+                        $data = $data->whereHas('jobPosition', function($q){
+                            $q->where('id', request()->filter_job_position);
+                        });
+                        break;
+                }
+            }
+            $data = $data->get();
+            return response()->json([
+                "status"=>"success",
+                "data"=>$data
+            ], Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -56,7 +92,7 @@ class UserController extends Controller
             "job_position_id"=>"required",
             "first_name"=>"required",
             "email"=>"required",
-            "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
+            // "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
         ]);
 
         try {

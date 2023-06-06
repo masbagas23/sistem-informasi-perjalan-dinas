@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DataCollection;
 use Illuminate\Http\Request;
 use App\Models\Vehicle as Model;
 use Illuminate\Http\Response;
@@ -30,7 +31,7 @@ class VehicleController extends Controller
                 });
             }
             $data = $data->paginate(request()->per_page);
-            return response()->json($data, Response::HTTP_OK);
+            return new DataCollection($data);
         } catch (\Throwable $th) {
             return response()->json([
                 'status'=>'error',

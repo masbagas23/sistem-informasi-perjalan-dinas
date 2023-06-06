@@ -112,7 +112,7 @@
         <hr class="sidebar-divider" />
 
         <!-- Heading -->
-        <div class="sidebar-heading">Kelola Pengguna</div>
+        <div class="sidebar-heading">Manajemen Pengguna</div>
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">

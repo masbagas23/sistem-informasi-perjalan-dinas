@@ -96,11 +96,16 @@
                     ></b-form-select>
                 </div>
                 <div>
+                    <p v-if="collection.data.length > 0">
+                        Menampilkan data ke {{collection.meta.from}} sampai {{collection.meta.to}} dari total {{collection.meta.total}} data
+                    </p>
+                </div>
+                <div>
                     <b-pagination
                         v-model="tableParams.page"
                         pills
-                        :total-rows="collection.total"
-                        :per-page="collection.per_page"
+                        :total-rows="collection.meta.total"
+                        :per-page="collection.meta.per_page"
                         v-if="collection.data && collection.data.length > 0"
                     ></b-pagination>
                 </div>

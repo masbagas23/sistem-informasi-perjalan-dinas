@@ -5,6 +5,8 @@ import mstJobCategory from "./job-categories/state"
 import mstCostCategory from "./cost-categories/state"
 import mstVehicle from "./vehicles/state"
 import mstCustomer from "./customers/state"
+import businessTripApplication from "./business-trip-applications/state"
+
 
 export default {
     modules:{
@@ -15,5 +17,6 @@ export default {
         mstCostCategory,
         mstVehicle,
         mstCustomer,
+        businessTripApplication,
     }
 };

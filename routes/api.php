@@ -26,6 +26,14 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::get('user', [Api\AuthController::class, 'user']);
 
     /**
+     * Transaksi
+     */
+
+    // Perjalan Dinas
+    Route::apiResource('/business-trips', 'BusinessTripApplicationController');
+    Route::get('/business-trip-list', 'BusinessTripApplicationController@loadList');
+
+    /**
      * User Manajemen
      */
     

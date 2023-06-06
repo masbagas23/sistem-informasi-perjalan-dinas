@@ -6,6 +6,7 @@ import mstJobCategory from "./job-categories/router"
 import mstCostCategory from "./cost-categories/router"
 import mstVehicle from "./vehicles/router"
 import mstCustomer from "./customers/router"
+import businessTripApplication from "./business-trip-applications/router"
 
 const dashboard = {
     path: '',
@@ -32,5 +33,6 @@ export default {
         ...mstCostCategory,
         ...mstVehicle,
         ...mstCustomer,
+        ...businessTripApplication,
     ]
 }
