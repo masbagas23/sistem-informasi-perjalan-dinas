@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DB;
+use PDF;
 
 class BusinessTripApplicationController extends Controller
 {
@@ -120,7 +121,7 @@ class BusinessTripApplicationController extends Controller
                 foreach ($users as $user) {
                     BusinessTripApplicationUser::create([
                         'application_id' => $master->id,
-                        'user_id' => $user['id'],
+                        'user_id' => $user['user_id'],
                         'is_leader' => $user['is_leader'],
                     ]);
                 }
@@ -158,7 +159,7 @@ class BusinessTripApplicationController extends Controller
     {
         try {
             $data = Model::find($id);
-            $data->load(['users.user', 'targets']);
+            $data->load(['users.user.jobPosition', 'targets', 'customer:id,name', 'jobCategory:id,name', 'requester:id,first_name,last_name']);
             $data = new BusinessTripApplicationEditResource($data);
             return response()->json([
                 "status" => "success",
@@ -181,16 +182,77 @@ class BusinessTripApplicationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            "name" => "required"
-        ]);
+        Validator::extend('business_trip_validator', function ($attr, $value, $parameters) {
+            switch ($parameters[0]) {
+                case 'users':
+                    if (count($value) > 0) return true;
+                    return false;
+                    break;
+                case 'targets':
+                    if (count($value) > 0) return true;
+                    return false;
+                    break;
+                default:
+                    return true;
+                    break;
+            }
+        }, "This field is required");
 
+        $request->validate([
+            "customer_id" => "required",
+            "job_category_id" => "required",
+            "description" => "required",
+            "start_date" => "required",
+            "end_date" => "required",
+            "users" => "required|business_trip_validator:users",
+            "targets" => "required|business_trip_validator:targets"
+        ]);
+        DB::beginTransaction();
         try {
-            Model::find($id)->update($request->all());
+            $users = $request->users;
+            $targets = $request->targets;
+            $master = Model::find($id);
+            $master->update([
+                'customer_id' => $request->customer_id,
+                'job_category_id' => $request->job_category_id,
+                'description' => $request->description,
+                'start_date' => Carbon::parse($request->start_date)->format('Y-m-d'),
+                'end_date' => Carbon::parse($request->end_date)->format('Y-m-d'),
+                'total_day' => $request->total_day,
+                'status' => Model::STATUS_WAITING
+            ]);
+
+            if (count($users) > 0) {
+                BusinessTripApplicationUser::where('application_id', $master->id)->delete();
+                foreach ($users as $user) {
+                    BusinessTripApplicationUser::withTrashed()->updateOrCreate([
+                        'application_id' => $master->id,
+                        'user_id' => $user['user_id'],
+                        'is_leader' => $user['is_leader'],
+                    ],[
+                        'application_id' => $master->id,
+                        'user_id' => $user['user_id'],
+                        'is_leader' => $user['is_leader'],
+                    ])->restore();
+                }
+            }
+            if (count($targets) > 0) {
+                BusinessTripApplicationTarget::where('application_id', $master->id)->forceDelete();
+                foreach ($targets as $target) {
+                    BusinessTripApplicationTarget::create([
+                        'application_id' => $master->id,
+                        'name' => $target['name'],
+                        'description' => $target['description'],
+                        'status' => BusinessTripApplicationTarget::STATUS_WAITING,
+                    ]);
+                }
+            }
+            DB::commit();
             return response()->json([
                 "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
+            DB::rollback();
             return response()->json([
                 'status' => 'error',
                 'message' => $th->getMessage(),
@@ -210,5 +272,61 @@ class BusinessTripApplicationController extends Controller
         return response()->json([
             "status" => "success"
         ], Response::HTTP_OK);
+    }
+
+    public function approval(Request $request, $id)
+    {
+        $request->validate([
+            "note"=> "required_if:status,4",
+        ]);
+
+        try {
+            $code_letter = Model::generateCodeLetter(Carbon::now());
+            Model::find($id)->update([
+                "code_letter" => $code_letter,
+                "note" => $request->note,
+                "status" => $request->status == Model::STATUS_APPROVE ? Model::STATUS_APPROVE : Model::STATUS_REJECT
+            ]);
+            return response()->json([
+                "status"=>"success"
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function cancel(Request $request, $id)
+    {
+        $request->validate([
+            "note"=>"required",
+        ]);
+
+        try {
+            Model::find($id)->update([
+                "note" => $request->note,
+                "status" => Model::STATUS_CANCEL
+            ]);
+            return response()->json([
+                "status"=>"success"
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'=>'error',
+                'message'=>$th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function letter($id)
+    {
+        $business_trip = Model::find($id);
+        $business_trip->load(['users.user.jobPosition', 'targets', 'customer', 'jobCategory:id,name', 'approver.jobPosition', 'requester:id,first_name,last_name']);
+        $pdf = PDF::loadView('pdf.sppd', compact('business_trip'))
+        ->setPaper('a4', 'portrait');
+
+        return $pdf->stream();
     }
 }

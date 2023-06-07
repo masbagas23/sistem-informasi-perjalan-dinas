@@ -15,6 +15,10 @@ function defaultForm() {
         users: [{ user_id: "", name: "", is_leader: true }],
         targets: [{ id: "", name: "", description: "", duration: "", start_date: "", end_date: "", status: "", reason: "" }],
         updated_at: "",
+        customer:"",
+        job_category:"",
+        requester:"",
+        code_letter:"",
     };
 }
 
@@ -88,6 +92,11 @@ const mutations = {
             users: payload.users,
             targets: payload.targets,
             updated_at: payload.updated_at,
+            customer: payload.customer,
+            job_category: payload.job_category,
+            requester: payload.requester,
+            code_letter: payload.code_letter,
+            code: payload.code,
         };
     },
     //ME-RESET STATE FORM MENJADI KOSONG
@@ -173,6 +182,58 @@ const actions = {
             //MELALUI STATE FORM
             $axios
                 .put(`/business-trips/${payload}`, state.form)
+                .then(response => {
+                    //FORM DIBERSIHKAN
+                    // commit("CLEAR_FORM");
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    //APABILA TERJADI ERROR VALIDASI
+                    //DIMANA LARAVEL MENGGUNAKAN CODE 422
+                    if (error.response.status == 422) {
+                        //MAKA LIST ERROR AKAN DIASSIGN KE STATE ERRORS
+                        commit("SET_ERRORS", error.response.data.errors, {
+                            root: true
+                        });
+                    }
+                    reject(error.response);
+                });
+        });
+    },
+    //UNTUK CANCEL DATA BERDASARKAN ID
+    cancel({ state, commit }, payload) {
+        return new Promise((resolve, reject) => {
+            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN ID DI URL
+            //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
+            //MELALUI STATE FORM
+            $axios
+                .post(`/business-trip-cancel/${payload}`, state.form)
+                .then(response => {
+                    //FORM DIBERSIHKAN
+                    // commit("CLEAR_FORM");
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    //APABILA TERJADI ERROR VALIDASI
+                    //DIMANA LARAVEL MENGGUNAKAN CODE 422
+                    if (error.response.status == 422) {
+                        //MAKA LIST ERROR AKAN DIASSIGN KE STATE ERRORS
+                        commit("SET_ERRORS", error.response.data.errors, {
+                            root: true
+                        });
+                    }
+                    reject(error.response);
+                });
+        });
+    },
+    //UNTUK CANCEL DATA BERDASARKAN ID
+    approve({ state, commit }, payload) {
+        return new Promise((resolve, reject) => {
+            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN ID DI URL
+            //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
+            //MELALUI STATE FORM
+            $axios
+                .post(`/business-trip-approval/${payload}`, state.form)
                 .then(response => {
                     //FORM DIBERSIHKAN
                     // commit("CLEAR_FORM");

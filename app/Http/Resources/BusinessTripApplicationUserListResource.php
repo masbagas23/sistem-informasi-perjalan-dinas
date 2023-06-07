@@ -18,7 +18,9 @@ class BusinessTripApplicationUserListResource extends JsonResource
             // 'id'=>$this->id,
             'application_id' => $this->application_id,
             'user_id' => $this->user_id,
-            'name' => $this->user->name,
+            'name' => $this->user->first_name.' '.$this->user->last_name,
+            'nip' => $this->user->nip,
+            'job_position' => $this->user->jobPosition->name,
             'is_leader' => $this->is_leader,
             'updated_at' => $this->updated_at
         ];

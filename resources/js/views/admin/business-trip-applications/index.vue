@@ -56,10 +56,11 @@
 
                 <template v-slot:cell(code)="row">
                     <span>{{ row.value }}</span><br>
-                    <b-badge v-if="row.item.status == 1" pill variant="warning">Menunggu</b-badge>
-                    <b-badge v-if="row.item.status == 2" pill variant="success">Disetujui</b-badge>
-                    <b-badge v-if="row.item.status == 3" pill variant="secondary">Dibatalkan</b-badge>
-                    <b-badge v-if="row.item.status == 4" pill variant="danger">Ditolak</b-badge>
+                    <b-badge v-if="!row.value" pill variant="warning">Menunggu</b-badge>
+                    <b-badge v-if="row.value == 1" pill variant="primary">Dalam Proses</b-badge>
+                    <b-badge v-if="row.value == 2" pill variant="success">Selesai</b-badge>
+                    <b-badge v-if="row.value == 3" pill variant="danger">Gagal</b-badge>
+                    <b-badge v-if="row.value == 4" pill variant="info">Jadwal Ulang</b-badge>
                 </template>
 
                 <template v-slot:cell(requester)="row">
@@ -74,17 +75,16 @@
                     {{ formatDate(row.item.start_date) }} - {{ formatDate(row.item.end_date) }}
                 </template>
 
-                <template v-slot:cell(result)="row">
-                    <b-badge v-if="!row.value" pill variant="warning">Menunggu</b-badge>
-                    <b-badge v-if="row.value == 1" pill variant="primary">Dalam Proses</b-badge>
-                    <b-badge v-if="row.value == 2" pill variant="success">Selesai</b-badge>
-                    <b-badge v-if="row.value == 3" pill variant="danger">Gagal</b-badge>
-                    <b-badge v-if="row.value == 4" pill variant="info">Jadwal Ulang</b-badge>
+                <template v-slot:cell(status)="row">
+                    <b-badge v-if="row.item.status == 1" pill variant="warning">Menunggu</b-badge>
+                    <b-badge v-if="row.item.status == 2" pill variant="success">Disetujui</b-badge>
+                    <b-badge v-if="row.item.status == 3" pill variant="secondary">Dibatalkan</b-badge>
+                    <b-badge v-if="row.item.status == 4" pill variant="danger">Ditolak</b-badge>
                 </template>
 
                 <template v-slot:cell(action)="row">
-                    <b-dropdown variant="warning" size="sm" right>
-                        <b-dropdown-item @click="view(row.item.id)">
+                    <b-dropdown variant="secondary" size="sm" right>
+                        <b-dropdown-item @click="detail(row.item.id)">
                             <b-badge
                                 title="Tampilkan"
                                 pill
@@ -93,7 +93,7 @@
                             ></b-badge>
                             <span> Tampilkan</span>
                         </b-dropdown-item>
-                        <b-dropdown-item @click="view(row.item.id)">
+                        <b-dropdown-item @click="viewApproval(row.item.id)">
                             <b-badge
                                 title="Persetujuan"
                                 pill
@@ -111,7 +111,7 @@
                             ></b-badge>
                             <span> Edit</span>
                         </b-dropdown-item>
-                        <b-dropdown-item @click="view(row.item.id)">
+                        <b-dropdown-item @click="viewCancel(row.item.id)">
                             <b-badge
                                 title="Batalkan"
                                 pill
@@ -182,17 +182,94 @@
                 </button>
             </template>
         </b-modal>
+        <!-- End -->
+
+        <!-- Modal Cancel -->
+        <b-modal
+            id="modal-form-business-trip-cancel"
+            size="md"
+            :title="'Batalkan '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <cancelComponent/>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i>Batal</b-button
+                >
+                <button class="btn btn-primary" @click.prevent="canceling">
+                    <b-spinner
+                        v-if="loadingProcess"
+                        small
+                        class="mr-2"
+                    ></b-spinner>
+                    <i v-else class="far fa-save mr-2"></i> Simpan
+                </button>
+            </template>
+        </b-modal>
+        <!-- End -->
+
+        <!-- Modal Cancel -->
+        <b-modal
+            id="modal-form-business-trip-detail"
+            size="lg"
+            :title="'Detail '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <detailComponent :modelId="modelId"/>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
+                >
+            </template>
+        </b-modal>
+        <!-- End -->
+
+        <!-- Modal Approval -->
+        <b-modal
+            id="modal-form-business-trip-approval"
+            size="lg"
+            :title="'Persetujuan '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <approvalComponet :modelId="modelId"/>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
+                >
+                <button class="btn btn-primary" @click.prevent="approval">
+                    <b-spinner
+                        v-if="loadingProcess"
+                        small
+                        class="mr-2"
+                    ></b-spinner>
+                    <i v-else class="far fa-save mr-2"></i> Simpan
+                </button>
+            </template>
+        </b-modal>
+        <!-- End -->
     </div>
 </template>
 <script>
 import { mapMutations, mapActions, mapState } from "vuex";
-import formComponent from "./form.vue";
 import * as notify from "@app/utils/notify";
 import moment from "moment";
+import formComponent from "./form.vue";
+import cancelComponent from "./cancel.vue"
+import detailComponent from "./detail.vue"
+import approvalComponet from "./approval.vue"
 
 export default {
     components: {
-        formComponent
+        formComponent,
+        cancelComponent,
+        detailComponent,
+        approvalComponet,
     },
     created() {
         this.reloadTable(this.tableParams);
@@ -210,7 +287,7 @@ export default {
                 { key: "date", label: "Tanggal", sortable: false },
                 { key: "job_category", label: "Kategori Pekerjaan", sortable: false },
                 { key: "requester", label: "Pemohon", sortable: false },
-                { key: "result", label: "Status", sortable: false },
+                { key: "status", label: "Status", sortable: false },
                 {
                     key: "action",
                     label: "Aksi",
@@ -261,9 +338,23 @@ export default {
             "store",
             "update",
             "destroy",
+            "cancel",
+            "approve"
         ]),
         create() {
             this.$bvModal.show("modal-form-business-trip");
+        },
+        viewCancel(id){
+            this.modelId = id;
+            this.$bvModal.show("modal-form-business-trip-cancel");
+        },
+        detail(id){
+            this.modelId = id;
+            this.$bvModal.show("modal-form-business-trip-detail");
+        },
+        viewApproval(id){
+            this.modelId = id;
+            this.$bvModal.show("modal-form-business-trip-approval");
         },
         view(id) {
             this.modelId = id;
@@ -275,6 +366,9 @@ export default {
                 this.reloadTable(this.tableParams);
             }
             this.$bvModal.hide("modal-form-business-trip");
+            this.$bvModal.hide("modal-form-business-trip-cancel");
+            this.$bvModal.hide("modal-form-business-trip-detail");
+            this.$bvModal.hide("modal-form-business-trip-approval");
         },
         reloadTable(params, keyword = false, filter = false) {
             this.load({
@@ -325,6 +419,32 @@ export default {
                         this.loadingProcess = false;
                     });
             }
+        }, 500),
+        canceling: _.debounce(function() {
+            this.loadingProcess = true;
+            this.cancel(this.modelId)
+            .then(r => {
+                this.hideModal(true);
+                notify.success(this.fileTitle, "batalkan");
+                this.loadingProcess = false;
+            })
+            .catch(e => {
+                notify.error(this.fileTitle, "batalkan");
+                this.loadingProcess = false;
+            });
+        }, 500),
+        approval: _.debounce(function() {
+            this.loadingProcess = true;
+            this.approve(this.modelId)
+            .then(r => {
+                this.hideModal(true);
+                notify.success(this.fileTitle, "simpan");
+                this.loadingProcess = false;
+            })
+            .catch(e => {
+                notify.error(this.fileTitle, "simpan");
+                this.loadingProcess = false;
+            });
         }, 500),
         remove(id) {
             this.$confirm(

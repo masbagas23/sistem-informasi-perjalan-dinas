@@ -15,7 +15,8 @@ class CreateBusinessTripApplicationsTable extends Migration
     {
         Schema::create('business_trip_applications', function (Blueprint $table) {
             $table->id();
-            $table->string('code',16);
+            $table->string('code',9);
+            $table->string('code_letter',16)->nullable();
             $table->unsignedInteger('customer_id');
             $table->unsignedInteger('job_category_id');
             $table->date('start_date');

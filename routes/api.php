@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Perjalan Dinas
     Route::apiResource('/business-trips', 'BusinessTripApplicationController');
     Route::get('/business-trip-list', 'BusinessTripApplicationController@loadList');
+    Route::post('/business-trip-cancel/{id}', 'BusinessTripApplicationController@cancel');
+    Route::post('/business-trip-approval/{id}', 'BusinessTripApplicationController@approval');
 
     /**
      * User Manajemen
@@ -64,3 +66,6 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::apiResource('/customers', 'CustomerController');
     Route::get('/customer-list', 'CustomerController@loadList');
 });
+
+// PDF
+Route::get('/business-trip-letter/{id}', [Api\BusinessTripApplicationController::class, 'letter']);

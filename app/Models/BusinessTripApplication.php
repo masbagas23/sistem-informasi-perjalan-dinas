@@ -22,12 +22,14 @@ class BusinessTripApplication extends Model
 
     protected $fillable = [
         'code',
+        'code_letter',
         'customer_id',
         'job_category_id',
         'start_date',
         'end_date',
         'note',
         'requested_by',
+        'approved_by',
         'status',
         'result',
         'total_day',
@@ -44,6 +46,11 @@ class BusinessTripApplication extends Model
         return $this->belongsTo(User::class, 'requested_by', 'id')->withDefault();
     }
 
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by', 'id')->withDefault();
+    }
+
     public function jobCategory()
     {
         return $this->belongsTo(JobCategory::class, 'job_category_id', 'id')->withDefault();
@@ -51,12 +58,34 @@ class BusinessTripApplication extends Model
 
     public function users()
     {
-        return $this->hasMany(BusinessTripApplicationUser::class, 'application_id', 'id');
+        return $this->hasMany(BusinessTripApplicationUser::class, 'application_id', 'id')->orderBy('is_leader', 'DESC');
     }
 
     public function targets()
     {
         return $this->hasMany(BusinessTripApplicationTarget::class, 'application_id', 'id');
+    }
+
+    public static function generateCodeLetter($date)
+    {
+        $month      = substr($date, 5, 2);
+        $year       = substr($date, 0, 4);
+        $lastRow    = self::withTrashed()
+        ->whereMonth('created_at',$month)
+        ->whereYear('created_at',$year)
+        ->count() + 1;
+        return self::checkGenerateCodeLetter($lastRow, $year, $month);
+    }
+
+    public static function checkGenerateCodeLetter($row, $year, $month)
+    {
+
+        $code  = trim(str_pad($row, 3, 0, STR_PAD_LEFT)."/FS/SPD/". monthRomawi($month)."/". $year);
+        if (self::withTrashed()->where('code_letter', $code)->exists()) {
+            $row++;
+            return self::checkGenerateCode($row, $year, $month);
+        }
+        return $code;
     }
 
     public static function generateCode($date)
@@ -73,7 +102,7 @@ class BusinessTripApplication extends Model
     public static function checkGenerateCode($row, $year, $month)
     {
 
-        $code  = trim(str_pad($row, 3, 0, STR_PAD_LEFT)."/SPD/". monthRomawi($month)."/". $year);
+        $code  = trim(str_pad("SPD".substr($year,2,2).$month.$row, 3, 0, STR_PAD_LEFT));
         if (self::withTrashed()->where('code', $code)->exists()) {
             $row++;
             return self::checkGenerateCode($row, $year, $month);
