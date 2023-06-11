@@ -35,6 +35,12 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::post('/business-trip-cancel/{id}', 'BusinessTripApplicationController@cancel');
     Route::post('/business-trip-approval/{id}', 'BusinessTripApplicationController@approval');
 
+    // Peminjaman Mobil
+    Route::apiResource('/vehicle-loans', 'VehicleLoanController');
+    Route::get('/vehicle-loan-list', 'VehicleLoanController@loadList');
+    Route::post('/vehicle-loan-cancel/{id}', 'VehicleLoanController@cancel');
+    Route::post('/vehicle-loan-approval/{id}', 'VehicleLoanController@approval');
+
     /**
      * User Manajemen
      */

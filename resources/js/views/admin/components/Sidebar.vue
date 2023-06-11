@@ -48,7 +48,7 @@
         </li>
         <!-- Peminjaman Kendaraan -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/vehicle-submissions">
+          <router-link class="nav-link" to="/admin/vehicle-loans">
             <i class="fa fa-car rotate-n-15"></i>
             <span>Peminjaman Kendaraan</span></router-link
           >

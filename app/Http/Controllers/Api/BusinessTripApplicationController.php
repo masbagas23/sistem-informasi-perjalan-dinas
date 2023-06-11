@@ -49,11 +49,32 @@ class BusinessTripApplicationController extends Controller
     public function loadList(Request $request)
     {
         try {
-            $data = Model::query();
+            $data = Model::with(['customer:id,name']);
             if (request()->keyword != '') {
                 $data = $data->where(function ($query) {
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
                 });
+            }
+            if(request()->status){
+                switch (request()->status) {
+                    case 'approved':
+                        $data = $data->where('status', Model::STATUS_APPROVE);
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+            }
+
+            if(request()->result){
+                switch (request()->result) {
+                    case 'waiting':
+                        $data = $data->where('result', Model::RESULT_ON_PROGRESS);
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
             }
             $data = $data->get();
             return response()->json([
@@ -285,7 +306,9 @@ class BusinessTripApplicationController extends Controller
             Model::find($id)->update([
                 "code_letter" => $code_letter,
                 "note" => $request->note,
-                "status" => $request->status == Model::STATUS_APPROVE ? Model::STATUS_APPROVE : Model::STATUS_REJECT
+                "approved_by" => auth()->user()->id,
+                "status" => $request->status == Model::STATUS_APPROVE ? Model::STATUS_APPROVE : Model::STATUS_REJECT,
+                "result" => $request->status == Model::STATUS_APPROVE ? Model::RESULT_ON_PROGRESS : Model::RESULT_PENDING
             ]);
             return response()->json([
                 "status"=>"success"

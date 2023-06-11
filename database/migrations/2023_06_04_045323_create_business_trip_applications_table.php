@@ -16,7 +16,7 @@ class CreateBusinessTripApplicationsTable extends Migration
         Schema::create('business_trip_applications', function (Blueprint $table) {
             $table->id();
             $table->string('code',9);
-            $table->string('code_letter',16)->nullable();
+            $table->string('code_letter',20)->nullable();
             $table->unsignedInteger('customer_id');
             $table->unsignedInteger('job_category_id');
             $table->date('start_date');
@@ -25,6 +25,7 @@ class CreateBusinessTripApplicationsTable extends Migration
             $table->text('description');
             $table->text('note')->nullable();
             $table->unsignedInteger('requested_by');
+            $table->unsignedInteger('approved_by')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->comment('[1=>Waiting,2=>Approve,3=>Cancel,4=>Reject]');
             $table->unsignedTinyInteger('result')->nullable()->comment('[1=>on progress,2=>done,3=>pending,4=>reschedule]');
             $table->timestamps();

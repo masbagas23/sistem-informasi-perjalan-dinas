@@ -50,6 +50,9 @@ class VehicleController extends Controller
                     ->orWhere('number_plate_license', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
+            if(request()->category > 0){
+                $data = $data->where('category', request()->category);
+            }
             $data = $data->get();
             return response()->json([
                 "status"=>"success",

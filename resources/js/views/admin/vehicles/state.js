@@ -28,7 +28,11 @@ const state = () => ({
             { text: 50, value: 50 },
             { text: 100, value: 100 }
         ]
-    }
+    },
+    category:[
+        {id:1, name:"Motor"},
+        {id:2, name:"Mobil"},
+    ]
 });
 
 const mutations = {
@@ -100,7 +104,7 @@ const actions = {
     //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA DARI SERVER
     loadList({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            $axios.get(`/vehicle-list`).then(response => {
+            $axios.get(`/vehicle-list`,{params:payload}).then(response => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit("ASSIGN_LIST", response.data);
                 resolve(response.data);

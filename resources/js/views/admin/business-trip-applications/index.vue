@@ -210,7 +210,7 @@
         </b-modal>
         <!-- End -->
 
-        <!-- Modal Cancel -->
+        <!-- Modal Detail -->
         <b-modal
             id="modal-form-business-trip-detail"
             size="lg"
