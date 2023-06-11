@@ -7,6 +7,7 @@ import mstVehicle from "./vehicles/state"
 import mstCustomer from "./customers/state"
 import businessTripApplication from "./business-trip-applications/state"
 import vehicleLoan from "./vehicle-loans/state"
+import downPaymentRequest from "./down-payment-requests/state"
 
 
 export default {
@@ -20,5 +21,6 @@ export default {
         mstCustomer,
         businessTripApplication,
         vehicleLoan,
+        downPaymentRequest,
     }
 };

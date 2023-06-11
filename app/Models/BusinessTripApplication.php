@@ -102,7 +102,7 @@ class BusinessTripApplication extends Model
     public static function checkGenerateCode($row, $year, $month)
     {
 
-        $code  = trim(str_pad("SPD".substr($year,2,2).$month.$row, 3, 0, STR_PAD_LEFT));
+        $code  = "SPD".substr($year,2,2).$month.trim(str_pad($row, 3, 0, STR_PAD_LEFT));
         if (self::withTrashed()->where('code', $code)->exists()) {
             $row++;
             return self::checkGenerateCode($row, $year, $month);

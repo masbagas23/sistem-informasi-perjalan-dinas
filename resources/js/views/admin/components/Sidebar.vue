@@ -75,12 +75,12 @@
               <!-- <h6 class="collapse-header">Custom Components:</h6> -->
               <router-link
                 class="bg-primary text-light collapse-item"
-                to="/admin/components/cards"
+                to="/admin/down-payment-requests"
                 >Uang Muka</router-link
               >
               <router-link
                 class="bg-primary text-light collapse-item"
-                to="/admin/components/cards"
+                to="/admin/expenses"
                 >Pengeluaran</router-link
               >
             </div>

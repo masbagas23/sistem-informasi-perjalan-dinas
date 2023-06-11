@@ -8,6 +8,7 @@ import mstVehicle from "./vehicles/router"
 import mstCustomer from "./customers/router"
 import businessTripApplication from "./business-trip-applications/router"
 import vehicleLoan from "./vehicle-loans/router"
+import downPaymentRequest from "./down-payment-requests/router"
 
 const dashboard = {
     path: '',
@@ -36,5 +37,6 @@ export default {
         ...mstCustomer,
         ...businessTripApplication,
         ...vehicleLoan,
+        ...downPaymentRequest,
     ]
 }

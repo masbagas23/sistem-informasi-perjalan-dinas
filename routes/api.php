@@ -41,6 +41,12 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::post('/vehicle-loan-cancel/{id}', 'VehicleLoanController@cancel');
     Route::post('/vehicle-loan-approval/{id}', 'VehicleLoanController@approval');
 
+    // Uang Muka
+    Route::apiResource('/down-payment-requests', 'DownPaymentRequestController');
+    Route::get('/down-payment-request-list', 'DownPaymentRequestController@loadList');
+    Route::post('/down-payment-request-cancel/{id}', 'DownPaymentRequestController@cancel');
+    Route::post('/down-payment-request-approval/{id}', 'DownPaymentRequestController@approval');
+
     /**
      * User Manajemen
      */
