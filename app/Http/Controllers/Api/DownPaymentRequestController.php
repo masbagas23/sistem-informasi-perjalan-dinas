@@ -50,6 +50,21 @@ class DownPaymentRequestController extends Controller
                 });
             }
 
+            if(request()->filter_application){
+                $data = $data->where('application_id', request()->application_id);
+            }
+
+            if(request()->filter_status){
+                switch (request()->application_id) {
+                    case 'approved':
+                        $data = $data->where('status', Model::STATUS_APPROVE);
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+            }
+
             $data = $data->get();
             return response()->json([
                 "status" => "success",

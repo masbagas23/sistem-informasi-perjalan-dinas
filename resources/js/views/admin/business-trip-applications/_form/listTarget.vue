@@ -22,6 +22,17 @@
                 <input placeholder="Nama" type="text" class="form-control" v-model="row.item.name">
             </template>
 
+            <template v-slot:cell(action)>
+                <b-badge
+                    title="Hapus"
+                    class="btn"
+                    @click="removeTarget(index)"
+                    pill
+                    variant="danger"
+                    ><b-icon icon="trash"></b-icon
+                ></b-badge>
+            </template>
+
             <template v-slot:cell(description)="row">
                 <!-- <input placeholder="Deskripsi Tugas" type="text" class="form-control" v-model="row.item.name"> -->
                 <b-form-textarea v-model="row.item.description" placeholder="Deskripsi Tugas" rows="1" max-rows="2" ></b-form-textarea>
@@ -34,9 +45,6 @@ import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
     props: ["form"],
-    created() {
-        this.loadUser({ filter_job_position: "participant" });
-    },
     data() {
         return {
             fields: [
@@ -66,9 +74,11 @@ export default {
         ...mapState(["errors"]), //MENGAMBIL STATE ERRORS
     },
     methods: {
-        ...mapActions("mstUser", { loadUser: "loadList" }),
         addTarget(){
             this.form.targets.push({id:"", name:"", description:"", duration:"", start_date:"", end_date:"", status:"", reason:""})
+        },
+        removeTarget(index){
+            this.form.targets.splice(index,1)
         }
     }
 };

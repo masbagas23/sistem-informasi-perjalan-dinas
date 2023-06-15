@@ -47,6 +47,12 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::post('/down-payment-request-cancel/{id}', 'DownPaymentRequestController@cancel');
     Route::post('/down-payment-request-approval/{id}', 'DownPaymentRequestController@approval');
 
+    // Biaya Pengeluaran
+    Route::apiResource('/expenses', 'ExpenseController');
+    Route::get('/expense-list', 'ExpenseController@loadList');
+    Route::post('/expense-validation/{id}', 'ExpenseController@validation');
+    Route::post('/expense-reimburse/{id}', 'ExpenseController@reimburse');
+
     /**
      * User Manajemen
      */

@@ -18,6 +18,17 @@
                 {{ row.index + 1 }}
             </template>
 
+            <template v-slot:cell(action)>
+                <b-badge
+                    title="Hapus"
+                    class="btn"
+                    @click="removeUser(index)"
+                    pill
+                    variant="danger"
+                    ><b-icon icon="trash"></b-icon
+                ></b-badge>
+            </template>
+
             <template v-slot:cell(name)="row">
                 <v-select
                     class="boot-style"
@@ -80,6 +91,9 @@ export default {
         ...mapActions("mstUser", { loadUser: "loadList" }),
         addUser(){
             this.form.users.push({id:'',name:'',is_leader:false})
+        },
+        removeUser(index){
+            this.form.users.splice(index,1)
         }
     }
 };
