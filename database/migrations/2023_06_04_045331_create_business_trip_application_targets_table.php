@@ -22,6 +22,7 @@ class CreateBusinessTripApplicationTargetsTable extends Migration
             $table->dateTime('end_date')->nullable();
             $table->unsignedInteger('duration')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->comment('[1=>Waiting,2=>Pending,3=>Done]');
+            $table->text('file_path')->nullable();
             $table->text('reason')->nullable();
             $table->timestamps();
             $table->softDeletes();

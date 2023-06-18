@@ -10,6 +10,7 @@ import businessTripApplication from "./business-trip-applications/router"
 import vehicleLoan from "./vehicle-loans/router"
 import downPaymentRequest from "./down-payment-requests/router"
 import expense from "./expenses/router"
+import reportTrip from "./report-trips/router"
 
 const dashboard = {
     path: '',
@@ -40,5 +41,6 @@ export default {
         ...vehicleLoan,
         ...downPaymentRequest,
         ...expense,
+        ...reportTrip,
     ]
 }

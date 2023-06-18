@@ -16,10 +16,14 @@ import Chart from "chart.js";
 import Vue from "vue";
 import vSelect from "@app/utils/vue-select";
 import VueSimpleAlert from "vue-simple-alert"
+import Element from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/en'
+
 
 window.Vue = require("vue").default;
 Vue.use(Toasted,{iconPack : 'material'});
 Vue.use(VueSimpleAlert)
+Vue.use(Element, {locale})
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

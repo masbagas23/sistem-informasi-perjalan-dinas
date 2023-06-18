@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::get('/business-trip-list', 'BusinessTripApplicationController@loadList');
     Route::post('/business-trip-cancel/{id}', 'BusinessTripApplicationController@cancel');
     Route::post('/business-trip-approval/{id}', 'BusinessTripApplicationController@approval');
+    Route::post('/business-trip-report/{id}', 'BusinessTripApplicationController@report');
 
     // Peminjaman Mobil
     Route::apiResource('/vehicle-loans', 'VehicleLoanController');
@@ -52,6 +53,13 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     Route::get('/expense-list', 'ExpenseController@loadList');
     Route::post('/expense-validation/{id}', 'ExpenseController@validation');
     Route::post('/expense-reimburse/{id}', 'ExpenseController@reimburse');
+
+    /**
+     * Laporan
+     */
+
+    // Laporan Perjalan Dinas
+    Route::apiResource('/report-trips', 'BusinessTripTargetController');
 
     /**
      * User Manajemen

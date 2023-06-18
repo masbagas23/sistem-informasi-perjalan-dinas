@@ -102,6 +102,15 @@
                             ></b-badge>
                             <span> Persetujuan</span>
                         </b-dropdown-item>
+                        <b-dropdown-item @click="viewReport(row.item.id)">
+                            <b-badge
+                                title="Laporan"
+                                pill
+                                variant="info"
+                                ><b-icon icon="file-earmark-check"></b-icon
+                            ></b-badge>
+                            <span> Laporan</span>
+                        </b-dropdown-item>
                         <b-dropdown-item @click="view(row.item.id)">
                             <b-badge
                                 title="Edit"
@@ -253,6 +262,32 @@
             </template>
         </b-modal>
         <!-- End -->
+
+        <!-- Modal Reporting -->
+        <b-modal
+            id="modal-form-business-trip-reporting"
+            size="xl"
+            :title="'Laporan '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <reportingComponent :modelId="modelId"/>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
+                >
+                <button class="btn btn-primary" @click.prevent="reporting">
+                    <b-spinner
+                        v-if="loadingProcess"
+                        small
+                        class="mr-2"
+                    ></b-spinner>
+                    <i v-else class="far fa-save mr-2"></i> Simpan
+                </button>
+            </template>
+        </b-modal>
+        <!-- End -->
     </div>
 </template>
 <script>
@@ -263,6 +298,7 @@ import formComponent from "./form.vue";
 import cancelComponent from "./cancel.vue"
 import detailComponent from "./detail.vue"
 import approvalComponet from "./approval.vue"
+import reportingComponent from "./reporting.vue"
 
 export default {
     components: {
@@ -270,6 +306,7 @@ export default {
         cancelComponent,
         detailComponent,
         approvalComponet,
+        reportingComponent
     },
     created() {
         this.reloadTable(this.tableParams);
@@ -339,7 +376,8 @@ export default {
             "update",
             "destroy",
             "cancel",
-            "approve"
+            "approve",
+            "report"
         ]),
         create() {
             this.$bvModal.show("modal-form-business-trip");
@@ -356,6 +394,10 @@ export default {
             this.modelId = id;
             this.$bvModal.show("modal-form-business-trip-approval");
         },
+        viewReport(id){
+            this.modelId = id;
+            this.$bvModal.show("modal-form-business-trip-reporting");
+        },
         view(id) {
             this.modelId = id;
             this.create();
@@ -369,6 +411,7 @@ export default {
             this.$bvModal.hide("modal-form-business-trip-cancel");
             this.$bvModal.hide("modal-form-business-trip-detail");
             this.$bvModal.hide("modal-form-business-trip-approval");
+            this.$bvModal.hide("modal-form-business-trip-reporting");
         },
         reloadTable(params, keyword = false, filter = false) {
             this.load({
@@ -420,9 +463,9 @@ export default {
                     });
             }
         }, 500),
-        canceling: _.debounce(function() {
+        reporting: _.debounce(function() {
             this.loadingProcess = true;
-            this.cancel(this.modelId)
+            this.report(this.modelId)
             .then(r => {
                 this.hideModal(true);
                 notify.success(this.fileTitle, "batalkan");
@@ -430,6 +473,19 @@ export default {
             })
             .catch(e => {
                 notify.error(this.fileTitle, "batalkan");
+                this.loadingProcess = false;
+            });
+        }, 500),
+        canceling: _.debounce(function() {
+            this.loadingProcess = true;
+            this.cancel(this.modelId)
+            .then(r => {
+                this.hideModal(true);
+                notify.success(this.fileTitle, "simpan");
+                this.loadingProcess = false;
+            })
+            .catch(e => {
+                notify.error(this.fileTitle, "simpan");
                 this.loadingProcess = false;
             });
         }, 500),

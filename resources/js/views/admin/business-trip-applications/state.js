@@ -13,7 +13,7 @@ function defaultForm() {
         total_day: "",
         description: "",
         users: [{ user_id: "", name: "", is_leader: true }],
-        targets: [{ id: "", name: "", description: "", duration: "", start_date: "", end_date: "", status: "", reason: "" }],
+        targets: [{ id: "", name: "", description: "", duration: "", start_date: "", end_date: "", status: "", reason: "", file_path:"", file:"" }],
         updated_at: "",
         customer:"",
         job_category:"",
@@ -208,6 +208,31 @@ const actions = {
             //MELALUI STATE FORM
             $axios
                 .post(`/business-trip-cancel/${payload}`, state.form)
+                .then(response => {
+                    //FORM DIBERSIHKAN
+                    // commit("CLEAR_FORM");
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    //APABILA TERJADI ERROR VALIDASI
+                    //DIMANA LARAVEL MENGGUNAKAN CODE 422
+                    if (error.response.status == 422) {
+                        //MAKA LIST ERROR AKAN DIASSIGN KE STATE ERRORS
+                        commit("SET_ERRORS", error.response.data.errors, {
+                            root: true
+                        });
+                    }
+                    reject(error.response);
+                });
+        });
+    },
+    report({ state, commit }, payload) {
+        return new Promise((resolve, reject) => {
+            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN ID DI URL
+            //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
+            //MELALUI STATE FORM
+            $axios
+                .post(`/business-trip-report/${payload}`, state.form)
                 .then(response => {
                     //FORM DIBERSIHKAN
                     // commit("CLEAR_FORM");

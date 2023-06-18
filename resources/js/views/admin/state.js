@@ -9,7 +9,7 @@ import businessTripApplication from "./business-trip-applications/state"
 import vehicleLoan from "./vehicle-loans/state"
 import downPaymentRequest from "./down-payment-requests/state"
 import expense from "./expenses/state"
-
+import reportTrip from "./report-trips/state"
 
 export default {
     modules:{
@@ -23,6 +23,7 @@ export default {
         businessTripApplication,
         vehicleLoan,
         downPaymentRequest,
-        expense
+        expense,
+        reportTrip
     }
 };

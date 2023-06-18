@@ -55,7 +55,7 @@ class BusinessTripApplicationController extends Controller
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
-            if(request()->status){
+            if (request()->status) {
                 switch (request()->status) {
                     case 'approved':
                         $data = $data->where('status', Model::STATUS_APPROVE);
@@ -66,7 +66,7 @@ class BusinessTripApplicationController extends Controller
                 }
             }
 
-            if(request()->result){
+            if (request()->result) {
                 switch (request()->result) {
                     case 'waiting':
                         $data = $data->where('result', Model::RESULT_ON_PROGRESS);
@@ -250,7 +250,7 @@ class BusinessTripApplicationController extends Controller
                         'application_id' => $master->id,
                         'user_id' => $user['user_id'],
                         'is_leader' => $user['is_leader'],
-                    ],[
+                    ], [
                         'application_id' => $master->id,
                         'user_id' => $user['user_id'],
                         'is_leader' => $user['is_leader'],
@@ -298,7 +298,7 @@ class BusinessTripApplicationController extends Controller
     public function approval(Request $request, $id)
     {
         $request->validate([
-            "note"=> "required_if:status,4",
+            "note" => "required_if:status,4",
         ]);
 
         try {
@@ -311,12 +311,12 @@ class BusinessTripApplicationController extends Controller
                 "result" => $request->status == Model::STATUS_APPROVE ? Model::RESULT_ON_PROGRESS : Model::RESULT_PENDING
             ]);
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -324,7 +324,7 @@ class BusinessTripApplicationController extends Controller
     public function cancel(Request $request, $id)
     {
         $request->validate([
-            "note"=>"required",
+            "note" => "required",
         ]);
 
         try {
@@ -333,12 +333,48 @@ class BusinessTripApplicationController extends Controller
                 "status" => Model::STATUS_CANCEL
             ]);
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function report(Request $request, $id)
+    {
+        $request->validate([
+            "targets" => "required",
+        ]);
+
+        try {
+            foreach ($request->targets as $target) {
+                $file_path = isset($target['file']) ? base64ToImage($target['file'], 'target') : null;
+                $start_date = Carbon::parse($request->start_date);
+                $end_date = Carbon::parse($request->end_date);
+                $duration = $end_date->diffInDays($start_date);
+                BusinessTripApplicationTarget::updateOrCreate([
+                    'application_id' => $id,
+                    'id' => $target['id']
+                ],[
+                    'application_id' => $id,
+                    'start_date' => $start_date->format('Y-m-d'),
+                    'end_date' => $end_date->format('Y-m-d'),
+                    'duration' => $duration,
+                    'status' => $request->status,
+                    'file_path' => $file_path,
+                    'reason'=> $request->reason,
+                ]);
+            }
+            return response()->json([
+                "status" => "success"
+            ], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -348,7 +384,7 @@ class BusinessTripApplicationController extends Controller
         $business_trip = Model::find($id);
         $business_trip->load(['users.user.jobPosition', 'targets', 'customer', 'jobCategory:id,name', 'approver.jobPosition', 'requester:id,first_name,last_name']);
         $pdf = PDF::loadView('pdf.sppd', compact('business_trip'))
-        ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'portrait');
 
         return $pdf->stream();
     }

@@ -95,16 +95,16 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/report-trips">
             <i class="fa fa-file"></i>
-            <span>Rekap Perjalan Dinas</span></router-link
+            <span>Laporan Perjalan Dinas</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/tables">
+          <router-link class="nav-link" to="/admin/report-expenses">
             <i class="fa fa-file"></i>
-            <span>Rekap Biaya Pengeluaran</span></router-link
+            <span>Laporan Biaya Pengeluaran</span></router-link
           >
         </li>
 

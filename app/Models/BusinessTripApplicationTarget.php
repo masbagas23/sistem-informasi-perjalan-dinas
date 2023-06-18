@@ -22,6 +22,7 @@ class BusinessTripApplicationTarget extends Model
         'start_date',
         'end_date',
         'status',
+        'file_path',
         'reason'
     ];
 
