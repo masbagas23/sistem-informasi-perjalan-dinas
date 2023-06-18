@@ -10,6 +10,7 @@ import vehicleLoan from "./vehicle-loans/state"
 import downPaymentRequest from "./down-payment-requests/state"
 import expense from "./expenses/state"
 import reportTrip from "./report-trips/state"
+import reportExpense from "./report-expenses/state"
 
 export default {
     modules:{
@@ -24,6 +25,7 @@ export default {
         vehicleLoan,
         downPaymentRequest,
         expense,
-        reportTrip
+        reportTrip,
+        reportExpense,
     }
 };

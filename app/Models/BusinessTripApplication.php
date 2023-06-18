@@ -66,6 +66,11 @@ class BusinessTripApplication extends Model
         return $this->hasMany(BusinessTripApplicationTarget::class, 'application_id', 'id');
     }
 
+    public function expense()
+    {
+        return $this->hasOne(Expense::class, 'application_id', 'id');
+    }
+
     public static function generateCodeLetter($date)
     {
         $month      = substr($date, 5, 2);

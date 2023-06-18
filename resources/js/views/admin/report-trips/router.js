@@ -8,7 +8,7 @@ export default [
                 path: '',
                 name: 'reportTrips.index',
                 component: () => import(/* webpackChunkName: "admin" */ './index.vue'),
-                meta: { title: 'Laporan Perjalan Dinas', module:'Laporan'}
+                meta: { title: 'Rekap Perjalan Dinas', module:'Laporan'}
             },
         ]
     }

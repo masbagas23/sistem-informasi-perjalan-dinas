@@ -27,7 +27,7 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin">
+          <router-link class="nav-link" to="/app">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></router-link
           >
@@ -41,14 +41,14 @@
 
         <!-- Perjalan Dinas -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/business-trips">
+          <router-link class="nav-link" to="/app/business-trips">
             <i class="fa fa-plane rotate-n-15"></i>
             <span>Perjalan Dinas</span></router-link
           >
         </li>
         <!-- Peminjaman Kendaraan -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/vehicle-loans">
+          <router-link class="nav-link" to="/app/vehicle-loans">
             <i class="fa fa-car rotate-n-15"></i>
             <span>Peminjaman Kendaraan</span></router-link
           >
@@ -75,12 +75,12 @@
               <!-- <h6 class="collapse-header">Custom Components:</h6> -->
               <router-link
                 class="bg-primary text-light collapse-item"
-                to="/admin/down-payment-requests"
+                to="/app/down-payment-requests"
                 >Uang Muka</router-link
               >
               <router-link
                 class="bg-primary text-light collapse-item"
-                to="/admin/expenses"
+                to="/app/expenses"
                 >Pengeluaran</router-link
               >
             </div>
@@ -95,16 +95,16 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/report-trips">
+          <router-link class="nav-link" to="/app/report-trips">
             <i class="fa fa-file"></i>
-            <span>Laporan Perjalan Dinas</span></router-link
+            <span>Rekap Perjalan Dinas</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/report-expenses">
+          <router-link class="nav-link" to="/app/report-expenses">
             <i class="fa fa-file"></i>
-            <span>Laporan Biaya Pengeluaran</span></router-link
+            <span>Rekap Biaya Pengeluaran</span></router-link
           >
         </li>
 
@@ -116,14 +116,14 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/users">
+          <router-link class="nav-link" to="/app/users">
             <i class="fa fa-users"></i>
             <span>Pengguna</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/roles">
+          <router-link class="nav-link" to="/app/roles">
             <i class="fa fa-info-circle"></i>
             <span>Hak Akses</span></router-link
           >
@@ -136,35 +136,35 @@
         <div class="sidebar-heading">Data Master</div>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/customers">
+          <router-link class="nav-link" to="/app/customers">
             <i class="fas fa-fw fa-table"></i>
             <span>Pelanggan</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/job-positions">
+          <router-link class="nav-link" to="/app/job-positions">
             <i class="fas fa-fw fa-table"></i>
             <span>Jabatan</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/job-categories">
+          <router-link class="nav-link" to="/app/job-categories">
             <i class="fas fa-fw fa-table"></i>
             <span>Kategori Pekerjaan</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/cost-categories">
+          <router-link class="nav-link" to="/app/cost-categories">
             <i class="fas fa-fw fa-table"></i>
             <span>Kategori Biaya</span></router-link
           >
         </li>
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-          <router-link class="nav-link" to="/admin/vehicles">
+          <router-link class="nav-link" to="/app/vehicles">
             <i class="fas fa-fw fa-table"></i>
             <span>Kendaraan</span></router-link
           >

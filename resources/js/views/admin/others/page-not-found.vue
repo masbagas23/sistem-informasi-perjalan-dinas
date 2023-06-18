@@ -7,7 +7,7 @@
     <p class="text-gray-500 mb-0">
       It looks like you found a glitch in the matrix...
     </p>
-    <router-link to="/admin">&larr; Back to Dashboard</router-link>
+    <router-link to="/app">&larr; Back to Dashboard</router-link>
   </div>
 </template>
 

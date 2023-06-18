@@ -58,8 +58,11 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
      * Laporan
      */
 
-    // Laporan Perjalan Dinas
-    Route::apiResource('/report-trips', 'BusinessTripTargetController');
+    // Rekap Perjalan Dinas
+    Route::apiResource('/report-trips', 'ReportTripController');
+
+    // Laporan Biaya Perjalan
+    Route::apiResource('/report-expenses', 'ReportExpenseController');
 
     /**
      * User Manajemen

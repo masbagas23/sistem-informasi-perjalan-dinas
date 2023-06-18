@@ -159,7 +159,7 @@ export default {
             loadingProcess: false,
             keyword: "",
             modelId: "",
-            fileTitle: "Laporan Perjalan Dinas",
+            fileTitle: "Rekap Perjalan Dinas",
             filterMonth: moment().format('DD-MM-yyyy')
         };
     },

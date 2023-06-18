@@ -49,7 +49,7 @@ let router = new Router({
 });
 
 router.beforeEach(async (to, from, next) => {
-    if(to.name === 'login' && store.getters.user)next('/admin');
+    if(to.name === 'login' && store.getters.user)next('/app');
     else if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.getters.user) next();
         else next("/login");

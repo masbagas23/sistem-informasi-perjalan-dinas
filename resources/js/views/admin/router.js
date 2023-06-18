@@ -11,6 +11,7 @@ import vehicleLoan from "./vehicle-loans/router"
 import downPaymentRequest from "./down-payment-requests/router"
 import expense from "./expenses/router"
 import reportTrip from "./report-trips/router"
+import reportExpense from "./report-expenses/router"
 
 const dashboard = {
     path: '',
@@ -26,7 +27,7 @@ const dashboard = {
     ]
 }
 export default {
-    path: "/admin",
+    path: "/app",
     component: layout,
     children: [
         dashboard,
@@ -42,5 +43,6 @@ export default {
         ...downPaymentRequest,
         ...expense,
         ...reportTrip,
+        ...reportExpense,
     ]
 }
