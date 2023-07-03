@@ -18,12 +18,16 @@ import vSelect from "@app/utils/vue-select";
 import VueSimpleAlert from "vue-simple-alert"
 import Element from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
+import VueApexCharts from 'vue-apexcharts'
+
 
 
 window.Vue = require("vue").default;
 Vue.use(Toasted,{iconPack : 'material'});
 Vue.use(VueSimpleAlert)
 Vue.use(Element, {locale})
+Vue.use(VueApexCharts)
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -36,6 +40,7 @@ Vue.use(Element, {locale})
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component("app", require("./App.vue").default);
+Vue.component('apexchart', VueApexCharts)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

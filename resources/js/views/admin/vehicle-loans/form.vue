@@ -6,7 +6,7 @@
             </div>
             <div v-else>
                 <b-row>
-                    <b-col cols="5">
+                    <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Perjalan Dinas</label>
                             <v-select @input="handleApplication" class="boot-style" v-model="form.application_id" label="code" :reduce="item => item.id" :options="businessTrips.data">
@@ -18,7 +18,7 @@
                             <p class="text-danger" v-if="errors.application_id">{{ errors.application_id[0] }}</p>
                         </div>
                     </b-col>
-                    <b-col cols="3">
+                    <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Kategori Kendaraan</label>
                             <v-select @input="handleVehicleCategory" class="boot-style" v-model="filterCategory" label="name" :reduce="item => item.id" :options="vehicleCategories">
@@ -26,7 +26,7 @@
                             </v-select>
                         </div>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Kendaraan</label>
                             <v-select class="boot-style" :disabled="!filterCategory" v-model="form.vehicle_id" label="name" :reduce="item => item.id" :options="vehicles.data"></v-select>

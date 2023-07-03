@@ -42,7 +42,7 @@
         <!-- Perjalan Dinas -->
         <li class="nav-item">
           <router-link class="nav-link" to="/app/business-trips">
-            <i class="fa fa-plane rotate-n-15"></i>
+            <i class="fa fa-suitcase"></i>
             <span>Perjalan Dinas</span></router-link
           >
         </li>

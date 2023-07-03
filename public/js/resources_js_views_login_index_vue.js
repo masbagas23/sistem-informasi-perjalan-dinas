@@ -440,37 +440,6 @@ var render = function() {
                           ]
                         )
                       ]
-                    ),
-                    _vm._v(" "),
-                    _c("hr"),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "text-center" },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "small",
-                            attrs: { to: "/forgot-password" }
-                          },
-                          [_vm._v("Lupa Kata Sandi?")]
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "text-center" },
-                      [
-                        _c(
-                          "router-link",
-                          { staticClass: "small", attrs: { to: "/register" } },
-                          [_vm._v("Buat Akun Baru!")]
-                        )
-                      ],
-                      1
                     )
                   ])
                 ])

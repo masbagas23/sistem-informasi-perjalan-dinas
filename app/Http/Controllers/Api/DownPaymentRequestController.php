@@ -51,11 +51,11 @@ class DownPaymentRequestController extends Controller
             }
 
             if(request()->filter_application){
-                $data = $data->where('application_id', request()->application_id);
+                $data = $data->where('application_id', request()->filter_application);
             }
 
             if(request()->filter_status){
-                switch (request()->application_id) {
+                switch (request()->filter_status) {
                     case 'approved':
                         $data = $data->where('status', Model::STATUS_APPROVE);
                         break;

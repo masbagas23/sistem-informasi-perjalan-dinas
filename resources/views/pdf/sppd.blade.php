@@ -91,8 +91,8 @@
         <p>Demikian surat ini kami buat untuk dapat dilaksanakan dengan penuh rasa tanggung jawab.</p>
 
         <p style="margin-top:50px" align="right">
-            Bandung, {{ Carbon\Carbon::parse($business_trip->created_date)->format('d F Y') }} <br>
-            {{ $business_trip->approver->jobPosition->name }},
+            Bandung, {{ Carbon\Carbon::parse($business_trip->created_date)->format('d F Y') }}, <br>
+            {{ $business_trip->approver->jobPosition->name }}
         </p>
         <p align="right">
             <img height="80px"

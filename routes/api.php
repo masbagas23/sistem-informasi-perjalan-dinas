@@ -94,6 +94,12 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Customer
     Route::apiResource('/customers', 'CustomerController');
     Route::get('/customer-list', 'CustomerController@loadList');
+
+
+    /** 
+     * Dashboard
+     */
+    Route::get('/statistic/top-customer', 'StatisticController@topCustomer');
 });
 
 // PDF

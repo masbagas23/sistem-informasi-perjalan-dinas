@@ -66,7 +66,7 @@
                         Login
                       </button>
                     </form>
-                    <hr />
+                    <!-- <hr />
                     <div class="text-center">
                       <router-link class="small" to="/forgot-password"
                         >Lupa Kata Sandi?</router-link
@@ -76,7 +76,7 @@
                       <router-link class="small" to="/register"
                         >Buat Akun Baru!</router-link
                       >
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>

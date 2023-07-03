@@ -93,7 +93,7 @@ class ExpenseController extends Controller
             // B. Simpan Detail Biaya Pengeluaran
             foreach ($details as $detail) {
                 // I. Konversi Base64 menjadi gambar dan simpan path nya
-                $file_path = array_key_exists('file', $detail) ? base64ToImage($detail['file'], 'kwitansi') : $detail['file_path'];
+                $file_path = isset($detail['file']) ? base64ToImage($detail['file'], 'kwitansi') : $detail['file_path'];
 
                 // II. Simpan Ke DB
                 ExpenseDetail::create([

@@ -6,6 +6,9 @@ function formatDate(date) {
 }
 
 function formatCurrency(bilangan) {
+    if(!bilangan){
+        return 0
+    }
     var reverse = bilangan.toString().split('').reverse().join(''),
         ribuan = reverse.match(/\d{1,3}/g);
     ribuan = ribuan.join('.').split('').reverse().join('');

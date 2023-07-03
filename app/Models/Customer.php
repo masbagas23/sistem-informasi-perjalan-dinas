@@ -16,4 +16,9 @@ class Customer extends Model
         'telephone',
         'gmaps_url',
     ];
+
+    public function applications()
+    {
+        return $this->hasMany(BusinessTripApplication::class, 'customer_id', 'id');
+    }
 }
