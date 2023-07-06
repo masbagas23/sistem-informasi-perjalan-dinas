@@ -215,4 +215,29 @@ class VehicleLoanController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function counter()
+    {
+        try {
+            $data = Model::where('status', Model::STATUS_APPROVE);
+
+            if (request()->filter_month) {
+                $data = $data->whereHas('application', function($query){
+                    $query->whereMonth('start_date', request()->filter_month);
+                });
+            }
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "total" => $data->count()
+                ]
+            ], Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

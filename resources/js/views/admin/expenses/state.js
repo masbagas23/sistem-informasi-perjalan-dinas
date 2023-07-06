@@ -5,7 +5,7 @@ function defaultForm() {
         code: "",
         application_id: "",
         total_nominal: '',
-        down_payment: '',
+        down_payment: 0,
         remaining_cost: '',
         is_reimburse: '',
         status: '',

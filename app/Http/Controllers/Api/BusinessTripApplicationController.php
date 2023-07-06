@@ -358,14 +358,14 @@ class BusinessTripApplicationController extends Controller
                 BusinessTripApplicationTarget::updateOrCreate([
                     'application_id' => $id,
                     'id' => $target['id']
-                ],[
+                ], [
                     'application_id' => $id,
                     'start_date' => $start_date->format('Y-m-d'),
                     'end_date' => $end_date->format('Y-m-d'),
                     'duration' => $duration,
                     'status' => $request->status,
                     'file_path' => $file_path,
-                    'reason'=> $request->reason,
+                    'reason' => $request->reason,
                 ]);
             }
             return response()->json([
@@ -387,5 +387,28 @@ class BusinessTripApplicationController extends Controller
             ->setPaper('a4', 'portrait');
 
         return $pdf->stream();
+    }
+
+    public function counter()
+    {
+        try {
+            $data = Model::where('status', Model::STATUS_APPROVE);
+
+            if (request()->filter_month) {
+                $data = $data->whereMonth('start_date', request()->filter_month);
+            }
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "total" => $data->count()
+                ]
+            ], Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

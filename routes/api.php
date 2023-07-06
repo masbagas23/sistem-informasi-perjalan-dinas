@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Perjalan Dinas
     Route::apiResource('/business-trips', 'BusinessTripApplicationController');
     Route::get('/business-trip-list', 'BusinessTripApplicationController@loadList');
+    Route::get('/business-trip-counter', 'BusinessTripApplicationController@counter');
     Route::post('/business-trip-cancel/{id}', 'BusinessTripApplicationController@cancel');
     Route::post('/business-trip-approval/{id}', 'BusinessTripApplicationController@approval');
     Route::post('/business-trip-report/{id}', 'BusinessTripApplicationController@report');
@@ -39,6 +40,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Peminjaman Mobil
     Route::apiResource('/vehicle-loans', 'VehicleLoanController');
     Route::get('/vehicle-loan-list', 'VehicleLoanController@loadList');
+    Route::get('/vehicle-loan-counter', 'VehicleLoanController@counter');
     Route::post('/vehicle-loan-cancel/{id}', 'VehicleLoanController@cancel');
     Route::post('/vehicle-loan-approval/{id}', 'VehicleLoanController@approval');
 
@@ -51,6 +53,7 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     // Biaya Pengeluaran
     Route::apiResource('/expenses', 'ExpenseController');
     Route::get('/expense-list', 'ExpenseController@loadList');
+    Route::get('/expense-counter', 'ExpenseController@counter');
     Route::post('/expense-validation/{id}', 'ExpenseController@validation');
     Route::post('/expense-reimburse/{id}', 'ExpenseController@reimburse');
 
@@ -99,7 +102,8 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
     /** 
      * Dashboard
      */
-    Route::get('/statistic/top-customer', 'StatisticController@topCustomer');
+    Route::get('/statistic/top-customer-trip', 'StatisticController@topCustomerTrip');
+    Route::get('/statistic/top-customer-cost', 'StatisticController@topCustomerCost');
 });
 
 // PDF
