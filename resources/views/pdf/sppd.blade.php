@@ -64,8 +64,8 @@
     </section>
     <section style="line-height: 1.5">
         <p>Untuk {{ $business_trip->description }} pada tanggal
-            {{ Carbon\Carbon::parse($business_trip->start_date)->format('d F Y') }} s/d
-            {{ Carbon\Carbon::parse($business_trip->end_date)->format('d F Y') }} ({{ $business_trip->total_day }}
+            {{ Carbon\Carbon::parse($business_trip->start_date)->translatedFormat('d F Y') }} s/d
+            {{ Carbon\Carbon::parse($business_trip->end_date)->translatedFormat('d F Y') }} ({{ $business_trip->total_day }}
             Hari) ke {{ $business_trip->customer->name }} yang beralamat di:</p>
     </section>
     <section style="line-height: 1.5;margin-left:50px">
@@ -91,7 +91,7 @@
         <p>Demikian surat ini kami buat untuk dapat dilaksanakan dengan penuh rasa tanggung jawab.</p>
 
         <p style="margin-top:50px" align="right">
-            Bandung, {{ Carbon\Carbon::parse($business_trip->created_date)->format('d F Y') }}, <br>
+            Bandung, {{ Carbon\Carbon::parse($business_trip->created_date)->translatedFormat('d F Y') }}, <br>
             {{ $business_trip->approver->jobPosition->name }}
         </p>
         <p align="right">

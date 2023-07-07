@@ -78,7 +78,23 @@
                 </template>         
 
                 <template v-slot:cell(action)="row">
-                    <b-dropdown variant="secondary" size="sm" right>
+                    <a href="#" @click="viewApproval(row.item.id)">
+                        <b-badge
+                            title="Persetujuan"
+                            pill
+                            variant="success"
+                            ><b-icon icon="person-check"></b-icon
+                        ></b-badge>
+                    </a>
+                    <a href="#" @click="remove(row.item.id)">
+                        <b-badge
+                            title="Hapus"
+                            pill
+                            variant="danger"
+                            ><b-icon icon="trash"></b-icon
+                        ></b-badge>
+                    </a>
+                    <!-- <b-dropdown variant="secondary" size="sm" right>
                         <b-dropdown-item @click="detail(row.item.id)">
                             <b-badge
                                 title="Tampilkan"
@@ -124,7 +140,7 @@
                             ></b-badge>
                             <span> Hapus</span>
                         </b-dropdown-item>
-                    </b-dropdown>
+                    </b-dropdown> -->
                 </template>
             </b-table>
             <div

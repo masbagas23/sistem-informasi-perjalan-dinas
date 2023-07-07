@@ -83,11 +83,24 @@
                 </template>
 
                 <template v-slot:cell(action)="row">
-                    <a href="#" @click="viewApproval(row.item.id)"><b-badge
+                    <a v-if="row.item.status == 1" href="#" @click="viewApproval(row.item.id)"><b-badge
                         title="Persetujuan"
                         pill
-                        variant="warning"
+                        variant="success"
                         ><b-icon icon="person-check"></b-icon
+                    ></b-badge></a>
+                    <a v-if="row.item.status == 2" href="#" @click="print(row.item.id)"><b-badge
+                        title="Cetak"
+                        pill
+                        variant="primary"
+                        ><b-icon icon="printer-fill"></b-icon
+                    ></b-badge></a>
+                    <a v-if="row.item.status == 2" href="#" @click="viewReport(row.item.id)">
+                        <b-badge
+                        title="Laporan"
+                        pill
+                        variant="warning"
+                        ><b-icon icon="file-earmark-check"></b-icon
                     ></b-badge></a>
                     <a href="#" @click="remove(row.item.id)"><b-badge
                         title="Hapus"
@@ -95,62 +108,6 @@
                         variant="danger"
                         ><b-icon icon="trash"></b-icon
                     ></b-badge></a>
-                    <!-- <b-dropdown variant="secondary" size="sm" right>
-                        <b-dropdown-item @click="detail(row.item.id)">
-                            <b-badge
-                                title="Tampilkan"
-                                pill
-                                variant="success"
-                                ><b-icon icon="eye"></b-icon
-                            ></b-badge>
-                            <span> Tampilkan</span>
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="viewApproval(row.item.id)">
-                            <b-badge
-                                title="Persetujuan"
-                                pill
-                                variant="info"
-                                ><b-icon icon="person-check"></b-icon
-                            ></b-badge>
-                            <span> Persetujuan</span>
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="viewReport(row.item.id)">
-                            <b-badge
-                                title="Laporan"
-                                pill
-                                variant="info"
-                                ><b-icon icon="file-earmark-check"></b-icon
-                            ></b-badge>
-                            <span> Laporan</span>
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="view(row.item.id)">
-                            <b-badge
-                                title="Edit"
-                                pill
-                                variant="primary"
-                                ><b-icon icon="pencil-square"></b-icon
-                            ></b-badge>
-                            <span> Edit</span>
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="viewCancel(row.item.id)">
-                            <b-badge
-                                title="Batalkan"
-                                pill
-                                variant="warning"
-                                ><b-icon icon="x-circle"></b-icon
-                            ></b-badge>
-                            <span> Batalkan</span>
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="remove(row.item.id)">
-                            <b-badge
-                                title="Hapus"
-                                pill
-                                variant="danger"
-                                ><b-icon icon="trash"></b-icon
-                            ></b-badge>
-                            <span> Hapus</span>
-                        </b-dropdown-item>
-                    </b-dropdown> -->
                 </template>
             </b-table>
             <div
@@ -300,6 +257,24 @@
             </template>
         </b-modal>
         <!-- End -->
+
+        <!-- Modal Print Letter -->
+        <b-modal
+            id="modal-print-preview-letter"
+            size="xl"
+            :title="'Surat Perintah '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <iframe srcdoc="Loading..." onload="this.removeAttribute('srcdoc')" :src="`/api/business-trip-letter/${modelId}`" style="height:800px;width:100%;" frameborder="0"></iframe>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
+                >
+            </template>
+        </b-modal>
+        <!-- End -->
     </div>
 </template>
 <script>
@@ -367,6 +342,7 @@ export default {
     },
     mounted(){
         this.CLEAR_ERRORS()
+        this.CLEAR_FORM()
     },
     watch: {
         tableParams: {
@@ -381,6 +357,7 @@ export default {
     },
     methods: {
         ...mapMutations(['CLEAR_ERRORS']),
+        ...mapMutations('businessTripApplication', ['CLEAR_FORM']),
         ...mapActions("businessTripApplication", [
             "load",
             "show",
@@ -414,6 +391,10 @@ export default {
             this.modelId = id;
             this.create();
         },
+        print(id){
+            this.modelId = id;
+            this.$bvModal.show("modal-print-preview-letter");
+        },
         hideModal(loading) {
             this.modelId = "";
             if (loading) {
@@ -424,6 +405,7 @@ export default {
             this.$bvModal.hide("modal-form-business-trip-detail");
             this.$bvModal.hide("modal-form-business-trip-approval");
             this.$bvModal.hide("modal-form-business-trip-reporting");
+            this.$bvModal.hide("modal-print-preview-letter");
         },
         reloadTable(params, keyword = false, filter = false) {
             this.load({

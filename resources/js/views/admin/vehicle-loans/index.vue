@@ -81,7 +81,7 @@
                     <a href="#" @click="viewApproval(row.item.id)"><b-badge
                         title="Persetujuan"
                         pill
-                        variant="warning"
+                        variant="success"
                         ><b-icon icon="person-check"></b-icon
                     ></b-badge></a>
                     <a href="#" @click="remove(row.item.id)"><b-badge

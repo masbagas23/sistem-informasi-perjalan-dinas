@@ -16,6 +16,10 @@
                     />
                 </b-col>
                 <b-col cols="4" class="text-right">
+                    <!-- Print -->
+                    <b-button @click="print" variant="success" size="sm"
+                        ><b-icon icon="printer-fill"></b-icon> Cetak</b-button
+                    >
                     <!-- Reload -->
                     <b-button
                         @click="handleSynchronize"
@@ -52,8 +56,21 @@
                 <template v-slot:cell(index)="row">
                     {{ row.index + 1 }}
                 </template>
+                
                 <template v-slot:cell(customer)="row">
                     {{ row.value.name }}
+                </template>
+
+                <template v-slot:cell(users)="row">
+                    {{ row.value[0].user.first_name }} {{ row.value[0].user.last_name }}
+                </template>
+
+                <template v-slot:cell(job_category)="row">
+                    {{ row.value.name }}
+                </template>
+
+                <template v-slot:cell(total_expense)="row">
+                    Rp {{ formatCurrency(row.item.expenses_sum_total_nominal) }}
                 </template>
 
                 <template v-slot:cell(result)="row">
@@ -120,6 +137,25 @@
                 >
             </template>
         </b-modal>
+        <!-- End -->
+
+        <!-- Modal Print -->
+        <b-modal
+            id="modal-print-report-trip"
+            size="xl"
+            :title="'Laporan '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <iframe srcdoc="Loading..." onload="this.removeAttribute('srcdoc')" :src="`/api/business-trip-report?month=${filterMonth}`" style="height:500px;width:100%;" frameborder="0"></iframe>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
+                >
+            </template>
+        </b-modal>
+        <!-- End -->
     </div>
 </template>
 <script>
@@ -127,7 +163,7 @@ import { mapMutations, mapActions, mapState } from "vuex";
 import detailComponent from "./detail.vue";
 import * as notify from "@app/utils/notify";
 import moment from "moment";
-import {formatDate} from "@app/utils/formatter"
+import {formatDate, formatCurrency} from "@app/utils/formatter"
 
 export default {
     components: {
@@ -146,15 +182,18 @@ export default {
                     sortable: false
                 },
                 { key: "code", label: "Kode", sortable: false },
-                { key: "customer", label: "Tujuan", sortable: false },
+                { key: "customer", label: "Pelanggan", sortable: false },
+                { key: "job_category", label: "Pekerjaan", sortable: false },
                 { key: "date", label: "Tanggal", sortable: false },
+                { key: "users", label: "Koordinator", sortable: false },
+                { key: "total_expense", label: "Total Pengeluaran", sortable: false },
                 { key: "result", label: "Status", sortable: false },
-                {
-                    key: "action",
-                    label: "Aksi",
-                    thStyle: "text-align: center; width: 80px;",
-                    sortable: false
-                }
+                // {
+                //     key: "action",
+                //     label: "Aksi",
+                //     thStyle: "text-align: center; width: 80px;",
+                //     sortable: false
+                // }
             ],
             loadingProcess: false,
             keyword: "",
@@ -201,9 +240,12 @@ export default {
             "update",
             "destroy",
         ]),
-        formatDate,
+        formatDate,formatCurrency,
         create() {
             this.$bvModal.show("modal-detail-report-trip");
+        },
+        print() {
+            this.$bvModal.show("modal-print-report-trip");
         },
         view(id) {
             this.modelId = id;
@@ -215,6 +257,7 @@ export default {
                 this.reloadTable(this.tableParams);
             }
             this.$bvModal.hide("modal-detail-report-trip");
+            this.$bvModal.hide("modal-print-report-trip");
         },
         reloadTable(params, keyword = false, filter = false) {
             this.load({

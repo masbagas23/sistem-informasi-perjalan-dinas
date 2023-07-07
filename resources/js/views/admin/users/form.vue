@@ -73,14 +73,21 @@
                             <p class="text-danger" v-if="errors.gender">{{ errors.gender[0] }}</p>
                         </div>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col cols="6">
                         <div class="form-group">
                             <label class="">No Rekening Bank</label>
                             <input placeholder="Nomor HP" type="number" :class="{ 'has-error': errors.bank_number }" class="form-control" v-model="form.bank_number">
                             <p class="text-danger" v-if="errors.bank_number">{{ errors.bank_number[0] }}</p>
                         </div>
                     </b-col>
-                    <b-col cols="8">
+                    <b-col cols="6">
+                        <div class="form-group">
+                            <label class="">Tanda Tangan</label>
+                            <b-form-file id="file" ref="file" @change="handleFileUpload" size="sm" accept=".jpg, .png, .webp"></b-form-file>
+                            <p class="text-danger" v-if="errors.bank_number">{{ errors.bank_number[0] }}</p>
+                        </div>
+                    </b-col>
+                    <b-col cols="12">
                         <div class="form-group">
                             <label>Alamat</label>
                             <b-form-textarea :class="{ 'has-error': errors.address }" v-model="form.address" placeholder="Alamat lengkap..." rows="3" max-rows="6" ></b-form-textarea>

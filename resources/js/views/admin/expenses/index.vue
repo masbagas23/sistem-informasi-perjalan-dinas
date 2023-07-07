@@ -77,7 +77,23 @@
                 </template>
 
                 <template v-slot:cell(action)="row">
-                    <b-dropdown variant="secondary" size="sm" right>
+                    <a href="#" @click="viewValidation(row.item.id)">
+                        <b-badge
+                            title="Validasi"
+                            pill
+                            variant="success"
+                            ><b-icon icon="person-check"></b-icon
+                        ></b-badge>
+                    </a>
+                    <a href="#" @click="remove(row.item.id)">
+                        <b-badge
+                            title="Hapus"
+                            pill
+                            variant="danger"
+                            ><b-icon icon="trash"></b-icon
+                        ></b-badge>
+                    </a>
+                    <!-- <b-dropdown variant="secondary" size="sm" right>
                         <b-dropdown-item @click="viewValidation(row.item.id)">
                             <b-badge
                                 title="Persetujuan"
@@ -105,7 +121,7 @@
                             ></b-badge>
                             <span> Hapus</span>
                         </b-dropdown-item>
-                    </b-dropdown>
+                    </b-dropdown> -->
                 </template>
             </b-table>
             <div
@@ -198,7 +214,7 @@
                 <b-button class="btn btn-secondary ml-2" @click="hideModal()"
                     ><i class="fas fa-arrow-left mr-2"></i>Batal</b-button
                 >
-                <button v-if="!modelId" class="btn btn-primary" @click.prevent="reimbursing">
+                <button class="btn btn-primary" @click.prevent="reimbursing">
                     <b-spinner
                         v-if="loadingProcess"
                         small
