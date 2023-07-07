@@ -24,6 +24,11 @@ class ExpenseDetail extends Model
         'status',
     ];
 
+    public function expense()
+    {
+        return $this->belongsTo(Expense::class, 'expense_id', 'id')->withDefault();
+    }
+
     public function costCategory()
     {
         return $this->belongsTo(CostCategory::class, 'cost_category_id', 'id')->withDefault();

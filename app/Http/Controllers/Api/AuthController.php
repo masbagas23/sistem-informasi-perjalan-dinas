@@ -21,6 +21,7 @@ class AuthController extends Controller
             if (Auth::attempt($request->only('email', 'password'))) {
                 /** @var User $user */
                 $user = Auth::user();
+                $user->load(['jobPosition:id,name,role_id']);
                 $token = $user->createToken('API Token')->accessToken;
 
                 if (config('auth.must_verify_email') && !$user->hasVerifiedEmail()) {
@@ -49,7 +50,9 @@ class AuthController extends Controller
     public function user()
     {
         try {
-            return response()->json(Auth::user());
+            $user = User::find(Auth::id())->with(['jobPosition:id,role_id', 'jobPosition.role:id,name']);
+
+            return response()->json($user);
         } catch (\Throwable $th) {
             return response([
                 'message' => 'Unauthenticated.'

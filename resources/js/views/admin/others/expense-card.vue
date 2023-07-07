@@ -51,7 +51,7 @@ export default {
         formatCurrency,
         loadCounter(){
             const payload = {
-                filter_month : moment().format('MM')
+                filter_month : moment().format('DD-MM-YYYY')
             }
 			this.isShow = true
             $axios.get(`/expense-counter`,{params:payload}).then(response => {

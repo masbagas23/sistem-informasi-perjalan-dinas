@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\DownPaymentRequest as Model;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class DownPaymentRequestController extends Controller
 {
@@ -19,7 +20,11 @@ class DownPaymentRequestController extends Controller
     public function index()
     {
         try {
-            $data = Model::with(['requester:id,first_name,middle_name,last_name']);
+            if (Auth::user()->jobPosition->role_id == 3) {
+                $data = Model::with(['requester:id,first_name,middle_name,last_name']);
+            }else{
+                $data = Model::with(['requester:id,first_name,middle_name,last_name'])->where('requested_by', Auth::id());
+            }
 
             if (isset(request()->order_column)) {
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));

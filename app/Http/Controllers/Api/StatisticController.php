@@ -16,7 +16,8 @@ class StatisticController extends Controller
     public function topCustomerTrip()
     {
         $customers = Customer::with(['applications:id,customer_id'])->whereHas('applications', function($query){
-            $query->whereMonth('start_date', request()->filter_month);
+            $date = Carbon::parse(request()->filter_month);
+            $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
         })->get();
         $data = [];
         foreach ($customers as $customer) {
@@ -36,7 +37,8 @@ class StatisticController extends Controller
     public function topCustomerCost()
     {
         $customers = Customer::with(['applications:id,customer_id', 'applications.expense:id,application_id,total_nominal'])->whereHas('applications', function($query){
-            $query->whereMonth('start_date', request()->filter_month);
+            $date = Carbon::parse(request()->filter_month);
+            $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
         })->whereHas('applications.expense')->get();
         $data = [];
         foreach ($customers as $customer) {

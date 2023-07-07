@@ -16,6 +16,10 @@
                     />
                 </b-col>
                 <b-col cols="4" class="text-right">
+                    <!-- Print -->
+                    <b-button @click="print" variant="success" size="sm"
+                        ><b-icon icon="printer-fill"></b-icon> Cetak</b-button
+                    >
                     <!-- Reload -->
                     <b-button
                         @click="handleSynchronize"
@@ -52,22 +56,30 @@
                 <template v-slot:cell(index)="row">
                     {{ row.index + 1 }}
                 </template>
+                
                 <template v-slot:cell(code)="row">
-                    {{row.item.code}} - {{row.item.customer.name}}
+                    {{row.item.expense.application.code}} - {{row.item.expense.application.customer.name}}
+                </template>
+
+                <template v-slot:cell(cost_category)="row">
+                    {{row.value.name}}
+                </template>
+                
+                <template v-slot:cell(description)="row">
+                    {{row.value ? row.value : '-'}}
                 </template>
                 
                 <template v-slot:cell(expense)="row">
-                    Rp {{ formatCurrency(row.value.total_nominal) }}
+                    Rp {{ formatCurrency(row.item.nominal) }}
                 </template>
 
-                <template v-slot:cell(result)="row">
+                <template v-slot:cell(status)="row">
                     <b-badge v-if="row.value == 1" pill variant="warning">Menunggu</b-badge>
-                    <b-badge v-if="row.value == 2" pill variant="success">Selesai</b-badge>
-                    <b-badge v-if="row.value == 3" pill variant="secondary">Tertunda</b-badge>
-                    <b-badge v-if="row.value == 4" pill variant="warning">Jadwal Ulang</b-badge>
+                    <b-badge v-if="row.value == 2" pill variant="success">Valid</b-badge>
+                    <b-badge v-if="row.value == 3" pill variant="secondary">Tidak Valid</b-badge>
                 </template>
 
-                <template v-slot:cell(date)="row">
+                <!-- <template v-slot:cell(date)="row">
                     {{ formatDate(row.item.start_date) }} - {{ formatDate(row.item.end_date) }}
                 </template>
 
@@ -80,7 +92,7 @@
                         variant="success"
                         ><b-icon icon="eye"></b-icon
                     ></b-badge>
-                </template>
+                </template> -->
             </b-table>
             <div
                 class="card-footer px-0 bg-white d-flex justify-content-between align-items-center"
@@ -124,6 +136,25 @@
                 >
             </template>
         </b-modal>
+        <!-- End -->
+
+        <!-- Modal Print -->
+        <b-modal
+            id="modal-print-report-expense"
+            size="xl"
+            :title="'Laporan '+fileTitle"
+            ref="modal"
+            no-close-on-esc
+            no-close-on-backdrop
+        >
+            <iframe srcdoc="Loading..." onload="this.removeAttribute('srcdoc')" :src="`/api/expense-report?month=${filterMonth}`" style="height:500px;width:100%;" frameborder="0"></iframe>
+            <template v-slot:modal-footer>
+                <b-button class="btn btn-secondary ml-2" @click="hideModal()"
+                    ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
+                >
+            </template>
+        </b-modal>
+        <!-- End -->
     </div>
 </template>
 <script>
@@ -150,15 +181,16 @@ export default {
                     sortable: false
                 },
                 { key: "code", label: "Perjalan Dinas", sortable: false },
-                { key: "date", label: "Tanggal", sortable: false },
-                { key: "expense", label: "Biaya Pengeluaran", sortable: false },
-                { key: "result", label: "Status", sortable: false },
-                {
-                    key: "action",
-                    label: "Aksi",
-                    thStyle: "text-align: center; width: 80px;",
-                    sortable: false
-                }
+                { key: "cost_category", label: "Kategori Biaya", sortable: false },
+                { key: "expense", label: "Nominal", sortable: false },
+                { key: "description", label: "Deskripsi", sortable: false },
+                { key: "status", label: "Status", sortable: false },
+                // {
+                //     key: "action",
+                //     label: "Aksi",
+                //     thStyle: "text-align: center; width: 80px;",
+                //     sortable: false
+                // }
             ],
             loadingProcess: false,
             keyword: "",
@@ -209,6 +241,9 @@ export default {
         create() {
             this.$bvModal.show("modal-detail-report-trip");
         },
+        print() {
+            this.$bvModal.show("modal-print-report-expense");
+        },
         view(id) {
             this.modelId = id;
             this.create();
@@ -219,6 +254,7 @@ export default {
                 this.reloadTable(this.tableParams);
             }
             this.$bvModal.hide("modal-detail-report-trip");
+            this.$bvModal.hide("modal-print-report-expense");
         },
         reloadTable(params, keyword = false, filter = false) {
             this.load({

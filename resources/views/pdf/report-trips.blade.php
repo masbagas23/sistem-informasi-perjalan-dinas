@@ -31,7 +31,8 @@
     <div style="text-align: center;">
         <img height="100px" src="{{ env('APP_URL', 'http://localhost') . '/images/logo.png' }}">
     </div>
-    <section style="padding-top:20px;">
+    <hr>
+    <section style="padding-top:10px;">
         <h3 align="center" style="margin-bottom: 0px">Laporan Rekap Perjalan Dinas Periode {{ $month }}
             {{ $year }}
         </h3>
@@ -47,9 +48,9 @@
                 <th>Status</th>
             </thead>
             <tbody>
-                @foreach ($data as $trip)
+                @foreach ($data as $index=>$trip)
                     <tr>
-                        <td style="text-align: center">1</td>
+                        <td style="text-align: center">{{$index+1}}.</td>
                         <td style="text-align: center">{{ $trip->code }}</td>
                         <td style="text-align: center">{{ $trip->customer->name }}</td>
                         <td style="text-align: center">{{ $trip->jobCategory->name }}</td>
@@ -83,7 +84,7 @@
                 <tr>
                     <td colspan="6" style="text-align: right"><b>Total</b></td>
                     <td style="text-align: center">
-                        {{ 'Rp ' . number_format($trip->expenses_sum_total_nominal, 2, ',', '.') }}</td>
+                        <b>{{ 'Rp ' . number_format($trip->expenses_sum_total_nominal, 2, ',', '.') }}</b></td>
                     <td style="border: 0px"></td>
                 </tr>
             </tfoot>

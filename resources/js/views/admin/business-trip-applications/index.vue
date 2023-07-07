@@ -14,7 +14,7 @@
                 </b-col>
                 <b-col cols="4" class="text-right">
                     <!-- Add -->
-                    <b-button @click="create" variant="success" size="sm"
+                    <b-button v-show="user.job_position.role_id == 3" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
                     >
                     <!-- Reload -->
@@ -83,7 +83,7 @@
                 </template>
 
                 <template v-slot:cell(action)="row">
-                    <a v-if="row.item.status == 1" href="#" @click="viewApproval(row.item.id)"><b-badge
+                    <a v-if="row.item.status == 1 && user.job_position.role_id == 2" href="#" @click="viewApproval(row.item.id)"><b-badge
                         title="Persetujuan"
                         pill
                         variant="success"
@@ -95,14 +95,14 @@
                         variant="primary"
                         ><b-icon icon="printer-fill"></b-icon
                     ></b-badge></a>
-                    <a v-if="row.item.status == 2" href="#" @click="viewReport(row.item.id)">
+                    <a v-if="row.item.status == 2 && user.job_position.role_id == 4" href="#" @click="viewReport(row.item.id)">
                         <b-badge
                         title="Laporan"
                         pill
                         variant="warning"
                         ><b-icon icon="file-earmark-check"></b-icon
                     ></b-badge></a>
-                    <a href="#" @click="remove(row.item.id)"><b-badge
+                    <a v-if="row.item.status == 1 && user.job_position.role_id == 3" href="#" @click="remove(row.item.id)"><b-badge
                         title="Hapus"
                         pill
                         variant="danger"
@@ -278,7 +278,7 @@
     </div>
 </template>
 <script>
-import { mapMutations, mapActions, mapState } from "vuex";
+import { mapMutations, mapActions, mapState, mapGetters } from "vuex";
 import * as notify from "@app/utils/notify";
 import moment from "moment";
 import formComponent from "./form.vue";
@@ -330,6 +330,7 @@ export default {
             collection: state => state.collection,
             isBusy: state => state.isBusy,
         }),
+        ...mapGetters(['user']),
         tableParams: {
             get() {
                 //MENGAMBIL VALUE PAGE DARI VUEX MODULE

@@ -10,6 +10,7 @@ use App\Models\Expense as Model;
 use Illuminate\Http\Response;
 use App\Models\ExpenseDetail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
@@ -21,8 +22,15 @@ class ExpenseController extends Controller
     public function index()
     {
         try {
-            $data = Model::with('application.customer');
-
+            if (Auth::user()->jobPosition->role_id == 5) {
+                $data = Model::with('application.customer');
+            }else{
+                $data = Model::with('application.customer')->whereHas('application', function($query){
+                    $query->whereHas('users',function($user){
+                        $user->where('user_id', Auth::id())->where('is_leader',1);
+                    });
+                });
+            }
             if (isset(request()->order_column)){
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));
             }
@@ -279,7 +287,8 @@ class ExpenseController extends Controller
 
             if (request()->filter_month) {
                 $data = $data->whereHas('application', function($query){
-                    $query->whereMonth('start_date', request()->filter_month);
+                    $date = Carbon::parse(request()->filter_month);
+                    $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
                 });
             }
 

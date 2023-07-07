@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DB;
+use Illuminate\Support\Facades\Auth;
 use PDF;
 
 class BusinessTripApplicationController extends Controller
@@ -25,7 +26,20 @@ class BusinessTripApplicationController extends Controller
     public function index()
     {
         try {
-            $data = Model::with(['requester', 'jobCategory:id,name']);
+            if(Auth::user()->jobPosition->role_id == 2){
+                $data = Model::with(['requester', 'jobCategory:id,name']);
+            }elseif(Auth::user()->jobPosition->role_id == 3){
+                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function($query){
+                    $query->where('requested_by', Auth::id());
+                });
+            }else{
+                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function($query){
+                    $query->where('requested_by', Auth::id())
+                    ->orWhereHas('users',function($user){
+                        $user->where('user_id', Auth::id())->where('is_leader', 1);
+                    });
+                });
+            }
 
             if (isset(request()->order_column)) {
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));
@@ -395,7 +409,8 @@ class BusinessTripApplicationController extends Controller
             $data = Model::where('status', Model::STATUS_APPROVE);
 
             if (request()->filter_month) {
-                $data = $data->whereMonth('start_date', request()->filter_month);
+                $date = Carbon::parse(request()->filter_month);
+                $data = $data->whereMonth('start_date', $date)->whereYear('start_date', $date);
             }
 
             return response()->json([

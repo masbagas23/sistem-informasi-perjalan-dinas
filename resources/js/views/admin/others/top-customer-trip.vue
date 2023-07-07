@@ -67,7 +67,7 @@ export default {
     methods: {
         load() {
             const payload = {
-                filter_month : moment().format('MM')
+                filter_month : moment().format('DD-MM-YYYY')
             }
             this.isShow = true
             $axios.get(`/statistic/top-customer-trip`, {params:payload}).then(response => {

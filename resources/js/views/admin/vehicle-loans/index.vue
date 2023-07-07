@@ -14,7 +14,7 @@
                 </b-col>
                 <b-col cols="4" class="text-right">
                     <!-- Add -->
-                    <b-button @click="create" variant="success" size="sm"
+                    <b-button v-show="user.job_position.role_id == 4" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
                     >
                     <!-- Reload -->
@@ -31,7 +31,7 @@
             <b-table
                 :items="collection.data"
                 :busy.sync="isBusy"
-                :fields="fields"
+                :fields="filterFields"
                 :sort-by.sync="tableParams.order_column"
                 :sort-desc.sync="tableParams.order_direction"
                 :tbody-tr-class="rowClass"
@@ -78,18 +78,27 @@
                 </template>         
 
                 <template v-slot:cell(action)="row">
-                    <a href="#" @click="viewApproval(row.item.id)"><b-badge
+                    <a v-if="row.item.status == 1 && user.job_position.role_id == 3" href="#" @click="viewApproval(row.item.id)"><b-badge
                         title="Persetujuan"
                         pill
                         variant="success"
                         ><b-icon icon="person-check"></b-icon
                     ></b-badge></a>
-                    <a href="#" @click="remove(row.item.id)"><b-badge
-                        title="Hapus"
+                    <a v-else-if="row.item.status == 1 && user.job_position.role_id == 4" href="#" @click="remove(row.item.id)">
+                        <b-badge
+                            title="Hapus"
+                            pill
+                            variant="danger"
+                            ><b-icon icon="trash"></b-icon
+                        ></b-badge>
+                    </a>
+                    <b-badge
+                        v-else
+                        title="Terkunci"
                         pill
-                        variant="danger"
-                        ><b-icon icon="trash"></b-icon
-                    ></b-badge></a>
+                        variant="secondary"
+                        ><b-icon icon="lock"></b-icon
+                    ></b-badge>
                     <!-- <b-dropdown variant="secondary" size="sm" right>
                         <b-dropdown-item @click="detail(row.item.id)">
                             <b-badge
@@ -260,7 +269,7 @@
     </div>
 </template>
 <script>
-import { mapMutations, mapActions, mapState } from "vuex";
+import { mapMutations, mapActions, mapState, mapGetters } from "vuex";
 import formComponent from "./form.vue";
 import * as notify from "@app/utils/notify";
 import moment from "moment";
@@ -297,7 +306,8 @@ export default {
                     key: "action",
                     label: "Aksi",
                     thStyle: "text-align: center; width: 80px;",
-                    sortable: false
+                    sortable: false,
+                    isNotAdmin: true
                 }
             ],
             loadingProcess: false,
@@ -311,6 +321,14 @@ export default {
             collection: state => state.collection,
             isBusy: state => state.isBusy,
         }),
+        ...mapGetters(["user"]),
+        filterFields(){
+            if(this.user.job_position.role_id == 5){
+                return this.fields.filter(item => !item.isNotAdmin)
+            }else{
+                return this.fields
+            }
+        },
         tableParams: {
             get() {
                 //MENGAMBIL VALUE PAGE DARI VUEX MODULE
@@ -319,7 +337,7 @@ export default {
             set(params) {
                 this.$store.commit("vehicleLoan/SET_TABLE_PARAMS", params);
             }
-        }
+        },
     },
     mounted(){
         this.CLEAR_ERRORS()

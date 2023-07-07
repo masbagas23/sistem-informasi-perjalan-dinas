@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\VehicleLoan as Model;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class VehicleLoanController extends Controller
 {
@@ -19,7 +20,12 @@ class VehicleLoanController extends Controller
     public function index()
     {
         try {
-            $data = Model::with(['application:id,code', 'vehicle', 'requester:id,first_name,middle_name,last_name']);
+            if (Auth::user()->jobPosition->role_id == 3) {
+                $data = Model::with(['application:id,code', 'vehicle', 'requester:id,first_name,middle_name,last_name']);
+            } else {
+                $data = Model::with(['application:id,code', 'vehicle', 'requester:id,first_name,middle_name,last_name'])
+                    ->where('requested_by', Auth::id());
+            }
 
             if (isset(request()->order_column)) {
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));
@@ -109,7 +115,7 @@ class VehicleLoanController extends Controller
     {
         try {
             $data = Model::find($id);
-            $data->load(['vehicle','application','requester']);
+            $data->load(['vehicle', 'application', 'requester']);
             return response()->json([
                 "status" => "success",
                 "data" => $data
@@ -173,7 +179,7 @@ class VehicleLoanController extends Controller
     public function approval(Request $request, $id)
     {
         $request->validate([
-            "note"=> "required_unless:status,2",
+            "note" => "required_unless:status,2",
         ]);
 
         try {
@@ -183,12 +189,12 @@ class VehicleLoanController extends Controller
                 "approved_by" => auth()->user()->id,
             ]);
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -196,7 +202,7 @@ class VehicleLoanController extends Controller
     public function cancel(Request $request, $id)
     {
         $request->validate([
-            "note"=>"required",
+            "note" => "required",
         ]);
 
         try {
@@ -206,12 +212,12 @@ class VehicleLoanController extends Controller
             ]);
             dd("OK");
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -222,7 +228,7 @@ class VehicleLoanController extends Controller
             $data = Model::where('status', Model::STATUS_APPROVE);
 
             if (request()->filter_month) {
-                $data = $data->whereHas('application', function($query){
+                $data = $data->whereHas('application', function ($query) {
                     $query->whereMonth('start_date', request()->filter_month);
                 });
             }

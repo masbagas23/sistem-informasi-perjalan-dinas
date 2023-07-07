@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DataCollection;
 use App\Models\BusinessTripApplication;
+use App\Models\ExpenseDetail as Model;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use PDF;
 
 class ReportExpenseController extends Controller
 {
@@ -18,7 +20,9 @@ class ReportExpenseController extends Controller
     public function index()
     {
         try {
-            $data = BusinessTripApplication::where('result', BusinessTripApplication::RESULT_DONE)->with(['expense', 'customer:id,name']);
+            $data = Model::whereHas('expense.application', function($query){
+                $query->where('status', BusinessTripApplication::RESULT_DONE);
+            })->with(['expense:id,application_id','expense.application:id,code,customer_id','expense.application.customer:id,name', 'costCategory:id,name']);
 
             if (isset(request()->order_column)){
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));
@@ -31,7 +35,7 @@ class ReportExpenseController extends Controller
             }
 
             if(request()->month){
-                $data = $data->whereMonth('start_date', Carbon::parse(request()->month));
+                $data = $data->whereMonth('created_at', Carbon::parse(request()->month));
             }
             $data = $data->paginate(request()->per_page);
             return new DataCollection($data);
@@ -58,5 +62,27 @@ class ReportExpenseController extends Controller
                 'message'=>$th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function print()
+    {
+        $data = Model::whereHas('expense.application', function($query){
+            $query->where('status', BusinessTripApplication::RESULT_DONE);
+        })->with(['expense:id,application_id','expense.application:id,code,customer_id','expense.application.customer:id,name', 'costCategory:id,name'])
+        ->where('status', 2);
+        $month = '';
+        $year = '';
+        if(request()->month){
+            $date = Carbon::parse(request()->month);
+            $month = $date->translatedFormat('F');
+            $year = $date->format('Y');
+            $data = $data->whereMonth('created_at', $date)->whereYear('created_at', $date);
+        }
+        $total = $data->sum('nominal');
+        $data = $data->get();
+        $pdf = PDF::loadView('pdf.report-expenses', compact(['data','month','year','total']))
+            ->setPaper('a4', 'potrait');
+
+        return $pdf->stream();
     }
 }

@@ -109,3 +109,4 @@ Route::group(['middleware' => ['auth:api'], 'namespace'=>'App\Http\Controllers\A
 // PDF
 Route::get('/business-trip-letter/{id}', [Api\BusinessTripApplicationController::class, 'letter']);
 Route::get('/business-trip-report', [Api\ReportTripController::class, 'print']);
+Route::get('/expense-report', [Api\ReportExpenseController::class, 'print']);
