@@ -27,7 +27,7 @@ class BusinessTripApplicationController extends Controller
     {
         try {
             if(Auth::user()->jobPosition->role_id == 2){
-                $data = Model::with(['requester', 'jobCategory:id,name']);
+                $data = Model::with(['requester', 'jobCategory:id,name'])->where('status', Model::STATUS_WAITING);
             }elseif(Auth::user()->jobPosition->role_id == 3){
                 $data = Model::with(['requester', 'jobCategory:id,name'])->where(function($query){
                     $query->where('requested_by', Auth::id());
