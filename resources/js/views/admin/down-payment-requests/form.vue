@@ -21,7 +21,7 @@
                     <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Nominal</label>
-                            <input placeholder="Nominal Uang Muka" type="number" step="50000" :class="{ 'has-error': errors.nominal }" class="form-control" v-model="form.nominal">
+                            <money v-bind="money" placeholder="Nominal Uang Muka" :class="{ 'has-error': errors.nominal }" class="form-control" v-model="form.nominal"/>
                             <p class="text-danger" v-if="errors.nominal">{{ errors.nominal[0] }}</p>
                         </div>
                     </b-col>
@@ -33,12 +33,25 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 import {formatDate} from '@app/utils/formatter'
+import {Money} from 'v-money'
 
 export default {
     props:['modelId'],
     created(){
         if(this.modelId > 0) this.show(this.modelId)
-        this.loadBusinessTrip({'status':'approved', 'result':'waiting'})
+        this.loadBusinessTrip({status:'approved', result:'waiting', page:'down_payment'})
+    },
+    components: {Money},
+    data(){
+        return{
+            money: {
+                decimal: ',',
+                thousands: '.',
+                prefix: 'Rp ',
+                precision: 0,
+                masked: false
+            }
+        }
     },
     computed: {
         ...mapState(['errors']), //MENGAMBIL STATE ERRORS

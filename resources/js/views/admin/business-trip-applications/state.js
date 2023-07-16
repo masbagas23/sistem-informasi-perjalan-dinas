@@ -127,7 +127,7 @@ const actions = {
     //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA DARI SERVER
     loadList({ commit }, payload) {
         return new Promise((resolve, reject) => {
-            $axios.get(`/business-trip-list`).then(response => {
+            $axios.get(`/business-trip-list`, {params:payload}).then(response => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit("ASSIGN_LIST", response.data);
                 resolve(response.data);

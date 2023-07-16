@@ -76,6 +76,16 @@ class BusinessTripApplication extends Model
         return $this->hasOne(Expense::class, 'application_id', 'id');
     }
 
+    public function downPayment()
+    {
+        return $this->hasOne(DownPaymentRequest::class, 'application_id', 'id');
+    }
+    
+    public function vehicleLoan()
+    {
+        return $this->hasOne(VehicleLoan::class, 'application_id', 'id');
+    }
+
     public static function generateCodeLetter($date)
     {
         $month      = substr($date, 5, 2);

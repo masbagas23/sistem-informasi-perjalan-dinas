@@ -13,7 +13,7 @@
                         <fieldset class="border px-2">
                             <legend  class="w-auto required"><span style="font-size:20px">Detail Biaya Pengeluaran</span></legend>
                             <b-col cols="12">
-                                <listExpenseComponent :form="form"/>
+                                <listExpenseComponent :mode="mode" :form="form"/>
                             </b-col>
                         </fieldset>
                     </b-col>
@@ -26,9 +26,9 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import {formatDate} from '@app/utils/formatter'
 import listExpenseComponent from "./_form/validationExpense.vue"
-import simpleDetailComponent from '../business-trip-applications/component/simple-detail.vue'
+import simpleDetailComponent from '../business-trip-applications/detail.vue'
 export default {
-    props:['modelId'],
+    props:['modelId','mode'],
     created(){
         if(this.modelId > 0) this.show(this.modelId)
         this.loadBusinessTrip()

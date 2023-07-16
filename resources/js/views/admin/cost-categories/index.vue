@@ -3,16 +3,16 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col cols="8">
+                <b-col class="col-lg-8 col-md-6">
                     <!-- Keyword -->
                     <b-form-input
                         v-model="keyword"
                         type="text"
                         placeholder="Cari"
-                        class="h-75 w-25"
+                        class="h-75"
                     ></b-form-input>
                 </b-col>
-                <b-col cols="4" class="text-right">
+                <b-col class="col-lg-4 col-md-6 text-right">
                     <!-- Add -->
                     <b-button @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
@@ -86,7 +86,7 @@
                         :options="tableParams.pageOptions"
                     ></b-form-select>
                 </div>
-                <div>
+                <div class="d-none d-block-lg">
                     <p v-if="collection.data.length > 0">
                         Menampilkan data ke {{collection.meta.from}} sampai {{collection.meta.to}} dari total {{collection.meta.total}} data
                     </p>

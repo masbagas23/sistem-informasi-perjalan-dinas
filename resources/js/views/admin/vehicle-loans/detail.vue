@@ -44,9 +44,9 @@
                                 </b-td>
                             </b-tr>
                             <b-tr>
-                                <b-td>Catatan</b-td>
+                                <b-td>Alasan</b-td>
                                 <b-td style="width:10px">:</b-td>
-                                <b-td>{{form.note}}</b-td>
+                                <b-td>{{form.note ? form.note : "-"}}</b-td>
                             </b-tr>
                         </b-table-simple>
                     </b-col>
@@ -71,9 +71,14 @@ export default {
         }),
     },
     methods:{
+        ...mapMutations(['CLEAR_ERRORS']),
         ...mapMutations('vehicleLoan', ['CLEAR_FORM']),
         ...mapActions('vehicleLoan', ['show']),
         formatDate
+    },
+    destroyed(){
+        this.CLEAR_ERRORS()
+        this.CLEAR_FORM()
     }
 }
 </script>

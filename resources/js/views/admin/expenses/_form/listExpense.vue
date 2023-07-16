@@ -23,7 +23,7 @@
             </template>
 
             <template v-slot:cell(nominal)="row">
-                <input placeholder="Nominal Biaya" type="number" step="1000" class="form-control" v-model="row.item.nominal">
+                <money v-bind="money" placeholder="Nominal Biaya" class="form-control" v-model="row.item.nominal"/>
             </template>
 
             <template v-slot:cell(description)="row">
@@ -69,15 +69,26 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import {Money} from 'v-money'
 
 export default {
     props: ["form"],
     created() {
         this.loadCostCategory();
     },
+    components:{
+        Money
+    },
     data() {
         return {
             imgUrl:'',
+            money: {
+                decimal: ',',
+                thousands: '.',
+                prefix: 'Rp ',
+                precision: 0,
+                masked: false
+            },
             fields: [
                 {
                     key: "index",

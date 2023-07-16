@@ -42,7 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $hidden = [
         'password',
-        'bank_number',
     ];
 
     /**
@@ -67,6 +66,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function jobPosition()
     {
         return $this->belongsTo(JobPosition::class, 'job_position_id', 'id')->withDefault();
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(BusinessTripApplicationUser::class, 'user_id','id');
     }
 
     public static function savePhoto($file, $dir)

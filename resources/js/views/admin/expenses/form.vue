@@ -5,7 +5,12 @@
                 <b-skeleton-table :rows="5" :columns="1" :table-props="{ bordered: true, striped: true }"></b-skeleton-table>
             </div>
             <div v-else>
-                <b-row>
+                <b-row v-if="form.application_id > 0">
+                    <b-col cols="12">
+                        <detailTripComponent :modelId="form.application_id"/>
+                    </b-col>
+                </b-row>
+                <b-row class="pt-2">
                     <b-col cols="6">
                         <div class="form-group">
                             <label class="required">Perjalan Dinas</label>
@@ -21,7 +26,7 @@
                     <b-col cols="6">
                         <div class="form-group">
                             <label>Uang Muka</label>
-                            <input readonly placeholder="Nominal Uang Muka" type="number" step="50000" class="form-control" v-model="form.down_payment">
+                            <money v-bind="money" readonly placeholder="Nominal Uang Muka" class="form-control" v-model="form.down_payment"/>
                         </div>
                     </b-col>
                     <b-col cols="12">
@@ -41,14 +46,30 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import {formatDate} from '@app/utils/formatter'
 import listExpenseComponent from "./_form/listExpense.vue"
+import detailTripComponent from "@app/views/admin/business-trip-applications/detail.vue"
+import {Money} from 'v-money'
+
 export default {
     props:['modelId'],
     created(){
         if(this.modelId > 0) this.show(this.modelId)
-        this.loadBusinessTrip()
+        this.loadBusinessTrip({status:'approved', result:'waiting', page:'expense'})
     },
     components:{
-        listExpenseComponent
+        listExpenseComponent,
+        detailTripComponent,
+        Money
+    },
+    data(){
+        return{
+            money: {
+                decimal: ',',
+                thousands: '.',
+                prefix: 'Rp ',
+                precision: 0,
+                masked: false
+            }
+        }
     },
     computed: {
         ...mapState(['errors']), //MENGAMBIL STATE ERRORS

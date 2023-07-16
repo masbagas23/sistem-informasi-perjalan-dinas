@@ -5,6 +5,10 @@
                 <b-skeleton-table :rows="5" :columns="1" :table-props="{ bordered: true, striped: true }"></b-skeleton-table>
             </div>
             <div v-else>
+                <b-alert class="text-center" v-if="form.status == 4" variant="warning" show dismissible>
+                    <h4>Alasan Ditolak</h4>
+                    {{form.note}}
+                </b-alert>
                 <b-row>
                     <!-- Tujuan -->
                     <b-col cols="12">
@@ -70,23 +74,23 @@
                         </fieldset>
                     </b-col>
                     <!-- Peserta -->
-                    <b-col cols="6">
+                    <b-col v-if="form.start_date" cols="6">
                         <fieldset class="border px-3">
                             <legend  class="w-auto required"><span style="font-size:20px">Peserta</span></legend>
                             <b-row style="max-height:300px">
                                 <b-col cols="12">
-                                    <chooseUser :form="form"/>
+                                    <chooseUser :index="form.start_date" :form="form"/>
                                 </b-col>
                             </b-row>
                         </fieldset>
                     </b-col>
                     <!-- Detail Pekerjaan -->
-                    <b-col cols="6">
+                    <b-col v-if="form.start_date" cols="6">
                         <fieldset class="border px-3">
                             <legend  class="w-auto required"><span style="font-size:20px">Daftar Tugas</span></legend>
                             <b-row style="max-height:300px">
                                 <b-col cols="12">
-                                    <listTarget :form="form"/>
+                                    <listTarget :index="form.start_date" :form="form"/>
                                 </b-col>
                             </b-row>
                         </fieldset>

@@ -229,7 +229,8 @@ class VehicleLoanController extends Controller
 
             if (request()->filter_month) {
                 $data = $data->whereHas('application', function ($query) {
-                    $query->whereMonth('start_date', request()->filter_month);
+                    $date = Carbon::parse(request()->filter_month);
+                    $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
                 });
             }
 

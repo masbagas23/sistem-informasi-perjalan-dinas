@@ -76,15 +76,15 @@
                     <b-col cols="6">
                         <div class="form-group">
                             <label class="">No Rekening Bank</label>
-                            <input placeholder="Nomor HP" type="number" :class="{ 'has-error': errors.bank_number }" class="form-control" v-model="form.bank_number">
+                            <input placeholder="Nomor Rekening Bank Gajian" type="number" :class="{ 'has-error': errors.bank_number }" class="form-control" v-model="form.bank_number">
                             <p class="text-danger" v-if="errors.bank_number">{{ errors.bank_number[0] }}</p>
                         </div>
                     </b-col>
                     <b-col cols="6">
                         <div class="form-group">
                             <label class="">Tanda Tangan</label>
-                            <b-form-file id="file" ref="file" @change="handleFileUpload" size="sm" accept=".jpg, .png, .webp"></b-form-file>
-                            <p class="text-danger" v-if="errors.bank_number">{{ errors.bank_number[0] }}</p>
+                            <b-form-file @change="handleSignature" accept=".jpg, .png, .webp"></b-form-file>
+                            <p class="text-danger" v-if="errors.siganture">{{ errors.siganture[0] }}</p>
                         </div>
                     </b-col>
                     <b-col cols="12">
@@ -133,6 +133,9 @@ export default {
         ...mapActions('mstJobPosition', {loadJobPosition:'loadList'}),
         handleFileUpload(file){
             this.form.file = file.target.files[0];
+        },
+        handleSignature(file){
+            this.form.signature = file.target.files[0];
         }
     },
     //KETIKA PAGE INI DITINGGALKAN MAKA

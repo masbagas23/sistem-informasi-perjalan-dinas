@@ -6,15 +6,20 @@
                 <hr>
             </b-col>
             <b-col cols="12" class="text-center py-2">
-                <b-button-group>
-                    <b-button @click="setStatus(true)" size="lg" variant="success"><b-icon icon="check-circle" v-if="form.status == 2"></b-icon> Setuju</b-button>
-                    <b-button @click="setStatus(false)" size="lg" variant="danger"><b-icon icon="check-circle" v-if="form.status != 2"></b-icon> Tolak</b-button>
-                </b-button-group>
-                <div v-if="form.status != 2" class="form-group pt-2">
+                <div v-if="form.status != 2" class="form-group pb-2">
                     <label class="required">Catatan</label>
                     <b-form-textarea :class="{ 'has-error': errors.note }" v-model="form.note" placeholder="Alasan ditolak..." rows="3" max-rows="6" ></b-form-textarea>
                     <p class="text-danger" v-if="errors.note">Isi alasan terlebih dahulu.</p>
                 </div>
+                <div v-if="form.status == 2" class="form-group pb-2">
+                    <label class="required">Upload Bukti Transfer</label>
+                    <b-form-file @change="handleAttachment" name="file" ref="file" size="sm" accept=".jpg, .png, .jpeg"></b-form-file>
+                    <p class="text-danger" v-if="errors.file">Mohon Untuk Upload Bukti Transfer Uang Muka Ke NoRek Tertera</p>
+                </div>
+                <b-button-group>
+                    <b-button @click="setStatus(true)" size="lg" variant="success"><b-icon icon="check-circle" v-if="form.status == 2"></b-icon> Setuju</b-button>
+                    <b-button @click="setStatus(false)" size="lg" variant="danger"><b-icon icon="check-circle" v-if="form.status != 2"></b-icon> Tolak</b-button>
+                </b-button-group>
             </b-col>
         </b-row>
     </div>
@@ -41,7 +46,14 @@ export default {
         setStatus(status){
             if(status) this.form.status = 2
             else this.form.status = 4
-        }
+        },
+        handleAttachment(file){
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                this.form.file = event.target.result ?? null
+            }
+            reader.readAsDataURL(file.target.files[0])
+        },
     },
     //KETIKA PAGE INI DITINGGALKAN MAKA
     destroyed() {

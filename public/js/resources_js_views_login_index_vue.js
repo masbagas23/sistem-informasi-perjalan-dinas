@@ -163,10 +163,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 response = _context.sent;
                 localStorage.setItem("token", response.data.token);
 
-                _this.$store.dispatch("user", response.data.user);
+                _this.$store.dispatch("user", response.data.user); // this.$router.push("/app");
 
-                _this.$router.push("/app");
 
+                window.location.href = "/app";
                 _context.next = 12;
                 break;
 

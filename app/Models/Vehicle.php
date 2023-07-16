@@ -15,4 +15,9 @@ class Vehicle extends Model
         'category',
         'number_plate_license',
     ];
+
+    public function loans()
+    {
+        return $this->hasMany(VehicleLoan::class, 'vehicle_id', 'id');
+    }
 }

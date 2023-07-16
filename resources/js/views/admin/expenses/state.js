@@ -86,7 +86,6 @@ const mutations = {
             reimburse_path: payload.reimburse_path,
             updated_at: payload.updated_at,
             details: payload.details,
-            reimburse_path:payload.reimburse_path,
         };
     },
     //ME-RESET STATE FORM MENJADI KOSONG

@@ -82,11 +82,11 @@
                         <b-badge
                             title="Persetujuan"
                             pill
-                            variant="success"
+                            variant="primary"
                             ><b-icon icon="person-check"></b-icon
                         ></b-badge>
                     </a>
-                    <a v-else-if="row.item.status == 1 && user.job_position.role_id == 4" href="#" @click="remove(row.item.id)">
+                    <a v-if="row.item.status == 1 && user.job_position.role_id == 4" href="#" @click="remove(row.item.id)">
                         <b-badge
                             title="Hapus"
                             pill
@@ -94,13 +94,14 @@
                             ><b-icon icon="trash"></b-icon
                         ></b-badge>
                     </a>
-                    <b-badge
-                        v-else
-                        title="Terkunci"
-                        pill
-                        variant="secondary"
-                        ><b-icon icon="lock"></b-icon
-                    ></b-badge>
+                    <a href="#" @click="detail(row.item.id)">
+                        <b-badge
+                            title="Tampilkan"
+                            pill
+                            variant="success"
+                            ><b-icon icon="eye"></b-icon
+                        ></b-badge>
+                    </a>
                     <!-- <b-dropdown variant="secondary" size="sm" right>
                         <b-dropdown-item @click="detail(row.item.id)">
                             <b-badge
@@ -209,6 +210,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <detailComponent :modelId="modelId" />
             <template v-slot:modal-footer>

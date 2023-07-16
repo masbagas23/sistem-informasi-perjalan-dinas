@@ -24,10 +24,10 @@
     </div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-lg-6 col-md-12">
         <topCustomerTrip/>
       </div>
-      <div class="col-6">
+      <div class="col-lg-6 col-md-12">
         <topCustomerCost/>
       </div>
     </div>

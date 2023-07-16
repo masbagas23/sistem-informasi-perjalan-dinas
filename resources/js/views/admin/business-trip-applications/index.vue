@@ -3,16 +3,16 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col cols="8">
+                <b-col class="col-lg-8 col-md-6">
                     <!-- Keyword -->
                     <b-form-input
                         v-model="keyword"
                         type="text"
                         placeholder="Cari"
-                        class="h-75 w-25"
+                        class="h-75"
                     ></b-form-input>
                 </b-col>
-                <b-col cols="4" class="text-right">
+                <b-col class="col-lg-4 col-md-6 text-right">
                     <!-- Add -->
                     <b-button v-show="user.job_position.role_id == 3" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
@@ -76,20 +76,21 @@
                 </template>
 
                 <template v-slot:cell(status)="row">
-                    <b-badge v-if="row.item.status == 1" pill variant="warning">Menunggu</b-badge>
-                    <b-badge v-if="row.item.status == 2" pill variant="success">Disetujui</b-badge>
-                    <b-badge v-if="row.item.status == 3" pill variant="secondary">Dibatalkan</b-badge>
-                    <b-badge v-if="row.item.status == 4" pill variant="danger">Ditolak</b-badge>
+                    <b-badge v-if="row.item.result == 2" pill variant="success">Selesai</b-badge>
+                    <b-badge v-else-if="row.item.status == 1" pill variant="warning">Menunggu</b-badge>
+                    <b-badge v-else-if="row.item.status == 2" pill variant="success">Disetujui</b-badge>
+                    <b-badge v-else-if="row.item.status == 3" pill variant="secondary">Dibatalkan</b-badge>
+                    <b-badge v-else-if="row.item.status == 4" pill variant="danger">Ditolak</b-badge>
                 </template>
 
                 <template v-slot:cell(action)="row">
                     <a v-if="row.item.status == 1 && user.job_position.role_id == 2" href="#" @click="viewApproval(row.item.id)"><b-badge
                         title="Persetujuan"
                         pill
-                        variant="success"
+                        variant="primary"
                         ><b-icon icon="person-check"></b-icon
                     ></b-badge></a>
-                    <a v-if="row.item.status == 2" href="#" @click="print(row.item.id)"><b-badge
+                    <a v-if="row.item.status == 2 && user.job_position.role_id == 4" href="#" @click="print(row.item.id)"><b-badge
                         title="Cetak"
                         pill
                         variant="primary"
@@ -108,6 +109,22 @@
                         variant="danger"
                         ><b-icon icon="trash"></b-icon
                     ></b-badge></a>
+                    <a v-if="row.item.status == 4 && user.job_position.role_id == 3" href="#" @click="view(row.item.id)">
+                        <b-badge
+                            title="Ajukan Ulang"
+                            pill
+                            variant="primary"
+                            ><b-icon icon="arrow-clockwise"></b-icon
+                        ></b-badge>
+                    </a>
+                    <a href="#" @click="detail(row.item.id)">
+                        <b-badge
+                            title="Tampilkan"
+                            pill
+                            variant="success"
+                            ><b-icon icon="eye"></b-icon
+                        ></b-badge>
+                    </a>
                 </template>
             </b-table>
             <div
@@ -119,7 +136,7 @@
                         :options="tableParams.pageOptions"
                     ></b-form-select>
                 </div>
-                <div>
+                <div class="d-none d-lg-block">
                     <p v-if="collection.data.length > 0">
                         Menampilkan data ke {{collection.meta.from}} sampai {{collection.meta.to}} dari total {{collection.meta.total}} data
                     </p>
@@ -196,6 +213,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <detailComponent :modelId="modelId"/>
             <template v-slot:modal-footer>
@@ -246,7 +264,7 @@
                 <b-button class="btn btn-secondary ml-2" @click="hideModal()"
                     ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
                 >
-                <button class="btn btn-primary" @click.prevent="reporting">
+                <button v-if="form.result == 1" class="btn btn-primary" @click.prevent="reporting">
                     <b-spinner
                         v-if="loadingProcess"
                         small
@@ -329,6 +347,7 @@ export default {
         ...mapState("businessTripApplication", {
             collection: state => state.collection,
             isBusy: state => state.isBusy,
+            form: state => state.form,
         }),
         ...mapGetters(['user']),
         tableParams: {
@@ -463,11 +482,11 @@ export default {
             this.report(this.modelId)
             .then(r => {
                 this.hideModal(true);
-                notify.success(this.fileTitle, "batalkan");
+                notify.success(this.fileTitle, "simpan");
                 this.loadingProcess = false;
             })
             .catch(e => {
-                notify.error(this.fileTitle, "batalkan");
+                notify.error(this.fileTitle, "simpan");
                 this.loadingProcess = false;
             });
         }, 500),

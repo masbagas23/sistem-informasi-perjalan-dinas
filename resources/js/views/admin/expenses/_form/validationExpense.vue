@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-table
-            :fields="fields"
+            :fields="filterFields"
             show-empty
             bordered
             small
@@ -42,7 +42,7 @@
             </template>
 
             <template v-slot:cell(file_path)="row">
-                <a @click="preview(row.value)" href="#"><div class="text-center"><b-img :src="row.value ? row.value : row.item.file" rounded class="pb-2" height="100px"></b-img></div></a>
+                <a v-if="row.value" @click="preview(row.value)" href="#"><div class="text-center"><b-img :src="row.value ? row.value : row.item.file" rounded class="pb-2" height="100px"></b-img></div></a>
             </template>
         </b-table>
 
@@ -71,7 +71,7 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import {formatCurrency} from '@app/utils/formatter'
 export default {
-    props: ["form"],
+    props: ["form","mode"],
     created() {
         this.loadCostCategory();
     },
@@ -88,7 +88,7 @@ export default {
                 {
                     key: "expense",
                     label: "Biaya Pengeluaran",
-                    thStyle: "text-align:center"
+                    // thStyle: "text-align:center"
                 },
                 {
                     key: "file_path",
@@ -100,6 +100,7 @@ export default {
                     tdClass: "text-center",
                     thStyle: "text-align:center;width:250px",
                     label: "Status",
+                    isDetail: true
                 },
             ]
         };
@@ -116,6 +117,13 @@ export default {
                 nominal = nominal + item.nominal
             });
             return nominal
+        },
+        filterFields(){
+            if(this.mode == 'detail'){
+                return this.fields.filter(item => !item.isDetail)
+            }else{
+                return this.fields
+            }
         },
     },
     methods: {

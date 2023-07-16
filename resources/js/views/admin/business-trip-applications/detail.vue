@@ -20,7 +20,7 @@
                                         <tr>
                                             <td>Nomor Surat</td>
                                             <td style="width:10px">:</td>
-                                            <td>{{form.code_letter}}</td>
+                                            <td>{{form.code_letter ? form.code_letter : '-'}}</td>
                                         </tr>
                                         <tr>
                                             <td>Pemohon</td>
@@ -58,9 +58,9 @@
                                             <td>{{form.description}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Catatan</td>
+                                            <td>Alasan</td>
                                             <td style="width:10px">:</td>
-                                            <td>{{form.note}}</td>
+                                            <td>{{form.note ? form.note : "-"}}</td>
                                         </tr>
                                     </b-table-simple>
                                 </b-col>

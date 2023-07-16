@@ -17,7 +17,7 @@ class StatisticController extends Controller
     {
         $customers = Customer::with(['applications:id,customer_id'])->whereHas('applications', function($query){
             $date = Carbon::parse(request()->filter_month);
-            $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
+            $query->whereMonth('start_date', $date)->whereYear('start_date', $date)->where('status', BusinessTripApplication::STATUS_APPROVE);
         })->get();
         $data = [];
         foreach ($customers as $customer) {
@@ -38,7 +38,7 @@ class StatisticController extends Controller
     {
         $customers = Customer::with(['applications:id,customer_id', 'applications.expense:id,application_id,total_nominal'])->whereHas('applications', function($query){
             $date = Carbon::parse(request()->filter_month);
-            $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
+            $query->whereMonth('start_date', $date)->whereYear('start_date', $date)->where('status', BusinessTripApplication::STATUS_APPROVE);
         })->whereHas('applications.expense')->get();
         $data = [];
         foreach ($customers as $customer) {

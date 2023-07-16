@@ -21,15 +21,17 @@
                     <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Kategori Kendaraan</label>
-                            <v-select @input="handleVehicleCategory" class="boot-style" v-model="filterCategory" label="name" :reduce="item => item.id" :options="vehicleCategories">
-                                
-                            </v-select>
+                            <v-select :disabled="!form.application_id > 0" @input="handleVehicleCategory" class="boot-style" v-model="filterCategory" label="name" :reduce="item => item.id" :options="vehicleCategories"></v-select>
                         </div>
                     </b-col>
                     <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Kendaraan</label>
-                            <v-select class="boot-style" :disabled="!filterCategory" v-model="form.vehicle_id" label="name" :reduce="item => item.id" :options="vehicles.data"></v-select>
+                            <v-select class="boot-style" :disabled="!filterCategory" v-model="form.vehicle_id" label="name" :reduce="item => item.id" :options="vehicles.data">
+                                <template #option="{ name, number_plate_license}">
+                                    <p class="m-0">{{ name }} - {{number_plate_license}}</p>
+                                </template>
+                            </v-select>
                             <p class="text-danger" v-if="errors.vehicle_id">{{ errors.vehicle_id[0] }}</p>
                         </div>
                     </b-col>
@@ -60,7 +62,7 @@ export default {
                 this.form.total_day = r.data.application.total_day
             })
         }
-        this.loadBusinessTrip({'status':'approved', 'result':'waiting'})
+        this.loadBusinessTrip({status:'approved', result:'waiting', page:'vehicle_loan'})
     },
     data(){
         return {
@@ -89,7 +91,7 @@ export default {
         ...mapActions('businessTripApplication', {loadBusinessTrip:'loadList'}),
         formatDate,
         handleVehicleCategory(){
-            this.loadVehicle({'category': this.filterCategory})
+            this.loadVehicle({'category': this.filterCategory, 'start_date':this.form.start_date, 'end_date':this.form.end_date, 'page':'vehicle_loan'});
         },
         handleApplication(){
             const application = this.businessTrips.data.find(item => item.id == this.form.application_id)

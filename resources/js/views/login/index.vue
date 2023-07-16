@@ -129,7 +129,8 @@ export default {
 
         localStorage.setItem("token", response.data.token);
         this.$store.dispatch("user", response.data.user);
-        this.$router.push("/app");
+        // this.$router.push("/app");
+        window.location.href = "/app"
       } catch (error) {
         notify.authError(error);
       }

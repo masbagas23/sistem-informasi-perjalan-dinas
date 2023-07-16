@@ -26,18 +26,22 @@ class BusinessTripApplicationController extends Controller
     public function index()
     {
         try {
-            if(Auth::user()->jobPosition->role_id == 2){
-                $data = Model::with(['requester', 'jobCategory:id,name'])->where('status', Model::STATUS_WAITING);
-            }elseif(Auth::user()->jobPosition->role_id == 3){
-                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function($query){
+            if (Auth::user()->jobPosition->role_id == 2) {
+                $data = Model::with(['requester', 'jobCategory:id,name']);
+            } elseif (Auth::user()->jobPosition->role_id == 3) {
+                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function ($query) {
                     $query->where('requested_by', Auth::id());
                 });
-            }else{
-                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function($query){
+            } elseif (Auth::user()->jobPosition->role_id == 4) {
+                $data = Model::with(['requester', 'jobCategory:id,name'])->whereHas('users', function ($query) {
+                    $query->where('user_id', Auth::id())->where('is_leader', 1);
+                });
+            } else {
+                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function ($query) {
                     $query->where('requested_by', Auth::id())
-                    ->orWhereHas('users',function($user){
-                        $user->where('user_id', Auth::id())->where('is_leader', 1);
-                    });
+                        ->orWhereHas('users', function ($user) {
+                            $user->where('user_id', Auth::id())->where('is_leader', 1);
+                        });
                 });
             }
 
@@ -68,6 +72,25 @@ class BusinessTripApplicationController extends Controller
                 $data = $data->where(function ($query) {
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
                 });
+            }
+            if (request()->page) {
+                switch (request()->page) {
+                    case 'vehicle_loan':
+                        $data = $data->whereHas('users', function ($query) {
+                            $query->where('user_id', Auth::id())->where('is_leader', 1);
+                        })->whereDoesntHave('vehicleLoan');
+                        break;
+                    case 'down_payment':
+                        $data = $data->whereHas('users', function ($query) {
+                            $query->where('user_id', Auth::id())->where('is_leader', 1);
+                        })->whereDoesntHave('downPayment');
+                        break;
+                    default:
+                        $data = $data->whereHas('users', function ($query) {
+                            $query->where('user_id', Auth::id())->where('is_leader', 1);
+                        });
+                        break;
+                }
             }
             if (request()->status) {
                 switch (request()->status) {
@@ -316,7 +339,7 @@ class BusinessTripApplicationController extends Controller
         ]);
 
         try {
-            $code_letter = Model::generateCodeLetter(Carbon::now());
+            $code_letter = $request->status == Model::STATUS_APPROVE ? Model::generateCodeLetter(Carbon::now()) : null;
             Model::find($id)->update([
                 "code_letter" => $code_letter,
                 "note" => $request->note,
@@ -364,8 +387,10 @@ class BusinessTripApplicationController extends Controller
         ]);
 
         try {
+            Model::find($id)->update(['result'=>Model::RESULT_DONE]);
             foreach ($request->targets as $target) {
-                $file_path = isset($target['file']) ? base64ToImage($target['file'], 'target') : null;
+                $file_path = isset($target['file']) ? base64ToImage($target['file'], 'target') : ($target['file_path'] ?? null);
+                
                 $start_date = Carbon::parse($request->start_date);
                 $end_date = Carbon::parse($request->end_date);
                 $duration = $end_date->diffInDays($start_date);

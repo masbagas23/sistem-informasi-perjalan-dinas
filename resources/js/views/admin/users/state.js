@@ -15,6 +15,7 @@ function defaultForm() {
         signature_url: "",
         avatar_url: "",
         updated_at: "",
+        signature:"",
         file:[]
     };
 }

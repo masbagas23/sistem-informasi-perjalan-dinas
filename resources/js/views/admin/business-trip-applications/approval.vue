@@ -13,7 +13,7 @@
                 <div v-if="form.status == 4" class="form-group pt-2">
                     <label class="required">Catatan</label>
                     <b-form-textarea :class="{ 'has-error': errors.note }" v-model="form.note" placeholder="Alasan ditolak..." rows="3" max-rows="6" ></b-form-textarea>
-                    <p class="text-danger" v-if="errors.note">{{ errors.note[0] }}</p>
+                    <p class="text-danger" v-if="errors.note">Mohon isi alasan penolakan.</p>
                 </div>
             </b-col>
         </b-row>

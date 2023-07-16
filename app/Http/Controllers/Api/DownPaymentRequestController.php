@@ -186,12 +186,17 @@ class DownPaymentRequestController extends Controller
     {
         $request->validate([
             "note"=> "required_unless:status,2",
+            "file"=>"required_if:status,2"
         ]);
 
         try {
+            if($request->status == 2){
+                $file_path = isset($request->file) ? base64ToImage($request->file, 'downpayment') : null;
+            }
             Model::find($id)->update([
                 "status" => $request->status == Model::STATUS_APPROVE ? Model::STATUS_APPROVE : Model::STATUS_REJECT,
                 "note" => $request->note,
+                "file_path" => $request->status == Model::STATUS_APPROVE ? $file_path : null,
                 "approved_by" => auth()->user()->id,
             ]);
             return response()->json([
@@ -216,7 +221,6 @@ class DownPaymentRequestController extends Controller
                 "note" => $request->note,
                 "status" => Model::STATUS_CANCEL
             ]);
-            dd("OK");
             return response()->json([
                 "status"=>"success"
             ], Response::HTTP_CREATED);

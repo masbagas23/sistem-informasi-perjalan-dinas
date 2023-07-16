@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserListResource;
+use App\Models\BusinessTripApplication;
 use Illuminate\Http\Request;
 use App\Models\User as Model;
 use Illuminate\Http\Response;
@@ -53,10 +54,16 @@ class UserController extends Controller
                 });
             }
             if(request()->filter_job_position){
+                $data = $data->whereDoesntHave('applications.application', function($query){
+                    $query->where('status', '!=', BusinessTripApplication::STATUS_REJECT)->where(function($date){
+                        $date->whereBetween('start_date', [request()->start_date, request()->end_date])->orWhereBetween('start_date', [request()->start_date, request()->end_date]);
+                    });
+                });
+                // dd($data->get());
                 switch (request()->filter_job_position) {
                     case 'participant':
                         $data = $data->whereHas('jobPosition', function($q){
-                            $q->where('id', '>', 2);
+                            $q->where('id', '>', 2)->where('id', '<', 5);
                         });
                         break;
                     default:
@@ -98,6 +105,9 @@ class UserController extends Controller
         try {
             $ava_url = '/images/ava.webp';
             // Simpan Foto
+            if($request->hasFile('file')){
+                $ava_url = Model::savePhoto($request->file('file'), 'avatar');
+            }
             if($request->hasFile('file')){
                 $ava_url = Model::savePhoto($request->file('file'), 'avatar');
             }

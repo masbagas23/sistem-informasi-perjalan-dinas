@@ -31,7 +31,7 @@
             <b-table
                 :items="collection.data"
                 :busy.sync="isBusy"
-                :fields="filterFields"
+                :fields="fields"
                 :sort-by.sync="tableParams.order_column"
                 :sort-desc.sync="tableParams.order_direction"
                 :tbody-tr-class="rowClass"
@@ -77,15 +77,23 @@
                 </template>
 
                 <template v-slot:cell(action)="row">
-                    <a v-if="row.item.status == 1 && user.job_position.role_id == 4" href="#" @click="viewValidation(row.item.id)">
+                    <a v-if="row.item.status == 1 && user.job_position.role_id == 5" href="#" @click="viewValidation(row.item.id)">
                         <b-badge
                             title="Validasi"
                             pill
-                            variant="success"
+                            variant="primary"
                             ><b-icon icon="person-check"></b-icon
                         ></b-badge>
                     </a>
-                    <a v-if="row.item.total_nominal == 0 && user.job_position.role_id == 4" href="#" @click="remove(row.item.id)">
+                    <a href="#" v-if="row.item.status == 1 && user.job_position.role_id == 4" @click="view(row.item.id)">
+                        <b-badge
+                            title="Edit"
+                            pill
+                            variant="primary"
+                            ><b-icon icon="pencil-square"></b-icon
+                        ></b-badge>
+                    </a>
+                    <a v-if="row.item.status == 1 && user.job_position.role_id == 4" href="#" @click="remove(row.item.id)">
                         <b-badge
                             title="Hapus"
                             pill
@@ -93,13 +101,14 @@
                             ><b-icon icon="trash"></b-icon
                         ></b-badge>
                     </a>
-                    <b-badge
-                        v-else
-                        title="Terkunci"
-                        pill
-                        variant="secondary"
-                        ><b-icon icon="lock"></b-icon
-                    ></b-badge>
+                    <a href="#" @click="viewValidation(row.item.id, 'detail')">
+                        <b-badge
+                            title="Detail"
+                            pill
+                            variant="success"
+                            ><b-icon icon="eye"></b-icon
+                        ></b-badge>
+                    </a>
                     <!-- <b-dropdown variant="secondary" size="sm" right>
                         <b-dropdown-item @click="viewValidation(row.item.id)">
                             <b-badge
@@ -191,12 +200,12 @@
             no-close-on-esc
             no-close-on-backdrop
         >
-            <validationComponent :modelId="modelId" />
+            <validationComponent :mode="mode" :modelId="modelId" />
             <template v-slot:modal-footer>
                 <b-button class="btn btn-secondary ml-2" @click="hideModal()"
-                    ><i class="fas fa-arrow-left mr-2"></i>Batal</b-button
+                    ><i class="fas fa-arrow-left mr-2"></i>Kembali</b-button
                 >
-                <button class="btn btn-primary" @click.prevent="validating">
+                <button v-if="mode != 'detail'" class="btn btn-primary" @click.prevent="validating">
                     <b-spinner
                         v-if="loadingProcess"
                         small
@@ -219,9 +228,9 @@
             <reimburseComponent :modelId="modelId"/>
             <template v-slot:modal-footer>
                 <b-button class="btn btn-secondary ml-2" @click="hideModal()"
-                    ><i class="fas fa-arrow-left mr-2"></i>Batal</b-button
+                    ><i class="fas fa-arrow-left mr-2"></i>Kembali</b-button
                 >
-                <button class="btn btn-primary" @click.prevent="reimbursing">
+                <button v-if="form.status_reimburse == 1" class="btn btn-primary" @click.prevent="reimbursing">
                     <b-spinner
                         v-if="loadingProcess"
                         small
@@ -276,6 +285,7 @@ export default {
             loadingProcess: false,
             keyword: "",
             modelId: "",
+            mode:"",
             fileTitle: "Biaya Pengeluaran"
         };
     },
@@ -305,6 +315,7 @@ export default {
     },
     mounted(){
         this.CLEAR_ERRORS()
+        this.CLEAR_FORM()
     },
     watch: {
         tableParams: {
@@ -319,6 +330,7 @@ export default {
     },
     methods: {
         ...mapMutations(['CLEAR_ERRORS']),
+        ...mapMutations('expense', ['CLEAR_FORM']),
         ...mapActions("expense", [
             "load",
             "show",
@@ -336,8 +348,9 @@ export default {
             this.modelId = id;
             this.create();
         },
-        viewValidation(id) {
+        viewValidation(id,detail) {
             this.modelId = id;
+            this.mode = detail
             this.$bvModal.show("modal-validation-expense");
         },
         viewReimburse(id) {
@@ -346,6 +359,7 @@ export default {
         },
         hideModal(loading) {
             this.modelId = "";
+            this.mode = "";
             if (loading) {
                 this.reloadTable(this.tableParams);
             }

@@ -22,13 +22,15 @@
                     <template v-slot:cell(date)="row">
                         <b-row>
                             <b-col cols="12">
-                                <b-form-datepicker size="sm" placeholder="Tanggal Mulai" @input="changeStartDate" v-model="row.item.start_date" :min="form.start_date" :max="form.end_date" locale="id"></b-form-datepicker>
+                                <b-form-datepicker v-if="form.result == 1" size="sm" placeholder="Tanggal Mulai" v-model="row.item.start_date" :min="form.start_date" locale="id"></b-form-datepicker>
+                                <div v-else class="text-center">{{formatDate(row.item.start_date)}} - {{formatDate(row.item.end_date)}}</div>
                             </b-col>
-                            <b-col cols="12" class="text-center">
+                            <b-col v-if="form.result == 1" cols="12" class="text-center">
                                 -
                             </b-col>
                             <b-col cols="12">
-                                <b-form-datepicker size="sm" placeholder="Tanggal Selesai" @input="changeEndDate" :disabled="!form.start_date" v-model="row.item.end_date" :min="form.start_date" :max="form.end_date" locale="id"></b-form-datepicker>
+                                <b-form-datepicker v-if="form.result == 1" size="sm" placeholder="Tanggal Selesai" :disabled="!form.start_date" v-model="row.item.end_date" :min="form.start_date" locale="id"></b-form-datepicker>
+                                <!-- <div v-else class="text-center">{{formatDate(row.item.end_date)}}</div> -->
                             </b-col>
                         </b-row>
                     </template>
@@ -43,13 +45,14 @@
                             <b-tr>
                                 <b-td style="width:150px">Catatan</b-td>
                                 <b-td style="width:10px">:</b-td>
-                                <b-td>{{row.item.description}}</b-td>
+                                <b-td>{{row.item.description ? row.item.description : "-"}}</b-td>
                             </b-tr>
                         </b-table-simple>
                     </template>
 
                     <template v-slot:cell(status)="row">
                         <v-select
+                            v-if="form.result == 1"
                             class="boot-style"
                             v-model="row.item.status"
                             label="name"
@@ -59,18 +62,19 @@
                             :clearable="false"
                             :selectable="(option) => option.id != 1"
                         ></v-select>
+                        <div class="text-center" v-else>{{row.item.status > 0 ? statuses.find(item => item.id == row.item.status).name : "-"}}</div>
                     </template>
 
                     <template v-slot:cell(file_path)="row">
                         <a @click="preview(row.value)" href="#"><div class="text-center"><b-img v-if="row.value" :src="row.value" rounded class="pb-2" height="100px"></b-img></div></a>
-                        <b-form-file @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .webp"></b-form-file>
+                        <b-form-file v-if="form.result == 1" @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .webp"></b-form-file>
                     </template>
                 </b-table>
 
                 <b-modal
                     id="modal-preview-image-target"
                     size="md"
-                    title="Preview"
+                    title="Pratinjau"
                     ref="modal"
                     no-close-on-esc
                     no-close-on-backdrop
@@ -92,7 +96,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-
+import {formatDate} from '@app/utils/formatter'
 export default {
     props: ["modelId"],
     created(){
@@ -114,12 +118,12 @@ export default {
                 {
                     key: "date",
                     label: "Tanggal",
-                    thStyle: "width:200px"
+                    thStyle: "text-align:center;width:250px"
                 },
                 {
                     key: "file_path",
                     label: "Dokumentasi",
-                    thStyle: "width:200px"
+                    thStyle: "text-align:center;width:200px"
 
                 },
                 {
@@ -148,6 +152,7 @@ export default {
         ...mapMutations(['CLEAR_ERRORS']),
         ...mapMutations('businessTripApplication', ['CLEAR_FORM']),
         ...mapActions('businessTripApplication', ['show']),
+        formatDate,
         preview(path){
             this.imgUrl = path
             this.$bvModal.show("modal-preview-image-target");
