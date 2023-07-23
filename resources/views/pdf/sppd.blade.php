@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <header style="background-image: url('{{ env('APP_URL', 'http://localhost') }}/images/kop-surat.png');"
+    <header style="background-image: url('{{ env('APP_URL', 'https://perjalanandinas.bagasraga.my.id') }}/images/kop-surat.png');"
         class="kop_surat"></header>
     <section style="padding-top:10px;">
         <h2 align="center" style="margin-bottom: 0px"><u>Surat Perintah Dinas</u></h2>
@@ -96,7 +96,7 @@
         </p>
         <p align="right">
             <img height="80px"
-                src="{{ env('APP_URL', 'http://localhost') . ($business_trip->approver->signature_url ? $business_trip->approver : '/images/signature.png') }}">
+                src="{{ env('APP_URL', 'https://perjalanandinas.bagasraga.my.id') . ($business_trip->approver->signature_url ? $business_trip->approver : '/images/signature.png') }}">
             <br>
             {{ $business_trip->approver->first_name }} {{ $business_trip->approver->middle_name }}
             {{ $business_trip->approver->last_name }}
