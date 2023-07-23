@@ -53,7 +53,7 @@ export default {
     props:['modelId'],
     created(){
         if(this.modelId > 0) this.show(this.modelId)
-        this.loadBusinessTrip({status:'approved', result:'waiting', page:'expense'})
+        this.loadBusinessTrip({status:'approved', page:'expense'})
     },
     components:{
         listExpenseComponent,

@@ -31,7 +31,7 @@
             </template>
 
             <template v-slot:cell(file_path)="row">
-                <a @click="preview(row.value)" href="#"><div class="text-center"><b-img :src="row.value ? row.value : row.item.file" rounded class="pb-2" height="100px"></b-img></div></a>
+                <a v-if="row.value" @click="preview(row.value)" href="#"><div class="text-center"><b-img :src="row.value ? row.value : row.item.file" rounded class="pb-2" height="100px"></b-img></div></a>
                 <b-form-file @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .webp"></b-form-file>
             </template>
             <template v-slot:cell(action)>
