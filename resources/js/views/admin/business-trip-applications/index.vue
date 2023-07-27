@@ -3,16 +3,15 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col class="col-lg-8 col-md-6">
+                <b-col class="col-lg-2 col-md-6">
                     <!-- Keyword -->
                     <b-form-input
                         v-model="keyword"
                         type="text"
                         placeholder="Cari"
-                        class="h-75"
                     ></b-form-input>
                 </b-col>
-                <b-col class="col-lg-4 col-md-6 text-right">
+                <b-col class="col-lg-10 col-md-6 text-right">
                     <!-- Add -->
                     <b-button v-show="user.job_position.role_id == 3" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
@@ -64,11 +63,16 @@
                 </template>
 
                 <template v-slot:cell(requester)="row">
-                    {{ row.value.first_name }}
+                    {{ row.value.first_name }} {{ row.value.last_name }}
+                    <div><em><small><span title="NIP">{{ row.value.nip }}</span> - <span title="Jabatan">{{ row.value.job_position.name }}</span></small></em></div>
                 </template>
 
                 <template v-slot:cell(job_category)="row">
                     {{ row.value.name }}
+                </template>
+
+                <template v-slot:cell(customer)="row">
+                    <a :href="row.value.gmaps_url" target="_blank" rel="noopener noreferrer">{{ row.value.name }}</a>
                 </template>
 
                 <template v-slot:cell(date)="row">
@@ -326,9 +330,10 @@ export default {
                     sortable: false
                 },
                 { key: "code", label: "Kode", sortable: false },
+                { key: "customer", label: "Lokasi Tujuan", sortable: false },
                 { key: "date", label: "Tanggal", sortable: false },
                 { key: "job_category", label: "Kategori Pekerjaan", sortable: false },
-                { key: "requester", label: "Pemohon", sortable: false },
+                { key: "requester", label: "Pemohon", sortable: false, tdClass:"text-left" },
                 { key: "status", label: "Status", sortable: false },
                 {
                     key: "action",

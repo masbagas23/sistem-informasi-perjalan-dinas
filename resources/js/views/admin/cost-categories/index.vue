@@ -3,13 +3,12 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col class="col-lg-8 col-md-6">
+                <b-col class="col-lg-2 col-md-6">
                     <!-- Keyword -->
                     <b-form-input
                         v-model="keyword"
                         type="text"
                         placeholder="Cari"
-                        class="h-75"
                     ></b-form-input>
                 </b-col>
                 <b-col class="col-lg-4 col-md-6 text-right">

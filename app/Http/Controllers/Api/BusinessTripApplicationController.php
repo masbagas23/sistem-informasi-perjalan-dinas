@@ -27,17 +27,17 @@ class BusinessTripApplicationController extends Controller
     {
         try {
             if (Auth::user()->jobPosition->role_id == 2) {
-                $data = Model::with(['requester', 'jobCategory:id,name']);
+                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name']);
             } elseif (Auth::user()->jobPosition->role_id == 3) {
-                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function ($query) {
+                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name'])->where(function ($query) {
                     $query->where('requested_by', Auth::id());
                 });
             } elseif (Auth::user()->jobPosition->role_id == 4) {
-                $data = Model::with(['requester', 'jobCategory:id,name'])->whereHas('users', function ($query) {
+                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name'])->whereHas('users', function ($query) {
                     $query->where('user_id', Auth::id())->where('is_leader', 1);
                 });
             } else {
-                $data = Model::with(['requester', 'jobCategory:id,name'])->where(function ($query) {
+                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name'])->where(function ($query) {
                     $query->where('requested_by', Auth::id())
                         ->orWhereHas('users', function ($user) {
                             $user->where('user_id', Auth::id())->where('is_leader', 1);
@@ -51,7 +51,7 @@ class BusinessTripApplicationController extends Controller
 
             if (request()->keyword != '') {
                 $data = $data->where(function ($query) {
-                    $query->where('name', 'LIKE', '%' . request()->keyword . '%');
+                    $query->where('code', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
             $data = $data->paginate(request()->per_page);
@@ -194,6 +194,7 @@ class BusinessTripApplicationController extends Controller
                     ]);
                 }
             }
+
             DB::commit();
             return response()->json([
                 "status" => "success"
@@ -342,7 +343,7 @@ class BusinessTripApplicationController extends Controller
             $code_letter = $request->status == Model::STATUS_APPROVE ? Model::generateCodeLetter(Carbon::now()) : null;
             Model::find($id)->update([
                 "code_letter" => $code_letter,
-                "note" => $request->note,
+                "note" => Model::STATUS_APPROVE ? null : $request->note,
                 "approved_by" => auth()->user()->id,
                 "status" => $request->status == Model::STATUS_APPROVE ? Model::STATUS_APPROVE : Model::STATUS_REJECT,
                 "result" => $request->status == Model::STATUS_APPROVE ? Model::RESULT_ON_PROGRESS : Model::RESULT_PENDING

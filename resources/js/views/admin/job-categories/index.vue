@@ -3,16 +3,15 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col cols="8">
+                <b-col class="col-lg-2 col-md-6">
                     <!-- Keyword -->
                     <b-form-input
                         v-model="keyword"
                         type="text"
                         placeholder="Cari"
-                        class="h-75 w-25"
                     ></b-form-input>
                 </b-col>
-                <b-col cols="4" class="text-right">
+                <b-col class="col-lg-10 col-md-6 text-right">
                     <!-- Add -->
                     <b-button @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
