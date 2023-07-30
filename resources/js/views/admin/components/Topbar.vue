@@ -90,7 +90,6 @@
 
       <!-- Nav Item - User Information -->
       <li class="nav-item dropdown no-arrow">
-        <div id="myNotifications"></div>
         <a
           class="nav-link dropdown-toggle"
           href="#"
