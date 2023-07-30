@@ -119,7 +119,7 @@ class UserController extends Controller
             }
             //
             $request->request->add(['avatar_url' => $ava_url]);
-            $request->request->add(['signature_url' => $signature_url]);
+            $request->request->add(['signature_url' => $signature_url ?? null]);
             $request->request->add(['password' => Hash::make('password')]);
             Model::create($request->all());
             return response()->json([
