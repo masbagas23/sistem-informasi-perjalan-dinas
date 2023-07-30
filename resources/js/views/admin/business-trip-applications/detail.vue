@@ -72,7 +72,7 @@
                             <b-col cols="12">
                                 <fieldset class="border px-3">
                                     <legend class="w-auto"><span style="font-size:20px">Peserta Perjalan Dinas</span></legend>
-                                    <div style="height:150px" >
+                                    <div style="max-height: 150px; overflow: auto; overflow-x: hidden;height:150px" >
                                          <p v-for="(user,index) in form.users" :key="index">
                                             {{index+1}}. {{user.name}} <span v-if="user.is_leader"> <b-badge variant="primary">Koordinator</b-badge></span><br>
                                             <small><em>{{user.nip}} - {{user.job_position}}</em></small>
@@ -83,7 +83,7 @@
                             <b-col cols="12">
                                 <fieldset class="border px-3">
                                     <legend class="w-auto"><span style="font-size:20px">Detail Tugas</span></legend>
-                                    <div style="height:150px" >
+                                    <div style="max-height: 150px; overflow: auto; overflow-x: hidden;height:150px" >
                                          <p v-for="(target,index) in form.targets" :key="index">
                                             {{index+1}}. {{target.name}}<br>
                                             <small><em>{{target.description}}</em></small>
@@ -128,3 +128,28 @@ export default {
     }
 }
 </script>
+<style scoped>
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #e7e7e7;
+    border: 1px solid #cacaca;
+    box-shadow: inset 0 0 6px rgba(77, 77, 77, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10rem;
+    border: 1px solid #fff;
+}
+::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+}
+
+::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+}
+</style>

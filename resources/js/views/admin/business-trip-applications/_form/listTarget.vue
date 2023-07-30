@@ -23,15 +23,18 @@
                 <input placeholder="Nama" type="text" class="form-control" v-model="row.item.name">
             </template>
 
-            <template v-slot:cell(action)>
-                <b-badge
-                    title="Hapus"
-                    class="btn"
-                    @click="removeTarget(index)"
-                    pill
-                    variant="danger"
-                    ><b-icon icon="trash"></b-icon
-                ></b-badge>
+            <template v-slot:cell(action)="row">
+                <div class="text-center">
+                    <b-badge
+                        v-show="row.index > 0"
+                        title="Hapus"
+                        class="btn"
+                        @click="removeTarget(row.index)"
+                        pill
+                        variant="danger"
+                        ><b-icon icon="trash"></b-icon
+                    ></b-badge>
+                </div>
             </template>
 
             <template v-slot:cell(description)="row">

@@ -156,17 +156,17 @@ export default {
   computed: {
     ...mapGetters(["user"]),
   },
-  mounted(){
-    const notificationapi = new NotificationAPI({
-      clientId: '585rb2fl4je58k1ut46oviauc8',
-      userId: this.user.email
-    });
+  // mounted(){
+  //   const notificationapi = new NotificationAPI({
+  //     clientId: '585rb2fl4je58k1ut46oviauc8',
+  //     userId: this.user.email
+  //   });
 
-    notificationapi.showInApp({
-      root: 'myNotifications',
-      popupPosition: 'bottomLeft',
-    });
-  },
+  //   notificationapi.showInApp({
+  //     root: 'myNotifications',
+  //     popupPosition: 'bottomLeft',
+  //   });
+  // },
   methods: {
     logout() {
       localStorage.removeItem("token");

@@ -44,6 +44,7 @@
                     v-model="row.item.user_id"
                     label="first_name"
                     :reduce="item => item.id"
+                    :selectable="selectable"
                     :options="users.data"
                     placeholder="Pilih Pegawai"
                 >
@@ -103,6 +104,10 @@ export default {
         },
         removeUser(index){
             this.form.users.splice(index,1)
+        },
+        selectable(item) {
+            const users = this.form.users.map(user => user.user_id)
+            return !_.includes(users, item.id)
         }
     }
 };
