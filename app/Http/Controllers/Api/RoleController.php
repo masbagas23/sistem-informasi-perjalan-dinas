@@ -27,6 +27,7 @@ class RoleController extends Controller
             if (request()->keyword != '') {
                 $data = $data->where(function($query){
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
+                    $query->orWhere('code', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
             $data = $data->paginate(request()->per_page);

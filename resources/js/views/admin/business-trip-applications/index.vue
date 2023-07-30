@@ -165,6 +165,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <formComponent :modelId="modelId" />
             <template v-slot:modal-footer>
@@ -191,6 +192,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <cancelComponent/>
             <template v-slot:modal-footer>
@@ -236,6 +238,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <approvalComponet :modelId="modelId"/>
             <template v-slot:modal-footer>
@@ -262,6 +265,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <reportingComponent :modelId="modelId"/>
             <template v-slot:modal-footer>
@@ -288,8 +292,9 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
-            <iframe srcdoc="Loading..." onload="this.removeAttribute('srcdoc')" :src="`/api/business-trip-letter/${modelId}`" style="height:800px;width:100%;" frameborder="0"></iframe>
+            <iframe srcdoc="Loading..." onload="this.removeAttribute('srcdoc')" :src="`/api/business-trip-letter/${modelId}`" style="height:500px;width:100%;" frameborder="0"></iframe>
             <template v-slot:modal-footer>
                 <b-button class="btn btn-secondary ml-2" @click="hideModal()"
                     ><i class="fas fa-arrow-left mr-2"></i> Kembali</b-button
@@ -318,6 +323,7 @@ export default {
         reportingComponent
     },
     created() {
+        this.keyword = this.$route.query.code ? this.$route.query.code : '';
         this.reloadTable(this.tableParams);
     },
     data() {

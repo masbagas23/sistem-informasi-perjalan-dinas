@@ -98,7 +98,12 @@ class UserController extends Controller
             "nip"=>"required|min:4|max:10|unique:users,nip",
             "job_position_id"=>"required",
             "first_name"=>"required",
+            "last_name"=>"required",
             "email"=>"required",
+            "phone_number"=>"required",
+            "gender"=>"required",
+            "bank_number"=>"required",
+            // "signature"=>"required|mimes:jpg,jpeg,png,webp|max:2048",
             // "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
         ]);
 
@@ -108,11 +113,13 @@ class UserController extends Controller
             if($request->hasFile('file')){
                 $ava_url = Model::savePhoto($request->file('file'), 'avatar');
             }
-            if($request->hasFile('file')){
-                $ava_url = Model::savePhoto($request->file('file'), 'avatar');
+            // Simpan tanda tangan
+            if($request->hasFile('signature')){
+                $signature_url = Model::savePhoto($request->file('signature'), 'signature');
             }
             //
             $request->request->add(['avatar_url' => $ava_url]);
+            $request->request->add(['signature_url' => $signature_url]);
             $request->request->add(['password' => Hash::make('password')]);
             Model::create($request->all());
             return response()->json([
@@ -161,8 +168,13 @@ class UserController extends Controller
             "nip"=>"required|min:4|max:10|unique:users,nip,".$id,
             "job_position_id"=>"required",
             "first_name"=>"required",
-            "email"=>"required|unique:users,nip,".$id,
-            "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
+            "last_name"=>"required",
+            "email"=>"required",
+            "phone_number"=>"required",
+            "gender"=>"required",
+            "bank_number"=>"required",
+            // "signature"=>"mimes:jpg,jpeg,png,webp|max:2048",
+            // "file"=>"mimes:jpg,jpeg,png,webp|max:2048"
         ]);
 
         try {
@@ -171,7 +183,11 @@ class UserController extends Controller
                 $ava_url = Model::savePhoto($request->file('file'), 'avatar');
                 $request->request->add(['avatar_url' => $ava_url]);
             }
-            //
+            // Simpan tanda tangan
+            if($request->hasFile('signature')){
+                $signature_url = Model::savePhoto($request->file('signature'), 'signature');
+                $request->request->add(['signature_url' => $signature_url]);
+            }
             Model::find($id)->update($request->all());
             return response()->json([
                 "status"=>"success"

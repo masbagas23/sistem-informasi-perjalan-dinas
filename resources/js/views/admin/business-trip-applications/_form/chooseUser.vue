@@ -3,6 +3,7 @@
         <!-- sticky-header -->
         <div class="row d-flex align-items-end">
             <div class="col-8">
+                <small><p class="text-danger" v-if="errors.users">Minimal tambahkan 1 peserta</p></small>
                 <small><i>* Peserta pertama merupakan koordinator</i></small>
             </div>
             <div class="col-4 text-right">

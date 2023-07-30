@@ -35,6 +35,13 @@ export default {
             isShow: state => state.isShow,
         }),
     },
+    watch:{
+        isShow(val){
+            if(val == false){
+                this.setStatus(false)
+            }
+        }
+    },
     methods: {
         ...mapMutations(['CLEAR_ERRORS']),
         ...mapMutations('businessTripApplication', ['CLEAR_FORM']),

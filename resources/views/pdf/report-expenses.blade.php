@@ -29,7 +29,7 @@
 
 <body>
     <div style="text-align: center;">
-        <img height="100px" src="{{ env('APP_URL', 'https://perjalanandinas.bagasraga.my.id') . '/images/logo.png' }}">
+        <img height="100px" src="{{  config('app.url') . '/images/logo.png' }}">
     </div>
     <hr>
     <section style="padding-top:10px;">

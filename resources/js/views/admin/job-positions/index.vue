@@ -85,7 +85,7 @@
                         :options="tableParams.pageOptions"
                     ></b-form-select>
                 </div>
-                <div>
+                <div class="d-none d-lg-block">
                     <p v-if="collection.data.length > 0">
                         Menampilkan data ke {{collection.meta.from}} sampai {{collection.meta.to}} dari total {{collection.meta.total}} data
                     </p>
@@ -110,6 +110,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <formComponent :modelId="modelId" />
             <template v-slot:modal-footer>
@@ -162,7 +163,7 @@ export default {
             ],
             loadingProcess: false,
             keyword: "",
-            modelId: "",
+            modelId: null,
             fileTitle: "Jabatan"
         };
     },
@@ -214,7 +215,7 @@ export default {
             this.create();
         },
         hideModal(loading) {
-            this.modelId = "";
+            this.modelId = null;
             if (loading) {
                 this.reloadTable(this.tableParams);
             }

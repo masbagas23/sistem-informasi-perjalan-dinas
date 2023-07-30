@@ -1,6 +1,7 @@
 <template>
     <div>
         <!-- sticky-header -->
+        <small><p class="text-danger" v-if="errors.users">Minimal tambahkan 1 tugas</p></small>
         <div class="float-right mb-2">
             <button @click="addTarget" class="btn btn-sm btn-success"><b-icon icon="plus"></b-icon> Tambah</button>
         </div>

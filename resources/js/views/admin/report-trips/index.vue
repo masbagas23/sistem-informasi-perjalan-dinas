@@ -104,7 +104,7 @@
                         :options="tableParams.pageOptions"
                     ></b-form-select>
                 </div>
-                <div>
+                <div class="d-none d-lg-block">
                     <p v-if="collection.data.length > 0">
                         Menampilkan data ke {{collection.meta.from}} sampai {{collection.meta.to}} dari total {{collection.meta.total}} data
                     </p>
@@ -129,6 +129,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <detailComponent :modelId="modelId" />
             <template v-slot:modal-footer>
@@ -147,6 +148,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <iframe srcdoc="Loading..." onload="this.removeAttribute('srcdoc')" :src="`/api/business-trip-report?month=${filterMonth}`" style="height:500px;width:100%;" frameborder="0"></iframe>
             <template v-slot:modal-footer>

@@ -10,21 +10,21 @@
                         <div class="form-group">
                             <label class="required">Nama</label>
                             <input placeholder="Nama" type="text" :class="{ 'has-error': errors.name }" class="form-control" v-model="form.name">
-                            <p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+                            <p class="text-danger" v-if="errors.name">Wajib isi nama</p>
                         </div>
                     </b-col>
                     <b-col cols="6">
                         <div class="form-group">
                             <label class="required">Kategori</label>
-                                <v-select class="boot-style" v-model="form.category" label="name" :reduce="item => item.id" :options="categories"></v-select>
-                            <p class="text-danger" v-if="errors.category">{{ errors.category[0] }}</p>
+                                <v-select placeholder="Pilih Kategori" class="boot-style" v-model="form.category" label="name" :reduce="item => item.id" :options="categories"></v-select>
+                            <p class="text-danger" v-if="errors.category">Wajib isi kategori</p>
                         </div>
                     </b-col>
                     <b-col cols="12">
                         <div class="form-group">
-                            <label>Plat Nomor</label>
+                            <label class="required">Plat Nomor</label>
                             <input placeholder="Plat Nomor" type="text" :class="{ 'has-error': errors.number_plate_license }" class="form-control" v-model="form.number_plate_license">
-                            <p class="text-danger" v-if="errors.number_plate_license">{{ errors.number_plate_license[0] }}</p>
+                            <p class="text-danger" v-if="errors.number_plate_license">Wajib isi plat nomor</p>
                         </div>
                     </b-col>
                 </b-row>

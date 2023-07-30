@@ -32,7 +32,7 @@
 
             <template v-slot:cell(file_path)="row">
                 <a v-if="row.value" @click="preview(row.value)" href="#"><div class="text-center"><b-img :src="row.value ? row.value : row.item.file" rounded class="pb-2" height="100px"></b-img></div></a>
-                <b-form-file @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .webp"></b-form-file>
+                <b-form-file @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .jpeg"></b-form-file>
             </template>
             <template v-slot:cell(action)>
                 <b-badge
@@ -53,6 +53,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <b-col cols="12">
                 <div class="text-center">

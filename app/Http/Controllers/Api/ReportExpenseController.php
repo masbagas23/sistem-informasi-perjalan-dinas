@@ -81,7 +81,7 @@ class ReportExpenseController extends Controller
         $total = $data->sum('nominal');
         $data = $data->get();
         $pdf = PDF::loadView('pdf.report-expenses', compact(['data','month','year','total']))
-            ->setPaper('a4', 'potrait');
+            ->setPaper('a4', 'landscape');
 
         return $pdf->stream();
     }

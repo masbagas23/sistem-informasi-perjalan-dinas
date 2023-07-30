@@ -9,10 +9,13 @@ use Illuminate\Http\Request;
 use App\Models\BusinessTripApplication as Model;
 use App\Models\BusinessTripApplicationTarget;
 use App\Models\BusinessTripApplicationUser;
+use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DB;
+use App\Models\User;
+use App\Plugins\NotificationAPI;
 use Illuminate\Support\Facades\Auth;
 use PDF;
 
@@ -27,17 +30,17 @@ class BusinessTripApplicationController extends Controller
     {
         try {
             if (Auth::user()->jobPosition->role_id == 2) {
-                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name']);
+                $data = Model::with(['customer', 'requester.jobPosition', 'jobCategory:id,name']);
             } elseif (Auth::user()->jobPosition->role_id == 3) {
-                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name'])->where(function ($query) {
+                $data = Model::with(['customer', 'requester.jobPosition', 'jobCategory:id,name'])->where(function ($query) {
                     $query->where('requested_by', Auth::id());
                 });
             } elseif (Auth::user()->jobPosition->role_id == 4) {
-                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name'])->whereHas('users', function ($query) {
+                $data = Model::with(['customer', 'requester.jobPosition', 'jobCategory:id,name'])->whereHas('users', function ($query) {
                     $query->where('user_id', Auth::id())->where('is_leader', 1);
                 });
             } else {
-                $data = Model::with(['customer','requester.jobPosition', 'jobCategory:id,name'])->where(function ($query) {
+                $data = Model::with(['customer', 'requester.jobPosition', 'jobCategory:id,name'])->where(function ($query) {
                     $query->where('requested_by', Auth::id())
                         ->orWhereHas('users', function ($user) {
                             $user->where('user_id', Auth::id())->where('is_leader', 1);
@@ -137,11 +140,15 @@ class BusinessTripApplicationController extends Controller
         Validator::extend('business_trip_validator', function ($attr, $value, $parameters) {
             switch ($parameters[0]) {
                 case 'users':
-                    if (count($value) > 0) return true;
+                    if (count($value) > 0){
+                        if($value[0]['user_id'] > 0)return true;
+                    };
                     return false;
                     break;
                 case 'targets':
-                    if (count($value) > 0) return true;
+                    if (count($value) > 0){
+                        if($value[0]['name'] != null)return true;
+                    };
                     return false;
                     break;
                 default:
@@ -163,20 +170,25 @@ class BusinessTripApplicationController extends Controller
         try {
             $users = $request->users;
             $targets = $request->targets;
+            $requester = auth()->user();
+            $code = Model::generateCode(Carbon::now());
+            // $pic = '';
+            // $customer = Customer::select('name')->where('id', $request->customer_id)->first();
             $master = Model::create([
-                'code' => Model::generateCode(Carbon::now()),
+                'code' => $code,
                 'customer_id' => $request->customer_id,
                 'job_category_id' => $request->job_category_id,
                 'description' => $request->description,
                 'start_date' => Carbon::parse($request->start_date)->format('Y-m-d'),
                 'end_date' => Carbon::parse($request->end_date)->format('Y-m-d'),
                 'total_day' => $request->total_day,
-                'requested_by' => auth()->user()->id,
+                'requested_by' => $requester->id,
                 'status' => Model::STATUS_WAITING
             ]);
 
             if (count($users) > 0) {
-                foreach ($users as $user) {
+                foreach ($users as $index => $user) {
+                    if ($index == 0) $pic = User::where('id', $user['user_id'])->first();
                     BusinessTripApplicationUser::create([
                         'application_id' => $master->id,
                         'user_id' => $user['user_id'],
@@ -194,6 +206,29 @@ class BusinessTripApplicationController extends Controller
                     ]);
                 }
             }
+
+            // $presindents = User::select('email')->whereHas('jobPosition.role', fn ($q) => $q->where('id', 2))->get();
+            // if (count($presindents) > 0) {
+            //     foreach ($presindents as $president) {
+            //         $notificationapi = new NotificationAPI(env('NOTIF_CLIENT_ID', '585rb2fl4je58k1ut46oviauc8'), env('NOTIF_CLIENT_SECRET', 't88ogvufanbtu4j3a83vn6b524og570a4rjni8n8ah3cnr2ai2t'));
+            //         $notificationapi->send([
+            //             "notificationId" => "pengajuan_perjalanan_dinas",
+            //             "user" => [
+            //                 "id" => $president['email'],
+            //                 "email" => "hasea23@gmail.com",   # required for email notifications
+            //             ],
+            //             "mergeTags" => [
+            //                 "host" => env('APP_URL', 'https://perjalanandinas.bagasraga.my.id'),
+            //                 "code" => $code,
+            //                 "avatar_url" => $requester->avatar_url,
+            //                 "pemohon" => $requester->first_name . ' ' . $requester->last_name,
+            //                 "tujuan" => $customer->name,
+            //                 "tanggal" => $request->total_day > 1 ? $master->start_date . ' - ' . $master->end_date : $master->start_date,
+            //                 "koordinator" => $pic->first_name .' '.$pic->last_name
+            //             ]
+            //         ]);
+            //     }
+            // }
 
             DB::commit();
             return response()->json([
@@ -341,13 +376,33 @@ class BusinessTripApplicationController extends Controller
 
         try {
             $code_letter = $request->status == Model::STATUS_APPROVE ? Model::generateCodeLetter(Carbon::now()) : null;
-            Model::find($id)->update([
+            $master = Model::find($id);
+            $master->update([
                 "code_letter" => $code_letter,
-                "note" => Model::STATUS_APPROVE ? null : $request->note,
+                "note" => $request->status == Model::STATUS_APPROVE ? null : $request->note,
                 "approved_by" => auth()->user()->id,
                 "status" => $request->status == Model::STATUS_APPROVE ? Model::STATUS_APPROVE : Model::STATUS_REJECT,
                 "result" => $request->status == Model::STATUS_APPROVE ? Model::RESULT_ON_PROGRESS : Model::RESULT_PENDING
             ]);
+
+            // if($request->status == Model::STATUS_APPROVE){
+            //     $pic = BusinessTripApplicationUser::with('user:id,first_name,email')->select('user_id')->where('is_leader', 1)->where('application_id', $id)->first();
+            //     $notificationapi = new NotificationAPI(env('NOTIF_CLIENT_ID', '585rb2fl4je58k1ut46oviauc8'), env('NOTIF_CLIENT_SECRET', 't88ogvufanbtu4j3a83vn6b524og570a4rjni8n8ah3cnr2ai2t'));
+            //     $notificationapi->send([
+            //         "notificationId" => "persetujuan_perjalanan_dinas",
+            //         "user" => [
+            //             "id" => $pic->user->email,
+            //             "email" => "hasea23@gmail.com",   # required for email notifications
+            //         ],
+            //         "mergeTags" => [
+            //             "host" => env('APP_URL', 'https://perjalanandinas.bagasraga.my.id'),
+            //             "code" => $master->code,
+            //             "pic" => $pic->customer->first_name,
+            //             "pekerjaan" => $master->jobCategory->name,
+            //             "pelanggan" => $master->customer->name
+            //         ]
+            //     ]);
+            // }
             return response()->json([
                 "status" => "success"
             ], Response::HTTP_CREATED);
@@ -388,10 +443,10 @@ class BusinessTripApplicationController extends Controller
         ]);
 
         try {
-            Model::find($id)->update(['result'=>Model::RESULT_DONE]);
+            Model::find($id)->update(['result' => Model::RESULT_DONE]);
             foreach ($request->targets as $target) {
                 $file_path = isset($target['file']) ? base64ToImage($target['file'], 'target') : ($target['file_path'] ?? null);
-                
+
                 $start_date = Carbon::parse($request->start_date);
                 $end_date = Carbon::parse($request->end_date);
                 $duration = $end_date->diffInDays($start_date);

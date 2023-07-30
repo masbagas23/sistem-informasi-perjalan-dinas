@@ -84,8 +84,13 @@
         <!-- </div>
       </li> -->
 
+      <li class="nav-item align-self-center">
+        <div id="myNotifications"></div>
+      </li>
+
       <!-- Nav Item - User Information -->
       <li class="nav-item dropdown no-arrow">
+        <div id="myNotifications"></div>
         <a
           class="nav-link dropdown-toggle"
           href="#"
@@ -145,11 +150,23 @@
 
 <script>
 import { mapGetters } from "vuex";
+import NotificationAPI from 'notificationapi-js-client-sdk';
 
 export default {
   name: "Topbar",
   computed: {
     ...mapGetters(["user"]),
+  },
+  mounted(){
+    const notificationapi = new NotificationAPI({
+      clientId: '585rb2fl4je58k1ut46oviauc8',
+      userId: this.user.email
+    });
+
+    notificationapi.showInApp({
+      root: 'myNotifications',
+      popupPosition: 'bottomLeft',
+    });
   },
   methods: {
     logout() {

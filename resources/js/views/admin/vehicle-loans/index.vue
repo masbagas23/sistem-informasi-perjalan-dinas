@@ -157,7 +157,7 @@
                         :options="tableParams.pageOptions"
                     ></b-form-select>
                 </div>
-                <div>
+                <div class="d-none d-lg-block">
                     <p v-if="collection.data.length > 0">
                         Menampilkan data ke {{collection.meta.from}} sampai {{collection.meta.to}} dari total {{collection.meta.total}} data
                     </p>
@@ -182,6 +182,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <formComponent :modelId="modelId" />
             <template v-slot:modal-footer>
@@ -225,6 +226,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <approvalComponent :modelId="modelId" />
             <template v-slot:modal-footer>
@@ -250,6 +252,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <cancelComponent/>
             <template v-slot:modal-footer>

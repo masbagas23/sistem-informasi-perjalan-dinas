@@ -53,6 +53,7 @@
             ref="modal"
             no-close-on-esc
             no-close-on-backdrop
+            hide-header-close
         >
             <b-col cols="12">
                 <div class="text-center">

@@ -67,7 +67,7 @@
 
                     <template v-slot:cell(file_path)="row">
                         <a @click="preview(row.value)" href="#"><div class="text-center"><b-img v-if="row.value" :src="row.value" rounded class="pb-2" height="100px"></b-img></div></a>
-                        <b-form-file v-if="form.result == 1" @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .webp"></b-form-file>
+                        <b-form-file v-if="form.result == 1" @change="handleAttachment(row.item, $event)" name="file[]" ref="file" size="sm" accept=".jpg, .png, .jpeg"></b-form-file>
                     </template>
                 </b-table>
 

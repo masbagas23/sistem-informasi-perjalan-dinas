@@ -23,7 +23,8 @@
 </head>
 
 <body>
-    <header style="background-image: url('{{ env('APP_URL', 'https://perjalanandinas.bagasraga.my.id') }}/images/kop-surat.png');"
+    <header
+        style="background-image: url('{{  config('app.url') }}/images/kop-surat.png');"
         class="kop_surat"></header>
     <section style="padding-top:10px;">
         <h2 align="center" style="margin-bottom: 0px"><u>Surat Perintah Dinas</u></h2>
@@ -34,7 +35,7 @@
         <p>Yang bertanda tangan dibawah ini {{ $business_trip->approver->gender == 1 ? 'Bapak' : 'Ibu' }}
             {{ $business_trip->approver->first_name }} {{ $business_trip->approver->middle_name }}
             {{ $business_trip->approver->last_name }} selaku {{ $business_trip->approver->jobPosition->name }} dari PT
-            Fusi Global Teknologi, dengan ini memberikan tugas dan tanggung jawab sebagai koordinator kepada:</p>
+            Fusi Global Teknologi, dengan ini memberikan tanggung jawab sebagai koordinator kepada:</p>
     </section>
 
     <section style="line-height: 1.5;margin-left:50px">
@@ -64,9 +65,14 @@
     </section>
     <section style="line-height: 1.5">
         <p>Untuk {{ $business_trip->description }} pada tanggal
-            {{ Carbon\Carbon::parse($business_trip->start_date)->translatedFormat('d F Y') }} s/d
-            {{ Carbon\Carbon::parse($business_trip->end_date)->translatedFormat('d F Y') }} ({{ $business_trip->total_day }}
-            Hari) ke {{ $business_trip->customer->name }} yang beralamat di:</p>
+            {{ Carbon\Carbon::parse($business_trip->start_date)->translatedFormat('d F Y') }}
+            @if ($business_trip->total_day > 1)
+                s/d
+                {{ Carbon\Carbon::parse($business_trip->end_date)->translatedFormat('d F Y') }}
+                ({{ $business_trip->total_day }} Hari) 
+            @endif
+            ke {{ $business_trip->customer->name }} yang beralamat di:
+        </p>
     </section>
     <section style="line-height: 1.5;margin-left:50px">
         <table style="vertical-align: top;">
@@ -96,7 +102,7 @@
         </p>
         <p align="right">
             <img height="80px"
-                src="{{ env('APP_URL', 'https://perjalanandinas.bagasraga.my.id') . ($business_trip->approver->signature_url ? $business_trip->approver : '/images/signature.png') }}">
+                src="{{ config('app.url') . ($business_trip->approver->signature_url ? $business_trip->approver->signature_url : '/images/signature.png') }}">
             <br>
             {{ $business_trip->approver->first_name }} {{ $business_trip->approver->middle_name }}
             {{ $business_trip->approver->last_name }}

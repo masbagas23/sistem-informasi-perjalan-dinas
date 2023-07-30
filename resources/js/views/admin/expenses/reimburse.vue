@@ -10,7 +10,7 @@
                         <img :src="form.reimburse_path" class="w-100">
                     </b-col>
                     <b-col v-else cols="12">
-                        <b-form-file @change="handleAttachment" name="file" ref="file" size="sm" accept=".jpg, .png, .webp"></b-form-file>
+                        <b-form-file @change="handleAttachment" name="file" ref="file" size="sm" accept=".jpg, .png, .jpeg"></b-form-file>
                     </b-col>
                 </b-row>
             </div>

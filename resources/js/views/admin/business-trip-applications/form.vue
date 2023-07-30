@@ -14,7 +14,7 @@
                     <b-col cols="12">
                         <fieldset class="border px-3">
                             <legend class="w-auto"><span style="font-size:20px">Tujuan</span></legend>
-                            <b-row style="max-height:300px">
+                            <b-row style="min-height:300px">
                                 <b-col cols="6">
                                     <div class="form-group">
                                         <label class="required">Pelanggan</label>
@@ -26,7 +26,7 @@
                                             :options="customers.data"
                                             placeholder="Pilih Tujuan"
                                         />
-                                        <p class="text-danger" v-if="errors.customer_id">{{ errors.customer_id[0] }}</p>
+                                        <p class="text-danger" v-if="errors.customer_id">Wajib isi pelanggan</p>
                                     </div>
                                 </b-col>
                                 <b-col cols="6">
@@ -40,21 +40,21 @@
                                             :options="jobCategories.data"
                                             placeholder="Pilih Pekerjaan"
                                         />
-                                        <p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+                                        <p class="text-danger" v-if="errors.job_category_id">Wajib isi kategori pekerjaan</p>
                                     </div>
                                 </b-col>
                                 <b-col cols="5">
                                     <div class="form-group">
                                         <label class="required">Tanggal Mulai</label>
                                         <b-form-datepicker placeholder="Pilih Tanggal Mulai" @input="changeStartDate" v-model="form.start_date" :min="today" locale="id"></b-form-datepicker>
-                                        <p class="text-danger" v-if="errors.start_date">{{ errors.start_date[0] }}</p>
+                                        <p class="text-danger" v-if="errors.start_date">Wajib isi tanggal mulai</p>
                                     </div>
                                 </b-col>
                                 <b-col cols="5">
                                     <div class="form-group">
                                         <label class="required">Tanggal Selesai</label>
                                         <b-form-datepicker placeholder="Pilih Tanggal Selesai" @input="changeEndDate" :disabled="!form.start_date" v-model="form.end_date" :min="startDate" locale="id"></b-form-datepicker>
-                                        <p class="text-danger" v-if="errors.end_date">{{ errors.end_date[0] }}</p>
+                                        <p class="text-danger" v-if="errors.end_date">Wajib isi tanggal selesai</p>
                                     </div>
                                 </b-col>
                                 <b-col cols="2">
@@ -67,7 +67,7 @@
                                     <div class="form-group">
                                         <label>Deskripsi</label>
                                         <b-form-textarea :class="{ 'has-error': errors.description }" v-model="form.description" placeholder="Contoh : perbaikan perangkat NB-IoT" rows="3" max-rows="6" ></b-form-textarea>
-                                        <p class="text-danger" v-if="errors.description">{{ errors.description[0] }}</p>
+                                        <p class="text-danger" v-if="errors.description">Wajib isi deskripsi</p>
                                     </div>
                                 </b-col>
                             </b-row>

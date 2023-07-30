@@ -10,7 +10,7 @@
                         <div class="form-group">
                             <label class="required">Nama</label>
                             <input placeholder="Nama" type="text" :class="{ 'has-error': errors.name }" class="form-control" v-model="form.name">
-                            <p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+                            <p class="text-danger" v-if="errors.name">Wajib isi nama</p>
                         </div>
                     </b-col>
                     <b-col cols="12">

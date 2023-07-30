@@ -10,14 +10,14 @@
                         <div class="form-group">
                             <label class="required">Nama</label>
                             <input placeholder="Nama" type="text" :class="{ 'has-error': errors.name }" class="form-control" v-model="form.name">
-                            <p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+                            <p class="text-danger" v-if="errors.name">Wajib isi nama</p>
                         </div>
                     </b-col>
                     <b-col cols="6">
                         <div class="form-group">
                             <label class="required">Telepon</label>
                                 <input placeholder="Telepon" type="number" :class="{ 'has-error': errors.telephone }" class="form-control" v-model="form.telephone">
-                            <p class="text-danger" v-if="errors.telephone">{{ errors.telephone[0] }}</p>
+                            <p class="text-danger" v-if="errors.telephone">Wajib isi nomor telepon</p>
                         </div>
                     </b-col>
                     <b-col cols="12">
@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label class="required">Alamat</label>
                             <b-form-textarea :class="{ 'has-error': errors.address }" v-model="form.address" placeholder="Alamat lengkap pelanggan..." rows="3" max-rows="6" ></b-form-textarea>
-                            <p class="text-danger" v-if="errors.address">{{ errors.address[0] }}</p>
+                            <p class="text-danger" v-if="errors.address">Wajib isi alamat</p>
                         </div>
                     </b-col>
                 </b-row>

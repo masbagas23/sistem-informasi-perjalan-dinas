@@ -10,14 +10,14 @@
                         <div class="form-group">
                             <label class="required">Nama</label>
                             <input placeholder="Nama" type="text" :class="{ 'has-error': errors.name }" class="form-control" v-model="form.name">
-                            <p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+                            <p class="text-danger" v-if="errors.name">Wajib isi nama</p>
                         </div>
                     </b-col>
                     <b-col cols="6">
                         <div class="form-group">
                             <label class="required">Hak Akses</label>
                             <v-select class="boot-style" v-model="form.role_id" label="name" :reduce="item => item.id" :options="roles.data"></v-select>
-                            <p class="text-danger" v-if="errors.role_id">{{ errors.role_id[0] }}</p>
+                            <p class="text-danger" v-if="errors.role_id">Wajib isi hak akses</p>
                         </div>
                     </b-col>
                     <b-col cols="12">
@@ -38,7 +38,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
     props:['modelId'],
     created(){
-        if(this.modelId > 0) this.show(this.modelId)
+        if(this.modelId != null) this.show(this.modelId)
         this.loadRole()
     },
     computed: {

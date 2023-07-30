@@ -86,6 +86,7 @@ const actions = {
                 .then(response => {
                     //SIMPAN DATA KE STATE MELALUI MUTATIONS
                     commit("ASSIGN_DATA", response.data);
+                    commit("CLEAR_FORM");
                     resolve(response.data);
                     commit("SET_BUSY", false);
                 })
