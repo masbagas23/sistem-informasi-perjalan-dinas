@@ -84,9 +84,9 @@
         <!-- </div>
       </li> -->
 
-      <li class="nav-item align-self-center">
+      <!-- <li class="nav-item align-self-center">
         <div id="myNotifications"></div>
-      </li>
+      </li> -->
 
       <!-- Nav Item - User Information -->
       <li class="nav-item dropdown no-arrow">
