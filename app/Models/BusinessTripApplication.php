@@ -103,7 +103,7 @@ class BusinessTripApplication extends Model
         $code  = trim(str_pad($row, 3, 0, STR_PAD_LEFT)."/FS/SPD/". monthRomawi($month)."/". $year);
         if (self::withTrashed()->where('code_letter', $code)->exists()) {
             $row++;
-            return self::checkGenerateCode($row, $year, $month);
+            return self::checkGenerateCodeLetter($row, $year, $month);
         }
         return $code;
     }
