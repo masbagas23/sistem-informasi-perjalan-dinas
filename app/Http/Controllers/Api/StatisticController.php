@@ -38,12 +38,12 @@ class StatisticController extends Controller
     public function topCustomerCost()
     {
         $date = Carbon::parse(request()->filter_month);
-        $customers = Customer::with(['applications:id,customer_id', 'applications.expense:id,application_id,total_nominal'])->whereHas('applications', function($query)use($date){
+        $customers = Customer::with(['applications:id,customer_id' => fn($query) => $query->whereMonth('start_date', $date)->whereYear('start_date', $date)->where('status', BusinessTripApplication::STATUS_APPROVE), 'applications.expense:id,application_id,total_nominal'])->whereHas('applications', function($query)use($date){
             $query->whereMonth('start_date', $date)->whereYear('start_date', $date)->where('status', BusinessTripApplication::STATUS_APPROVE);
         })->whereHas('applications.expense')->get();
         $data = [];
         foreach ($customers as $customer) {           
-            $payload['y'] = $customer->applications()->whereMonth('start_date', $date)->whereYear('start_date', $date)->where('status', BusinessTripApplication::STATUS_APPROVE)->sum(function ($application) {
+            $payload['y'] = $customer->applications->sum(function ($application) {
                 return $application->expense ? $application->expense->total_nominal : 0;
             });
             $payload['x'] = $customer['name'];
