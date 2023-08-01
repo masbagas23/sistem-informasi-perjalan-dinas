@@ -56,7 +56,7 @@ class UserController extends Controller
             if(request()->filter_job_position){
                 $data = $data->whereDoesntHave('applications.application', function($query){
                     $query->where('status', '!=', BusinessTripApplication::STATUS_REJECT)->where(function($date){
-                        $date->whereBetween('start_date', [request()->start_date, request()->end_date])->orWhereBetween('start_date', [request()->start_date, request()->end_date]);
+                        $date->whereBetween('start_date', [request()->start_date, request()->end_date])->orWhereBetween('end_date', [request()->start_date, request()->end_date]);
                     });
                 });
                 // dd($data->get());
