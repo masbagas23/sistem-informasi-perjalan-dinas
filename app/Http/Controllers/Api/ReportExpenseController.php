@@ -21,7 +21,7 @@ class ReportExpenseController extends Controller
     {
         try {
             $data = Model::whereHas('expense.application', function($query){
-                $query->where('status', BusinessTripApplication::RESULT_DONE);
+                $query->where('status', BusinessTripApplication::RESULT_DONE)->whereMonth('start_date', Carbon::parse(request()->month));
             })->with(['expense:id,application_id','expense.application:id,code,customer_id','expense.application.customer:id,name', 'costCategory:id,name']);
 
             if (isset(request()->order_column)){
@@ -33,10 +33,7 @@ class ReportExpenseController extends Controller
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
-
-            if(request()->month){
-                $data = $data->expense->application()->whereMonth('start_date', Carbon::parse(request()->month));
-            }
+            
             $data = $data->paginate(request()->per_page);
             return new DataCollection($data);
         } catch (\Throwable $th) {
