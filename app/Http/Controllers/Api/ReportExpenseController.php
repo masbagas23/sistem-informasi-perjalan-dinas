@@ -73,7 +73,7 @@ class ReportExpenseController extends Controller
             $date = Carbon::parse(request()->month);
             $month = $date->translatedFormat('F');
             $year = $date->format('Y');
-            $data = $data->whereMonth('created_at', $date)->whereYear('created_at', $date);
+            // $data = $data->whereMonth('created_at', $date)->whereYear('created_at', $date);
         }
         $total = $data->sum('nominal');
         $data = $data->get();
