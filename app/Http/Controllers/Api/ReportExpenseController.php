@@ -33,7 +33,7 @@ class ReportExpenseController extends Controller
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
-            
+
             $data = $data->paginate(request()->per_page);
             return new DataCollection($data);
         } catch (\Throwable $th) {
@@ -64,9 +64,9 @@ class ReportExpenseController extends Controller
     public function print()
     {
         $data = Model::whereHas('expense.application', function($query){
-            $query->where('status', BusinessTripApplication::RESULT_DONE);
+            $query->where('status', BusinessTripApplication::RESULT_DONE)->whereMonth('start_date', Carbon::parse(request()->month));
         })->with(['expense:id,application_id','expense.application:id,code,customer_id','expense.application.customer:id,name', 'costCategory:id,name'])
-        ->where('status', 2);
+        ->where('status', Model::STATUS_VALID);
         $month = '';
         $year = '';
         if(request()->month){
