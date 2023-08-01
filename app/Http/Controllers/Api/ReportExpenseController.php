@@ -35,7 +35,7 @@ class ReportExpenseController extends Controller
             }
 
             if(request()->month){
-                $data = $data->whereMonth('created_at', Carbon::parse(request()->month));
+                $data = $data->expense->application()->whereMonth('start_date', Carbon::parse(request()->month));
             }
             $data = $data->paginate(request()->per_page);
             return new DataCollection($data);
