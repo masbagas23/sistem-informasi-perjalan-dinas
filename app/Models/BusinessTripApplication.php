@@ -93,6 +93,7 @@ class BusinessTripApplication extends Model
         $lastRow    = self::withTrashed()
         ->whereMonth('created_at',$month)
         ->whereYear('created_at',$year)
+        ->whereNotNull('code_letter')
         ->count() + 1;
         return self::checkGenerateCodeLetter($lastRow, $year, $month);
     }
