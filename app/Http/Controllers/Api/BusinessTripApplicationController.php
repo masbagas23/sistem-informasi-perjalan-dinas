@@ -375,8 +375,8 @@ class BusinessTripApplicationController extends Controller
         ]);
 
         try {
-            $code_letter = $request->status == Model::STATUS_APPROVE ? Model::generateCodeLetter(Carbon::now()) : null;
             $master = Model::find($id);
+            $code_letter = $request->status == Model::STATUS_APPROVE ? Model::generateCodeLetter(Carbon::parse($master->start_date)) : null;
             $master->update([
                 "code_letter" => $code_letter,
                 "note" => $request->status == Model::STATUS_APPROVE ? null : $request->note,
