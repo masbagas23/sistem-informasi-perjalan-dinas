@@ -3,15 +3,24 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col class="col-lg-2 col-md-6">
+                <b-col class="col-lg-4 col-md-6">
                     <!-- Keyword -->
                     <b-form-input
                         v-model="keyword"
                         type="text"
                         placeholder="Cari"
                     ></b-form-input>
+                    <el-date-picker
+                    v-model="filterMonth"
+                    @change="reloadTable(tableParams)"
+                    type="month"
+                    placeholder="Pick a month"
+                    format="MMM yyyy"
+                    value-format="DD-MM-yyyy"
+                    size="small"
+                    />
                 </b-col>
-                <b-col class="col-lg-10 col-md-6 text-right">
+                <b-col class="col-lg-8 col-md-6 text-right">
                     <!-- Add -->
                     <b-button v-show="user.job_position.role_id == 3" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
@@ -351,7 +360,8 @@ export default {
             loadingProcess: false,
             keyword: "",
             modelId: "",
-            fileTitle: "Perjalan Dinas"
+            fileTitle: "Perjalan Dinas",
+            filterMonth: moment().format('DD-MM-yyyy')
         };
     },
     computed: {
@@ -441,6 +451,7 @@ export default {
         reloadTable(params, keyword = false, filter = false) {
             this.load({
                 keyword: this.keyword,
+                month: this.filterMonth,
                 company_id: this.company_id,
                 payroll_schedule_id: this.payroll_schedule_id,
                 payroll_transaction_id: this.payroll_transaction_id,
