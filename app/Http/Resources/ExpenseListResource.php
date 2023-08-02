@@ -18,6 +18,7 @@ class ExpenseListResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'application_id' => $this->application_id,
+            'application' => $this->application,
             'total_nominal' => $this->total_nominal,
             'down_payment' => $this->down_payment,
             'remaining_cost' => $this->remaining_cost > 0 ? $this->remaining_cost : 0,
