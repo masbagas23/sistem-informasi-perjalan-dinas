@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use App\Models\ExpenseDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Controller
 {
@@ -85,9 +86,22 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
+        Validator::extend('expense_validator', function ($attr, $value, $parameters) {
+            switch ($parameters[0]) {
+                case 'details':
+                    if (count($value) > 0){
+                        if($value[0]['cost_category_id'] > 0) return true;
+                    };
+                    return false;
+                    break;
+                default:
+                    return true;
+                    break;
+            }
+        }, "This field is required");
         $request->validate([
             "application_id"=>"required",
-            "details"=>"required"
+            "details"=>"required|expense_validator:details"
         ]);
 
         DB::beginTransaction();

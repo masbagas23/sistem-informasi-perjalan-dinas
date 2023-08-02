@@ -20,7 +20,7 @@
                                     <small><em>{{ formatDate(start_date) }} - {{formatDate(end_date)}}</em></small>
                                 </template>
                             </v-select>
-                            <p class="text-danger" v-if="errors.application_id">{{ errors.application_id[0] }}</p>
+                            <p class="text-danger" v-if="errors.application_id">Perjalanan dinas wajib diisi</p>
                         </div>
                     </b-col>
                     <b-col cols="6">
@@ -31,6 +31,7 @@
                     </b-col>
                     <b-col cols="12">
                         <fieldset class="border px-2">
+                            <p class="text-danger" v-if="errors.details">Min 1 biaya pengeluaran</p>
                             <legend  class="w-auto required"><span style="font-size:20px">Detail Biaya Pengeluaran</span></legend>
                             <b-col cols="12">
                                 <listExpenseComponent :form="form"/>
