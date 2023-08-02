@@ -7,7 +7,7 @@
             <div v-else>
                 <b-row v-if="form.application_id > 0">
                     <b-col cols="12">
-                        <detailTripComponent :modelId="form.application_id"/>
+                        <detailTripComponent :key="form.application_id" :modelId="form.application_id"/>
                     </b-col>
                 </b-row>
                 <b-row class="pt-2">
