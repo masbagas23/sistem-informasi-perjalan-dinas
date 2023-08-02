@@ -56,4 +56,9 @@ class DownPaymentRequest extends Model
     {
         return $this->belongsTo(User::class,'approved_by','id')->withDefault();
     }
+
+    public function application()
+    {
+        return $this->belongsTo(BusinessTripApplication::class,'application_id','id')->withDefault();
+    }
 }
