@@ -59,6 +59,10 @@
                 
                 <template v-slot:cell(remaining_cost)="row">
                     Rp {{ formatCurrency(row.value) }}
+                </template>
+
+                <template v-slot:cell(reimburse_cost)="row">
+                    Rp {{ formatCurrency(row.value) }}
                     <a href="#" @click="viewReimburse(row.item.id)"><div>
                         <b-badge v-if="row.item.status_reimburse == 1" pill variant="warning">Menunggu Bukti Transfer</b-badge>
                         <b-badge v-if="row.item.status_reimburse == 2" pill variant="success">Lihat Bukti Transfer</b-badge>
@@ -274,7 +278,8 @@ export default {
                 { key: "code", label: "Kode", sortable: false },
                 { key: "application", label: "Perjalan Dinas", sortable: false },
                 { key: "total_nominal", label: "Total Pengeluaran", sortable: false },
-                { key: "remaining_cost", label: "Reimburse", sortable: false },
+                { key: "remaining_cost", label: "Sisa", sortable: false },
+                { key: "reimburse_cost", label: "Kurang", sortable: false },
                 { key: "status", label: "Status", sortable: false },
                 {
                     key: "action",
