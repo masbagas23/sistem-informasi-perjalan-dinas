@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DataCollection;
+use App\Http\Resources\ExpenseListResource;
 use App\Models\DB;
 use Illuminate\Http\Request;
 use App\Models\Expense as Model;
@@ -41,7 +42,7 @@ class ExpenseController extends Controller
                 });
             }
             $data = $data->paginate(request()->per_page);
-            return new DataCollection($data);
+            return ExpenseListResource::collection($data);
         } catch (\Throwable $th) {
             return response()->json([
                 'status'=>'error',
