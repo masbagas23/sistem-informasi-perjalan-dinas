@@ -92,6 +92,11 @@ class BusinessTripApplicationController extends Controller
                             $query->where('user_id', Auth::id())->where('is_leader', 1);
                         })->whereDoesntHave('downPayment');
                         break;
+                    case 'expense':
+                        $data = $data->whereHas('users', function ($query) {
+                            $query->where('user_id', Auth::id())->where('is_leader', 1);
+                        })->whereDoesntHave('expense');
+                        break;
                     default:
                         $data = $data->whereHas('users', function ($query) {
                             $query->where('user_id', Auth::id())->where('is_leader', 1);
@@ -144,14 +149,14 @@ class BusinessTripApplicationController extends Controller
         Validator::extend('business_trip_validator', function ($attr, $value, $parameters) {
             switch ($parameters[0]) {
                 case 'users':
-                    if (count($value) > 0){
-                        if($value[0]['user_id'] > 0)return true;
+                    if (count($value) > 0) {
+                        if ($value[0]['user_id'] > 0) return true;
                     };
                     return false;
                     break;
                 case 'targets':
-                    if (count($value) > 0){
-                        if($value[0]['name'] != null)return true;
+                    if (count($value) > 0) {
+                        if ($value[0]['name'] != null) return true;
                     };
                     return false;
                     break;
