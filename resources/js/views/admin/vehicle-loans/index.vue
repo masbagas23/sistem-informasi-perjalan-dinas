@@ -3,24 +3,32 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col class="col-lg-4 col-md-6">
-                    <!-- Keyword -->
-                    <b-form-input
-                        v-model="keyword"
-                        type="text"
-                        placeholder="Cari"
-                    ></b-form-input>
-                    <el-date-picker
-                    v-model="filterMonth"
-                    @change="reloadTable(tableParams)"
-                    type="month"
-                    placeholder="Pick a month"
-                    format="MMM yyyy"
-                    value-format="DD-MM-yyyy"
-                    size="small"
-                    />
+                <b-col class="col-lg-6 col-md-12">
+                    <b-row>
+                        <b-col class="py-1">
+                            <!-- Keyword -->
+                            <b-form-input
+                                v-model="keyword"
+                                type="text"
+                                placeholder="Cari"
+                                class="w-100"
+                            ></b-form-input>
+                        </b-col>
+                        <b-col class="py-1">
+                            <!-- Month -->
+                            <el-date-picker
+                            v-model="filterMonth"
+                            @change="reloadTable(tableParams)"
+                            type="month"
+                            class="w-100"
+                            placeholder="Pick a month"
+                            format="MMM yyyy"
+                            value-format="DD-MM-yyyy"
+                            />
+                        </b-col>
+                    </b-row>
                 </b-col>
-                <b-col class="col-lg-8 col-md-6 text-right">
+                <b-col class="col-lg-6 col-md-12 text-right">
                     <!-- Add -->
                     <b-button v-show="user.job_position.role_id == 4" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button

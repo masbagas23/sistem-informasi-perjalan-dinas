@@ -57,6 +57,10 @@ class BusinessTripApplicationController extends Controller
                     $query->where('code', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
+            if (isset(request()->month)) {
+                $month = Carbon::parse(request()->month);
+                $data = $data->whereMonth('start_date', $month)->whereYear('start_date', $month);
+            }
             $data = $data->paginate(request()->per_page);
             return new DataCollection($data);
         } catch (\Throwable $th) {

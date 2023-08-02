@@ -36,6 +36,10 @@ class VehicleLoanController extends Controller
                     $query->where('code', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
+            if (isset(request()->month)) {
+                $month = Carbon::parse(request()->month);
+                $data = $data->whereHas('application', fn($query) => $query->whereMonth('start_date', $month)->whereYear('start_date', $month));
+            }
             $data = $data->paginate(request()->per_page);
             return new DataCollection($data);
         } catch (\Throwable $th) {

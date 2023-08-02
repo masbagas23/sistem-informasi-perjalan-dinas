@@ -3,15 +3,32 @@
         <b-card class="text-center">
             <!-- Header -->
             <b-row class="d-flex align-items-center">
-                <b-col class="col-lg-2 col-md-6">
-                    <!-- Keyword -->
-                    <b-form-input
-                        v-model="keyword"
-                        type="text"
-                        placeholder="Cari"
-                    ></b-form-input>
+                <b-col class="col-lg-6 col-md-12">
+                    <b-row>
+                        <b-col class="py-1">
+                            <!-- Keyword -->
+                            <b-form-input
+                                v-model="keyword"
+                                type="text"
+                                placeholder="Cari"
+                                class="w-100"
+                            ></b-form-input>
+                        </b-col>
+                        <b-col class="py-1">
+                            <!-- Month -->
+                            <el-date-picker
+                            v-model="filterMonth"
+                            @change="reloadTable(tableParams)"
+                            type="month"
+                            class="w-100"
+                            placeholder="Pick a month"
+                            format="MMM yyyy"
+                            value-format="DD-MM-yyyy"
+                            />
+                        </b-col>
+                    </b-row>
                 </b-col>
-                <b-col class="col-lg-10 col-md-6 text-right">
+                <b-col class="col-lg-6 col-md-12 text-right">
                     <!-- Add -->
                     <b-button v-show="user.job_position.role_id == 4" @click="create" variant="success" size="sm"
                         ><b-icon icon="plus"></b-icon> Tambah</b-button
@@ -75,7 +92,7 @@
                 </template>
 
                 <template v-slot:cell(application)="row">
-                    {{ row.value.code }} - {{ row.value.customer.name }}
+                    {{ row.value.code }} - {{ row.value.customer ? row.value.customer.name : ''}}
                     <div><em><small>{{ formatDate(row.value.start_date) }} - {{ formatDate(row.value.end_date) }} ({{row.value.total_day}} Hari)</small></em></div>
                 </template>
 
@@ -293,7 +310,8 @@ export default {
             keyword: "",
             modelId: "",
             mode:"",
-            fileTitle: "Biaya Pengeluaran"
+            fileTitle: "Biaya Pengeluaran",
+            filterMonth: moment().format('DD-MM-yyyy')
         };
     },
     computed: {
@@ -384,6 +402,7 @@ export default {
                 page: keyword ? (this.tableParams.page = 1) : params.page,
                 per_page: params.per_page,
                 order_column: params.order_column,
+                month: this.filterMonth,
                 order_direction: params.order_direction
             });
         },

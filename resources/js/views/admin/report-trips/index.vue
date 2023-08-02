@@ -12,7 +12,6 @@
                     placeholder="Pick a month"
                     format="MMM yyyy"
                     value-format="DD-MM-yyyy"
-                    size="small"
                     />
                 </b-col>
                 <b-col cols="4" class="text-right">
