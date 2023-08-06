@@ -14,7 +14,7 @@
                 <div v-if="form.status == 2" class="form-group pb-2">
                     <label class="required">Upload Bukti Transfer</label>
                     <b-form-file @change="handleAttachment" name="file" ref="file" size="sm" accept=".jpg, .png, .jpeg"></b-form-file>
-                    <p class="text-danger" v-if="errors.file">Mohon Untuk Upload Bukti Transfer Uang Muka Ke NoRek Tertera</p>
+                    <p class="text-danger" v-if="errors.file">Mohon Untuk Upload Bukti Transfer Uang Muka Ke No Rekening Tertera</p>
                 </div>
                 <b-button-group>
                     <b-button @click="setStatus(true)" size="lg" variant="success"><b-icon icon="check-circle" v-if="form.status == 2"></b-icon> Setuju</b-button>

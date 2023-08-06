@@ -19,6 +19,7 @@ class ExpenseDetail extends Model
         'cost_category_id',
         'nominal',
         'description',
+        'reason',
         'file_path',
         'approved_by',
         'status',

@@ -214,7 +214,9 @@
                         small
                         class="mr-2"
                     ></b-spinner>
-                    <i v-else class="far fa-save mr-2"></i> Simpan
+                    <i v-else class="far fa-save mr-2"></i>
+                    <span v-if="modelId > 0">Simpan</span>
+                    <span v-else>Ajukan</span>
                 </button>
             </template>
         </b-modal>

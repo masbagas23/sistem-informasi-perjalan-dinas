@@ -15,10 +15,20 @@
             </template>
 
             <template v-slot:cell(status)="row">
-                <b-button-group>
-                    <b-button @click="setStatus(row.item, 2)" size="sm" variant="success"><b-icon icon="check-circle" v-if="row.value == 2"></b-icon> Valid</b-button>
-                    <b-button @click="setStatus(row.item, 3)" size="sm" variant="danger"><b-icon icon="check-circle" v-if="row.value == 3"></b-icon> Tidak Valid</b-button>
-                </b-button-group>
+                <div v-if="row.value == 1">
+                    <b-button-group>
+                        <b-button @click="setStatus(row.item, 2)" size="sm" variant="success"><b-icon icon="check-circle" v-if="row.value == 2"></b-icon> Valid</b-button>
+                        <b-button @click="setStatus(row.item, 3)" size="sm" variant="danger"><b-icon icon="check-circle" v-if="row.value == 3"></b-icon> Tidak Valid</b-button>
+                    </b-button-group>
+                    <div class="text-center mt-2" v-if="row.value == 3">
+                        <b-form-textarea v-model="row.item.reason" placeholder="Alasan tidak valid : contoh, bukti nota editan" rows="2" max-rows="6" ></b-form-textarea>
+                        <p class="text-danger" v-if="errors.reason">{{errors.reason[0]}}</p>
+                    </div>
+                </div>
+                <div v-else>
+                    <b>{{row.value == 2 ? 'Valid' : 'Tidak Valid'}}</b><br>
+                    <em><small>Alasan: {{row.item.reason}}</small></em>
+                </div>
             </template>
             
             <template v-slot:cell(expense)="row">
@@ -101,7 +111,7 @@ export default {
                     tdClass: "text-center",
                     thStyle: "text-align:center;width:250px",
                     label: "Status",
-                    isDetail: true
+                    // isDetail: true
                 },
             ]
         };

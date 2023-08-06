@@ -18,7 +18,7 @@ class ReportTripController extends Controller
     public function index()
     {
         try {
-            $data = Model::where('result', Model::RESULT_DONE)->with(['customer:id,name', 'jobCategory:id,name', 'users'=>function($query){$query->where('is_leader', 1);}, 'users.user:id,first_name,last_name'])->withSum(['expenses'=> fn($query) => $query->where('status', 2)], 'total_nominal');
+            $data = Model::whereHas('expense', fn($q)=>$q->where('total_nominal', '>', 0))->where('result', Model::RESULT_DONE)->with(['customer:id,name', 'jobCategory:id,name', 'users'=>function($query){$query->where('is_leader', 1);}, 'users.user:id,first_name,last_name'])->withSum(['expenses'=> fn($query) => $query->where('status', 2)], 'total_nominal');
 
             if (isset(request()->order_column)){
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));
@@ -45,7 +45,7 @@ class ReportTripController extends Controller
 
     public function print()
     {
-        $data = Model::where('result', Model::RESULT_DONE)->with(['customer:id,name', 'jobCategory:id,name', 'users'=>function($query){$query->where('is_leader', 1);}, 'users.user:id,first_name,last_name'])->withSum(['expenses'=> fn($query) => $query->where('status', 2)], 'total_nominal');
+        $data = Model::whereHas('expense', fn($q)=>$q->where('total_nominal', '>', 0))->where('result', Model::RESULT_DONE)->with(['customer:id,name', 'jobCategory:id,name', 'users'=>function($query){$query->where('is_leader', 1);}, 'users.user:id,first_name,last_name'])->withSum(['expenses'=> fn($query) => $query->where('status', 2)], 'total_nominal');
         $month = '';
         $year = '';
         if(request()->month){

@@ -26,32 +26,32 @@ class ExpenseController extends Controller
         try {
             if (Auth::user()->jobPosition->role_id == 5) {
                 $data = Model::with('application.customer');
-            }else{
-                $data = Model::with('application.customer')->whereHas('application', function($query){
-                    $query->whereHas('users',function($user){
-                        $user->where('user_id', Auth::id())->where('is_leader',1);
+            } else {
+                $data = Model::with('application.customer')->whereHas('application', function ($query) {
+                    $query->whereHas('users', function ($user) {
+                        $user->where('user_id', Auth::id())->where('is_leader', 1);
                     });
                 });
             }
-            if (isset(request()->order_column)){
+            if (isset(request()->order_column)) {
                 $data = $data->orderBy(request()->order_column, (request()->order_direction == 'true' ? 'DESC' : 'ASC'));
             }
 
             if (request()->keyword != '') {
-                $data = $data->where(function($query){
+                $data = $data->where(function ($query) {
                     $query->where('code', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
             if (isset(request()->month)) {
                 $month = Carbon::parse(request()->month);
-                $data = $data->whereHas('application', fn($query) => $query->whereMonth('start_date', $month)->whereYear('start_date', $month));
+                $data = $data->whereHas('application', fn ($query) => $query->whereMonth('start_date', $month)->whereYear('start_date', $month));
             }
             $data = $data->paginate(request()->per_page);
             return ExpenseListResource::collection($data);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -61,19 +61,19 @@ class ExpenseController extends Controller
         try {
             $data = Model::query();
             if (request()->keyword != '') {
-                $data = $data->where(function($query){
+                $data = $data->where(function ($query) {
                     $query->where('name', 'LIKE', '%' . request()->keyword . '%');
                 });
             }
             $data = $data->get();
             return response()->json([
-                "status"=>"success",
-                "data"=>$data
+                "status" => "success",
+                "data" => $data
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,8 +89,8 @@ class ExpenseController extends Controller
         Validator::extend('expense_validator', function ($attr, $value, $parameters) {
             switch ($parameters[0]) {
                 case 'details':
-                    if (count($value) > 0){
-                        if($value[0]['cost_category_id'] > 0) return true;
+                    if (count($value) > 0) {
+                        if ($value[0]['cost_category_id'] > 0) return true;
                     };
                     return false;
                     break;
@@ -100,8 +100,8 @@ class ExpenseController extends Controller
             }
         }, "This field is required");
         $request->validate([
-            "application_id"=>"required",
-            "details"=>"required|expense_validator:details"
+            "application_id" => "required",
+            "details" => "required|expense_validator:details"
         ]);
 
         DB::beginTransaction();
@@ -116,7 +116,7 @@ class ExpenseController extends Controller
                 'down_payment' => $request->down_payment,
                 'status' => Model::STATUS_VALIDATION,
             ]);
-            
+
             // B. Simpan Detail Biaya Pengeluaran
             foreach ($details as $detail) {
                 // I. Konversi Base64 menjadi gambar dan simpan path nya
@@ -127,20 +127,20 @@ class ExpenseController extends Controller
                     'expense_id' => $master->id,
                     'cost_category_id' => $detail['cost_category_id'],
                     'nominal' => $detail['nominal'],
-                    'description'=> $detail['description'],
+                    'description' => $detail['description'],
                     'file_path' => $file_path,
                     'status' => ExpenseDetail::STATUS_WAITING
                 ]);
             }
             DB::commit();
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -157,13 +157,13 @@ class ExpenseController extends Controller
             $data = Model::find($id);
             $data->load('details.costCategory');
             return response()->json([
-                "status"=>"success",
-                "data"=>$data
+                "status" => "success",
+                "data" => $data
             ], Response::HTTP_OK);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -177,7 +177,24 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        Validator::extend('expense_validator', function ($attr, $value, $parameters) {
+            switch ($parameters[0]) {
+                case 'details':
+                    if (count($value) > 0) {
+                        if ($value[0]['cost_category_id'] > 0) return true;
+                    };
+                    return false;
+                    break;
+                default:
+                    return true;
+                    break;
+            }
+        }, "This field is required");
+        $request->validate([
+            "application_id" => "required",
+            "details" => "required|expense_validator:details"
+        ]);
+
         try {
             // ~ Inisiasi variabel pembantu
             $master = Model::find($id);
@@ -189,7 +206,7 @@ class ExpenseController extends Controller
                 'down_payment' => $request->down_payment,
                 'status' => Model::STATUS_VALIDATION,
             ]);
-            
+
             // B. Update Detail Biaya Pengeluaran
             ExpenseDetail::where('expense_id', $master->id)->delete();
             foreach ($details as $detail) {
@@ -202,21 +219,21 @@ class ExpenseController extends Controller
                     'cost_category_id' => $detail['cost_category_id'],
                     'nominal' => $detail['nominal'],
                     'file_path' => $file_path,
-                ],[
+                ], [
                     'expense_id' => $master->id,
                     'cost_category_id' => $detail['cost_category_id'],
                     'nominal' => $detail['nominal'],
-                    'description'=> $detail['description'],
+                    'description' => $detail['description'],
                     'file_path' => $file_path,
                 ])->restore();
             }
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -231,7 +248,7 @@ class ExpenseController extends Controller
     {
         Model::find($id)->delete();
         return response()->json([
-            "status"=>"success"
+            "status" => "success"
         ], Response::HTTP_OK);
     }
 
@@ -249,31 +266,57 @@ class ExpenseController extends Controller
             ]);
             DB::commit();
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     public function validation(Request $request, $id)
     {
-        
+        Validator::extend('expense_validator', function ($attr, $value, $parameters) {
+            switch ($parameters[0]) {
+                case 'details':
+                    if (count($value) > 0) {
+                        foreach ($value as $detail) {
+                            if ($detail['status'] == 3) {
+                                if (empty($detail['reason'])) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            } else {
+                                return true;
+                            }
+                        }
+                    };
+                    return false;
+                    break;
+                default:
+                    return true;
+                    break;
+            }
+        }, "Alasan harus di isi.");
+        $request->validate([
+            "details" => "required|expense_validator:details"
+        ]);
         DB::beginTransaction();
         try {
             // ~ Inisiasi variabel pembantu
             $master = Model::find($id);
             $details = $request->details;
-            
+
             // A. Update Detail Biaya Pengeluaran
             foreach ($details as $detail) {
                 // I. Simpan Ke DB
                 ExpenseDetail::find($detail['id'])->update([
-                    'status' => $detail['status']
+                    'status' => $detail['status'],
+                    'reason' => $detail['status'] == 3 ? $detail['reason'] : null,
                 ]);
             }
 
@@ -288,13 +331,13 @@ class ExpenseController extends Controller
             ]);
             DB::commit();
             return response()->json([
-                "status"=>"success"
+                "status" => "success"
             ], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json([
-                'status'=>'error',
-                'message'=>$th->getMessage(),
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -305,7 +348,7 @@ class ExpenseController extends Controller
             $data = Model::where('status', Model::STATUS_DONE);
 
             if (request()->filter_month) {
-                $data = $data->whereHas('application', function($query){
+                $data = $data->whereHas('application', function ($query) {
                     $date = Carbon::parse(request()->filter_month);
                     $query->whereMonth('start_date', $date)->whereYear('start_date', $date);
                 });

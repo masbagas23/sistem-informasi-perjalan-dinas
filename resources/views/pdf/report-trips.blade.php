@@ -84,7 +84,7 @@
                 <tr>
                     <td colspan="6" style="text-align: right"><b>Total</b></td>
                     <td style="text-align: center">
-                        <b>{{ 'Rp ' . number_format($trip->expenses_sum_total_nominal, 2, ',', '.') }}</b></td>
+                        <b>{{ 'Rp ' . number_format($total, 2, ',', '.') }}</b></td>
                     <td style="border: 0px"></td>
                 </tr>
             </tfoot>

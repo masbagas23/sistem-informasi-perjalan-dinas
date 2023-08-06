@@ -60,7 +60,7 @@
                 </b-row>
                 <b-alert v-show="form.status == 2 && form.file_path == null" variant="primary" class="text-center" show>
                     <h4>No Rekening</h4>
-                    {{form.requester.bank_number}}
+                    {{form.requester.bank_number}} a.n {{form.requester.first_name}} {{form.requester.middle_name}} {{form.requester.last_name}}
                 </b-alert>
             </div>
         </b-overlay>

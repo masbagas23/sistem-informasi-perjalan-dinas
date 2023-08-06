@@ -12,7 +12,7 @@ function defaultForm() {
         status_reimburse: '',
         reimburse_path: '',
         updated_at: "",
-        details: [{ cost_category_id: '', nominal: '', description: '', file_path: '', file: '' }],
+        details: [{ cost_category_id: '', nominal: '', description: '', file_path: '', file: '', reason:'' }],
         attachment: [],
         reimburse_file: '',
     };

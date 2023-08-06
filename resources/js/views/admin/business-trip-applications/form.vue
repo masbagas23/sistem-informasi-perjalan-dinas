@@ -17,7 +17,7 @@
                             <b-row style="min-height:300px">
                                 <b-col cols="6">
                                     <div class="form-group">
-                                        <label class="required">Pelanggan</label>
+                                        <label class="required">Lokasi</label>
                                         <v-select
                                             class="boot-style"
                                             v-model="form.customer_id"
@@ -31,7 +31,7 @@
                                 </b-col>
                                 <b-col cols="6">
                                     <div class="form-group">
-                                        <label class="required">Kategori Pekerjaan</label>
+                                        <label class="required">Alasan Dinas</label>
                                         <v-select
                                             class="boot-style"
                                             v-model="form.job_category_id"
