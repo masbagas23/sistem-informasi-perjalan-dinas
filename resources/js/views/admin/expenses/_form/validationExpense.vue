@@ -15,7 +15,7 @@
             </template>
 
             <template v-slot:cell(status)="row">
-                <div v-if="row.value == 1">
+                <div v-if="form.status == 1">
                     <b-button-group>
                         <b-button @click="setStatus(row.item, 2)" size="sm" variant="success"><b-icon icon="check-circle" v-if="row.value == 2"></b-icon> Valid</b-button>
                         <b-button @click="setStatus(row.item, 3)" size="sm" variant="danger"><b-icon icon="check-circle" v-if="row.value == 3"></b-icon> Tidak Valid</b-button>
@@ -26,8 +26,18 @@
                     </div>
                 </div>
                 <div v-else>
-                    <b>{{row.value == 2 ? 'Valid' : 'Tidak Valid'}}</b><br>
-                    <em><small>Alasan: {{row.item.reason}}</small></em>
+                    <b-badge
+                        v-if="row.value == 2"
+                        pill
+                        variant="success"
+                    >Valid</b-badge>
+                    <b-badge
+                        v-if="row.value == 3"
+                        pill
+                        variant="danger"
+                    >Tidak Valid</b-badge>
+                    <!-- <b>{{row.value == 2 ? 'Valid' : 'Tidak Valid'}}</b><br> -->
+                    <br><em v-if="row.value == 3"><small>Alasan: {{row.item.reason}}</small></em>
                 </div>
             </template>
             
@@ -41,12 +51,25 @@
                     <b-tr>
                         <b-td style="width:100px">Nominal</b-td>
                         <b-td style="width:10px">:</b-td>
-                        <b-td>Rp {{formatCurrency(row.item.nominal)}}</b-td>
+                        <b-td>
+                            Rp {{formatCurrency(row.item.nominal)}}<br>
+                            <span v-if="row.item.nominal > row.item.cost_category.max_price"><em><small class="text-danger">Nominal melebihi alokasi dana</small></em></span>
+                        </b-td>
+                    </b-tr>
+                    <b-tr>
+                        <b-td style="width:100px">Qty</b-td>
+                        <b-td style="width:10px">:</b-td>
+                        <b-td>{{row.item.qty}}</b-td>
                     </b-tr>
                     <b-tr>
                         <b-td style="width:100px">Deskripsi</b-td>
                         <b-td style="width:10px">:</b-td>
                         <b-td>{{row.item.description}}</b-td>
+                    </b-tr>
+                    <b-tr>
+                        <b-td style="width:100px">Total</b-td>
+                        <b-td style="width:10px">:</b-td>
+                        <b-td><b>Rp {{formatCurrency(row.item.total_nominal)}}</b></b-td>
                     </b-tr>
                 </b-table-simple>
             </template>

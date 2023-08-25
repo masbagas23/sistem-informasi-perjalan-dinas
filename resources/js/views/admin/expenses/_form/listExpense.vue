@@ -19,15 +19,26 @@
             </template>
 
             <template v-slot:cell(cost_category_id)="row">
-                <v-select class="boot-style" v-model="row.item.cost_category_id" label="name" :reduce="item => item.id" :options="costCategories.data"></v-select>
+                <v-select class="boot-style" v-model="row.item.cost_category_id" label="name" :reduce="item => item.id" :options="costCategories.data">
+                     <template #option="{ name, max_price}">
+                        <p class="m-0">{{name}}</p>
+                        <small><em>Alokasi dana <span v-if="max_price != 0">Rp {{ formatCurrency(max_price) }}</span> <span v-else>Rp -</span></em></small>
+                    </template>
+                </v-select>
             </template>
 
             <template v-slot:cell(nominal)="row">
                 <money v-bind="money" placeholder="Nominal Biaya" class="form-control" v-model="row.item.nominal"/>
+                <p class="text-danger" v-if="row.item.cost_category_id > 1"><span v-if="row.value > costCategories.data.find(item => item.id == row.item.cost_category_id).max_price && costCategories.data.find(item => item.id == row.item.cost_category_id).max_price > 0">Nominal melebihi alokasi dana !</span></p>
             </template>
 
             <template v-slot:cell(description)="row">
                 <b-form-textarea v-model="row.item.description" placeholder="Deskripsi Pengeluaran" rows="1" max-rows="2" ></b-form-textarea>
+            </template>
+
+            <template v-slot:cell(qty)="row">
+                <b-form-input type="number" min="1" v-model="row.item.qty" placeholder="Qty"></b-form-input>
+                <em class="mt-2"><b>Total = Rp {{formatCurrency(row.item.qty * row.item.nominal)}}</b></em>
             </template>
 
             <template v-slot:cell(file_path)="row">
@@ -71,7 +82,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import {Money} from 'v-money'
-
+import {formatCurrency} from '@app/utils/formatter'
 export default {
     props: ["form"],
     created() {
@@ -100,11 +111,16 @@ export default {
                 {
                     key: "cost_category_id",
                     label: "Kategori Biaya",
-                    thStyle: "min-width:200px;text-align:center"
+                    thStyle: "min-width:220px;text-align:center"
                 },
                 {
                     key: "nominal",
                     label: "Nominal",
+                    thStyle: "text-align:center"
+                },
+                {
+                    key: "qty",
+                    label: "Qty",
                     thStyle: "text-align:center"
                 },
                 {
@@ -140,7 +156,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions("mstCostCategory", { loadCostCategory: "loadList" }),
+        ...mapActions("mstCostCategory", { loadCostCategory: "loadList" }),formatCurrency,
         addTarget(){
             this.form.details.push({ cost_category_id: '', nominal: '', description: '', file_path: '', file: '' })
         },

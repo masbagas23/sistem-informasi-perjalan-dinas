@@ -13,6 +13,7 @@ class Vehicle extends Model
     protected $fillable = [
         'name',
         'category',
+        'condition',
         'number_plate_license',
     ];
 

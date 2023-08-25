@@ -22,6 +22,13 @@
                     </b-col>
                     <b-col cols="12">
                         <div class="form-group">
+                            <label class="required">Kondisi</label>
+                                <v-select placeholder="Pilih Kondisi Kendaraan" class="boot-style" v-model="form.condition" label="name" :reduce="item => item.id" :options="conditions"></v-select>
+                            <p class="text-danger" v-if="errors.condition">Wajib isi kondisi</p>
+                        </div>
+                    </b-col>
+                    <b-col cols="12">
+                        <div class="form-group">
                             <label class="required">Plat Nomor</label>
                             <input placeholder="Plat Nomor" type="text" :class="{ 'has-error': errors.number_plate_license }" class="form-control" v-model="form.number_plate_license">
                             <p class="text-danger" v-if="errors.number_plate_license">Wajib isi plat nomor</p>
@@ -45,6 +52,10 @@ export default {
             categories :[
                 {id:1, name:"Motor"},
                 {id:2, name:"Mobil"},
+            ],
+            conditions:[
+                {id:0, name:"Sedang Dalam Perbaikan"},
+                {id:1, name:"Tersedia"}
             ]
         }
     },

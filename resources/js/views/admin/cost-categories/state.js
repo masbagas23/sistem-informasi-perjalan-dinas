@@ -4,6 +4,7 @@ function defaultForm() {
     return {
         name: "",
         description: "",
+        max_price:"",
         updated_at: "",
     };
 }
@@ -67,6 +68,7 @@ const mutations = {
         state.form = {
             name: payload.name,
             description: payload.description,
+            max_price: payload.max_price,
             updated_at: payload.updated_at,
         };
     },

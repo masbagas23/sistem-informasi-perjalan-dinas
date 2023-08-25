@@ -90,9 +90,16 @@ class ExpenseController extends Controller
             switch ($parameters[0]) {
                 case 'details':
                     if (count($value) > 0) {
-                        if ($value[0]['cost_category_id'] > 0) return true;
+                        foreach ($value as $detail) {
+                            if (empty($detail['cost_category_id'])) {
+                                return false;
+                            }
+                            if (empty($detail['qty'])) {
+                                return false;
+                            }
+                        }
                     };
-                    return false;
+                    return true;
                     break;
                 default:
                     return true;
@@ -127,6 +134,8 @@ class ExpenseController extends Controller
                     'expense_id' => $master->id,
                     'cost_category_id' => $detail['cost_category_id'],
                     'nominal' => $detail['nominal'],
+                    'qty' => $detail['qty'],
+                    'total_nominal' => $detail['nominal'] * $detail['qty'],
                     'description' => $detail['description'],
                     'file_path' => $file_path,
                     'status' => ExpenseDetail::STATUS_WAITING
@@ -155,7 +164,7 @@ class ExpenseController extends Controller
     {
         try {
             $data = Model::find($id);
-            $data->load('details.costCategory');
+            $data->load(['details.costCategory', 'application.downPayment.requester']);
             return response()->json([
                 "status" => "success",
                 "data" => $data
@@ -181,9 +190,17 @@ class ExpenseController extends Controller
             switch ($parameters[0]) {
                 case 'details':
                     if (count($value) > 0) {
-                        if ($value[0]['cost_category_id'] > 0) return true;
+                        // if ($value[0]['cost_category_id'] > 0) return true;
+                        foreach ($value as $detail) {
+                            if (empty($detail['cost_category_id'])) {
+                                return false;
+                            }
+                            if (empty($detail['qty'])) {
+                                return false;
+                            }
+                        }
                     };
-                    return false;
+                    return true;
                     break;
                 default:
                     return true;
@@ -218,6 +235,8 @@ class ExpenseController extends Controller
                     'expense_id' => $master->id,
                     'cost_category_id' => $detail['cost_category_id'],
                     'nominal' => $detail['nominal'],
+                    'qty' => $detail['qty'],
+                    'total_nominal' => $detail['nominal'] * $detail['qty'],
                     'file_path' => $file_path,
                 ], [
                     'expense_id' => $master->id,
@@ -254,6 +273,10 @@ class ExpenseController extends Controller
 
     public function reimburse(Request $request, $id)
     {
+        $request->validate([
+            "reimburse_file" => "required",
+        ]);
+
         DB::beginTransaction();
         try {
             // ~ Inisiasi variabel pembantu
@@ -287,15 +310,11 @@ class ExpenseController extends Controller
                             if ($detail['status'] == 3) {
                                 if (empty($detail['reason'])) {
                                     return false;
-                                } else {
-                                    return true;
                                 }
-                            } else {
-                                return true;
                             }
                         }
                     };
-                    return false;
+                    return true;
                     break;
                 default:
                     return true;
@@ -320,7 +339,7 @@ class ExpenseController extends Controller
                 ]);
             }
 
-            $total_nominal = ExpenseDetail::where('expense_id', $id)->where('status', ExpenseDetail::STATUS_VALID)->sum('nominal');
+            $total_nominal = ExpenseDetail::where('expense_id', $id)->where('status', ExpenseDetail::STATUS_VALID)->sum('total_nominal');
             $remaining_cost = $master->down_payment - $total_nominal;
             $master->update([
                 'status' => Model::STATUS_DONE,

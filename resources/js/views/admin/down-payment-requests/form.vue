@@ -21,8 +21,9 @@
                     <b-col cols="12">
                         <div class="form-group">
                             <label class="required">Nominal</label>
-                            <money v-bind="money" placeholder="Nominal Uang Muka" :class="{ 'has-error': errors.nominal }" class="form-control" v-model="form.nominal"/>
+                            <money @input="handleNominal" v-bind="money" placeholder="Nominal Uang Muka" :class="{ 'has-error': errors.nominal }" class="form-control" v-model="form.nominal"/>
                             <p class="text-danger" v-if="errors.nominal">{{ errors.nominal[0] }}</p>
+                            <p class="text-danger" v-if="errNominal">{{ errNominal }}</p>
                         </div>
                     </b-col>
                 </b-row>
@@ -50,7 +51,8 @@ export default {
                 prefix: 'Rp ',
                 precision: 0,
                 masked: false
-            }
+            },
+            errNominal:'',
         }
     },
     computed: {
@@ -69,6 +71,18 @@ export default {
         ...mapActions('downPaymentRequest', ['show']),
         ...mapActions('businessTripApplication', {loadBusinessTrip:'loadList'}),
         formatDate,
+        handleNominal(nominal){
+            if(nominal < 50000){
+                this.errNominal = "Minimal pengajuan sebesar Rp 50.000"
+                this.$emit('toogleSubmit', false)
+            }else if(nominal > 1000000){
+                this.errNominal = "Maksimal pengajuan sebesar Rp 1.000.000"
+                this.$emit('toogleSubmit', false)
+            }else{
+                this.errNominal = ''
+                this.$emit('toogleSubmit', true)
+            }
+        },
     },
     //KETIKA PAGE INI DITINGGALKAN MAKA
     destroyed() {

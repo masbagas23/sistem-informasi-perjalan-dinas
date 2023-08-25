@@ -183,8 +183,8 @@ export default {
                     sortable: false
                 },
                 { key: "code", label: "Kode", sortable: false },
-                { key: "customer", label: "Pelanggan", sortable: false },
-                { key: "job_category", label: "Pekerjaan", sortable: false },
+                { key: "customer", label: "Lokasi", sortable: false },
+                { key: "job_category", label: "Alasan Dinas", sortable: false },
                 { key: "date", label: "Tanggal", sortable: false },
                 { key: "users", label: "Koordinator", sortable: false },
                 { key: "total_expense", label: "Total Pengeluaran", sortable: false },

@@ -4,6 +4,7 @@ function defaultForm() {
     return {
         name: "",
         category: "",
+        condition: "",
         number_plate_license: "",
         updated_at: "",
     };
@@ -72,6 +73,7 @@ const mutations = {
         state.form = {
             name: payload.name,
             category: payload.category,
+            condition: payload.condition,
             number_plate_license: payload.number_plate_license,
             updated_at: payload.updated_at,
         };

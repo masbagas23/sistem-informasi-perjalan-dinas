@@ -61,7 +61,7 @@ class VehicleController extends Controller
             if (request()->page) {
                 switch (request()->page) {
                     case 'vehicle_loan':
-                        $data = $data->whereDoesntHave('loans', function ($query) {
+                        $data = $data->where('condition', 1)->whereDoesntHave('loans', function ($query) {
                             $query->whereIn('status', [VehicleLoan::STATUS_APPROVE, VehicleLoan::STATUS_WAITING])->where(function ($date) {
                                 $start_date = Carbon::parse(request()->start_date);
                                 $end_date = Carbon::parse(request()->end_date);
@@ -98,6 +98,7 @@ class VehicleController extends Controller
         $request->validate([
             "name" => "required",
             "category" => "required",
+            "condition" => "required",
             "number_plate_license" => "required|min:6",
         ]);
 
@@ -148,6 +149,7 @@ class VehicleController extends Controller
         $request->validate([
             "name" => "required",
             "category" => "required",
+            "condition" => "required",
             "number_plate_license" => "required|min:6",
         ]);
 

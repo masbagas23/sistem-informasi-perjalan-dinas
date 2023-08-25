@@ -10,7 +10,13 @@
                         <img :src="form.reimburse_path" class="w-100">
                     </b-col>
                     <b-col v-else cols="12">
+                        <b-alert variant="primary" class="text-center" show>
+                            <h4>No Rekening</h4>
+                            {{requester.bank_number}} a.n {{requester.first_name}} {{requester.middle_name}} {{requester.last_name}}
+                            <b><p>Bank BNI</p></b>
+                        </b-alert>
                         <b-form-file @change="handleAttachment" name="file" ref="file" size="sm" accept=".jpg, .png, .jpeg"></b-form-file>
+                        <p class="text-danger" v-if="errors.reimburse_file">Wajib upload bukti transfer</p>
                     </b-col>
                 </b-row>
             </div>
@@ -23,9 +29,19 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
     props:['modelId'],
     created(){
-        if(this.modelId > 0) this.show(this.modelId)
+        if(this.modelId > 0){
+            this.show(this.modelId).then(e => {
+                this.requester = e.data.application.down_payment.requester
+            })
+        }
+    },
+    data(){
+        return {
+            requester:''
+        }
     },
     computed:{
+        ...mapState(['errors']), //MENGAMBIL STATE ERRORS
         ...mapState('expense', {
             form: state => state.form, //MENGAMBIL STATE DATA
             isShow: state => state.isShow,

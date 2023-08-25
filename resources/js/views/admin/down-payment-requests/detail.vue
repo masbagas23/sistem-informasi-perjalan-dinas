@@ -48,7 +48,7 @@
                                 <b-td style="width:10px">:</b-td>
                                 <b-td>{{form.note ? form.note : "-"}}</b-td>
                             </b-tr>
-                            <b-tr v-show="form.status == 2">
+                            <b-tr v-show="form.status == 2 && form.file_path == null">
                                 <b-td>Bukti Transfer</b-td>
                                 <b-td style="width:10px">:</b-td>
                                 <b-td>
@@ -61,6 +61,7 @@
                 <b-alert v-show="form.status == 2 && form.file_path == null" variant="primary" class="text-center" show>
                     <h4>No Rekening</h4>
                     {{form.requester.bank_number}} a.n {{form.requester.first_name}} {{form.requester.middle_name}} {{form.requester.last_name}}
+                    <b><p>Bank BNI</p></b>
                 </b-alert>
             </div>
         </b-overlay>

@@ -203,12 +203,12 @@
             no-close-on-backdrop
             hide-header-close
         >
-            <formComponent :modelId="modelId" />
+            <formComponent @toogleSubmit="toogleSubmit" :modelId="modelId" />
             <template v-slot:modal-footer>
                 <b-button class="btn btn-secondary ml-2" @click="hideModal()"
                     ><i class="fas fa-arrow-left mr-2"></i>Batal</b-button
                 >
-                <button class="btn btn-primary" @click.prevent="submit">
+                <button :disabled="!enableSubmit" class="btn btn-primary" @click.prevent="submit">
                     <b-spinner
                         v-if="loadingProcess"
                         small
@@ -338,7 +338,8 @@ export default {
             keyword: "",
             modelId: "",
             fileTitle: "Uang Muka",
-            filterMonth: moment().format('DD-MM-yyyy')
+            filterMonth: moment().format('DD-MM-yyyy'),
+            enableSubmit:false,
         };
     },
     computed: {
@@ -505,6 +506,9 @@ export default {
                 .catch(() => {
                         notify.error(this.fileTitle, "hapus");
                 });
+        },
+        toogleSubmit(state){
+            this.enableSubmit = state
         }
     }
 };

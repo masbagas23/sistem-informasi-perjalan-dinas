@@ -20,6 +20,8 @@ class ExpenseDetail extends Model
         'nominal',
         'description',
         'reason',
+        'qty',
+        'total_nominal',
         'file_path',
         'approved_by',
         'status',

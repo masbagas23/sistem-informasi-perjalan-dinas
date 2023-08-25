@@ -12,6 +12,7 @@ class CostCategory extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'max_price'
     ];
 }
