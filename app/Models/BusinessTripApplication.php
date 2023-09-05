@@ -61,6 +61,11 @@ class BusinessTripApplication extends Model
         return $this->hasMany(BusinessTripApplicationUser::class, 'application_id', 'id')->orderBy('is_leader', 'DESC');
     }
 
+    public function coordinator()
+    {
+        return $this->hasOne(BusinessTripApplicationUser::class, 'application_id', 'id')->where('is_leader', 1);
+    }
+
     public function targets()
     {
         return $this->hasMany(BusinessTripApplicationTarget::class, 'application_id', 'id');
