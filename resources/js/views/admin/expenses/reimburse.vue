@@ -31,7 +31,7 @@ export default {
     created(){
         if(this.modelId > 0){
             this.show(this.modelId).then(e => {
-                this.requester = e.data.application.down_payment.requester
+                this.requester = e.data.application.coordinator.user
             })
         }
     },

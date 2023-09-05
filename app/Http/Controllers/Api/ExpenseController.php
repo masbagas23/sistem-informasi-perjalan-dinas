@@ -164,7 +164,7 @@ class ExpenseController extends Controller
     {
         try {
             $data = Model::find($id);
-            $data->load(['details.costCategory', 'application.coordinator']);
+            $data->load(['details.costCategory', 'application.coordinator.user']);
             return response()->json([
                 "status" => "success",
                 "data" => $data
